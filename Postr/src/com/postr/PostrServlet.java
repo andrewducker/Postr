@@ -11,8 +11,10 @@ public class PostrServlet extends HttpServlet {
 	public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 		try {
 		resp.setContentType("text/plain");
-		LJWriter writer = new LJWriter("andrewducker", "Balisk!", TimeZone.getDefault(), true);
-			resp.getWriter().println(writer.Login());
+		String userName = req.getParameter("username");
+		String password = req.getParameter("password");
+		LJWriter writer = new LJWriter(userName,password, TimeZone.getDefault(), true);
+		resp.getWriter().println(writer.Login());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
