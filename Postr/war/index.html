@@ -17,7 +17,7 @@ function loadXMLDoc()
 xmlhttp=new XMLHttpRequest();
 username=$("#username").val();
 password=$("#password").val();
-xmlhttp.open("GET","postr?username="+username+"&password="+password,true);
+xmlhttp.open("POST","dreamwidth?username="+username+"&password="+password,true);
 xmlhttp.onreadystatechange=ajaxReturns;
 xmlhttp.send();
 }

@@ -7,39 +7,26 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TimeZone;
 
 import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.client.XmlRpcClient;
 import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
 
+import com.postr.DataTypes.LJData;
 import com.postr.DataTypes.PasswordEncryptor;
 
 
 public class LJWriter extends BaseWriter {
 
-		protected LJWriter(){}
-		
-		private String userName;
-		private String password;
-		private TimeZone timeZone;
-		private Boolean postPrivately;
-		public LJWriter(String userName, String password, TimeZone timeZone, Boolean postPrivately) throws Exception{
-			this.userName = userName;
-			this.password = EncryptPassword(password);
-			this.timeZone = timeZone;
-			this.postPrivately = postPrivately;
-		}
-		
 		protected String serverURL = "http://www.livejournal.com/interface/xmlrpc";
 		
 		
 		@SuppressWarnings("unchecked")
-		public String Login() throws Exception
+		public String Login(String userName, String password) throws Exception
 		{
 		    XmlRpcClient client = getClient();
-		    
-		    HashMap<String, Object> loginParams = getInitialisedCallParams(client);
+		    password = EncryptPassword(password);
+		    HashMap<String, Object> loginParams = getInitialisedCallParams(client, userName, password);
 		    Object[] params = new Object[]{loginParams};
 		    Map<String, String> postResult;
 		    try{
@@ -57,18 +44,18 @@ public class LJWriter extends BaseWriter {
 		
 		
 		@SuppressWarnings("unchecked")
-		public String Write(String contents, String header, List<String> tags)  throws Exception{
+		public String Write(LJData ljData, String contents, String header, List<String> tags)  throws Exception{
 		    XmlRpcClient client = getClient();
 		    
-		    HashMap<String, Object> postParams = getInitialisedCallParams(client);
+		    HashMap<String, Object> postParams = getInitialisedCallParams(client,ljData.getUserName(),ljData.getPassword());
 		    
 		    postParams.put("event", contents);
 		    postParams.put("subject", header) ;
-		    if (postPrivately) {
+		    if (ljData.getPostPrivately()) {
 			    postParams.put("security","private");
 			}
 
-		    Calendar calendar = Calendar.getInstance(timeZone);
+		    Calendar calendar = Calendar.getInstance(ljData.getTimeZone());
 		    postParams.put("year",calendar.get(Calendar.YEAR));
 		    postParams.put("mon",calendar.get(Calendar.MONTH)+1);
 		    postParams.put("day",calendar.get(Calendar.DAY_OF_MONTH));
@@ -110,7 +97,7 @@ public class LJWriter extends BaseWriter {
 
 		@SuppressWarnings("unchecked")
 		private HashMap<String, Object> getInitialisedCallParams(
-				XmlRpcClient client) throws XmlRpcException,
+				XmlRpcClient client, String userName, String password) throws XmlRpcException,
 				NoSuchAlgorithmException {
 			Map<String, String> challengeResult =  (Map<String, String>) client.execute("LJ.XMLRPC.getchallenge", new Object[0]);
 		    
