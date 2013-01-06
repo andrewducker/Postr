@@ -1,4 +1,4 @@
-package com.postr.Writers;
+package com.postr.Translators;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -16,7 +16,7 @@ import com.postr.DataTypes.LJData;
 import com.postr.DataTypes.PasswordEncryptor;
 
 
-public class LJWriter extends BaseWriter {
+public class LJTranslator {
 
 		protected String serverURL = "http://www.livejournal.com/interface/xmlrpc";
 		
