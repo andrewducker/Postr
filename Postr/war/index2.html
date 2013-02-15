@@ -1,70 +1,8 @@
 <html>
 <head>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-<script type="text/javascript">
-function loadXMLDoc()
-{
-xmlhttp=new XMLHttpRequest();
-username=$("#username").val();
-password=$("#password").val();
-xmlhttp.open("POST","dreamwidth?username="+username+"&password="+password,true);
-xmlhttp.onreadystatechange=ajaxReturns;
-xmlhttp.send();
-}
-function ajaxReturns()
-{
-  //document.getElementById("logs").innerHTML += xmlhttp.readyState+"<BR>";
-  if (xmlhttp.readyState==4)
-  {
-    if(xmlhttp.status==200)
-    {
-    	document.getElementById("myDiv").innerHTML=xmlhttp.responseText;
-    	showBox2();
-    }
-    else
-    {
-    document.getElementById("myDiv").innerHTML="FAIL!";
-    }
-  }
-}
-</script>
-
-<style>
-        .box{
-            position:fixed;
-            top:-400px;
-            left:30%;
-            right:30%;
-            background-color:#fff;
-            color:#7F7F7F;
-            padding:20px;
-            border:2px solid #ccc;
-            -moz-border-radius: 20px;
-            -webkit-border-radius:20px;
-            -khtml-border-radius:20px;
-            -moz-box-shadow: 0 1px 5px #333;
-            -webkit-box-shadow: 0 1px 5px #333;
-            z-index:101;
-        }
-        .overlay{
-		    background:#f0f0f0;
-		    position:fixed;
-		    top:0px;
-		    bottom:0px;
-		    left:0px;
-		    right:0px;
-		    z-index:100;
-}
-        a.boxclose{
-            float:right;
-            width:10px;
-            height:10px;
-            background:#ffffff;
-            margin-top:-20px;
-            margin-right:-20px;
-            cursor:pointer;
-        }
-</style>
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.0/themes/base/jquery-ui.css">
+<script src="http://code.jquery.com/ui/1.10.0/jquery-ui.js"></script>
 </head>
 <body>
 
@@ -77,102 +15,74 @@ function ajaxReturns()
 
 </fieldset>
 
-        <div class="overlay" id="overlay" style="display:none;"></div>
-        <div class="box" id="box1">
+        <div id="dreamwidthCredentials">
             <h1>Enter your Dreamwidth user name and password.</h1>
-            <a class="boxclose" id="boxclose1">X</a>
             <form>
 				<input type="text" id="username" name="username">
 				<input type="password" id="password" name="password">
 			</form>
-            
-            <input type="submit" class="nextWizardPageButton" id="Next1" value="Next">
-            <p>
-
-            </p>
         </div>
 
-        <div class="box" id="box2">
-            <a class="boxclose" id="boxclose2">X</a>
-            <div id="myDiv"><h2>Did it work?</h2></div>
-            <input type="submit" class="nextWizardPageButton" id="Next2" value="Next">
+        <div id="dreamwidthResults">
             <h1>Other Important message</h1>
-            <p>
-
-            </p>
+            <div id="myDiv"><h2>Did it work?</h2></div>
         </div>
 
-		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
 		<script type="text/javascript">
+
+		function VerifyDreamwidthCredentials()
+		{
+			var posting = $.post("dreamwidth",{username:$("#username").val(), password:$("#password").val()});
+			posting.done(function(data){
+				$("#myDiv").text(data);
+				showWizardPage($("#dreamwidthResults"));
+			});
+		}
+
+		$( "#dreamwidthCredentials" ).dialog({ autoOpen: false },{modal:true},{buttons: [{text:"ok", click: VerifyDreamwidthCredentials}]});
+		$( "#dreamwidthResults" ).dialog({ autoOpen: false },{modal:true},{buttons: [{text:"ok", click: CloseAllPages}]});
                         var wizards = new Array();
-                        function wireBox(boxToWire)
-                        {
-                            boxToWire.find(".boxclose").click(function(){
-                                RewindWizardPage();
-                            })
-                        }
-                        
-                        function wireWizardButton(buttonToWire, boxToWire){
-                            buttonToWire.click(function(){
-                                    showWizardPage(boxToWire);
-				});
-                        }
-                        
+                        closingAllPages = false;
+
                         function showWizardPage(boxToShow){
-                            if (typeof boxToShow==='string') {
-                                boxToShow = $('#'+boxToShow);
-                            }
-                            if (wizards.length == 0) {
-                                $('#overlay').fadeIn(100,function(){
-                                    boxToShow.animate({'top':'100px'},500);
-                                });
-                            }
-                            else{
-                                boxToShow.animate({'top':'100px'},500);
-                                wizards[0].css('z-index',99);
-                            }
+                        	if(wizards.length > 0){
+                        		var currentPage = wizards[wizards.length-1];
+                        		currentPage.dialog( "widget" ).hide();
+                        	}
                             wizards.push(boxToShow);
-                        }
-                        
-                        function wireWizardNextPageButton(boxToWire, nextButtonFunction){
-                            boxToWire.find('.nextWizardPageButton').click(nextButtonFunction);
+                            boxToShow.on( "dialogclose", function( event, ui ) {RewindWizardPage();} );
+                            boxToShow.dialog("open");
                         }
                         
                         function RewindWizardPage(){
+                        	if(closingAllPages){
+                        		return;
+                        	}
                             var previousPage = wizards.pop();
                             if (wizards.length == 0) {
-                                $('#overlay').fadeOut(100,function(){
-                                    previousPage.animate({'top':0-previousPage.outerHeight(true)},500);
-                                })
                             }
                             else{
-	                                wizards[0].css('z-index',101);
-                                    previousPage.animate({'top':0-previousPage.outerHeight(true)},500);
-                            }
-                            
-                        }
-                        
-                        function wireButtonAndBox(buttonID, boxID, nextButtonFunction)
-                        {
-                            var button = $('#'+buttonID);
-                            var box = $('#'+boxID);
-                            wireWizardButton(button,box);
-                            wireBox(box);
-                            if (typeof nextButtonFunction==="undefined" ) {
-                                //do nothing
-                            }
-                            else{
-                                wireWizardNextPageButton(box,nextButtonFunction);
+                            	var currentPage = wizards[wizards.length-1];
+                        		currentPage.dialog( "widget" ).show();
                             }
                         }
                         
-                        function showBox2(){
-                            showWizardPage('box2');
+                        function CloseAllPages(){
+                        	closingAllPages = true;
+                        	while(wizards.length > 0){
+                            	var currentPage = wizards.pop();
+								currentPage.dialog("close");                        		
+                        		}
+                        	closingAllPages = false;
                         }
+                        
+                        
                         
 			$(function() {
-                                wireButtonAndBox('AddNewInput1','box1', loadXMLDoc);
-                                wireButtonAndBox('AddNewInput2','box2');
+				$( "#AddNewInput1" ).click(function() {
+					showWizardPage($("#dreamwidthCredentials"));
+					});
+
                         })
 
         </script>
