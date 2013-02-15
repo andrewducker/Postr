@@ -36,8 +36,8 @@
 			});
 		}
 
-		$( "#dreamwidthCredentials" ).dialog({ autoOpen: false },{modal:true},{buttons: [{text:"ok", click: verifyDreamwidthCredentials}]});
-		$( "#dreamwidthResults" ).dialog({ autoOpen: false },{modal:true},{buttons: [{text:"ok", click: closeAllPages}]});
+		registerWizard("#dreamwidthCredentials",{buttons: [{text:"ok", click: verifyDreamwidthCredentials}]});
+		registerWizard("#dreamwidthResults",{buttons: [{text:"Done", click: closeAllPages}]});
                         
                         
 			$(function() {

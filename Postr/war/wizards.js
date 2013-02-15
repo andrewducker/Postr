@@ -1,5 +1,5 @@
 var wizards = new Array();
-closingAllPages = false;
+wizards.closingAllPages = false;
 
 function showWizardPage(boxToShow){
 	if(wizards.length > 0){
@@ -7,12 +7,16 @@ function showWizardPage(boxToShow){
 		currentPage.dialog( "widget" ).hide();
 	}
     wizards.push(boxToShow);
-    boxToShow.on( "dialogclose", function( event, ui ) {rewindWizardPage();} );
     boxToShow.dialog("open");
 }
 
+function registerWizard(wizardToRegister, buttons){
+	$( wizardToRegister ).dialog({ autoOpen: false },{modal:true}, buttons);
+	$(wizardToRegister).on( "dialogclose", function( event, ui ) {rewindWizardPage();} );
+}
+
 function rewindWizardPage(){
-	if(closingAllPages){
+	if(wizards.closingAllPages){
 		return;
 	}
     var previousPage = wizards.pop();
@@ -25,11 +29,11 @@ function rewindWizardPage(){
 }
 
 function closeAllPages(){
-	closingAllPages = true;
+	wizards.closingAllPages = true;
 	while(wizards.length > 0){
     	var currentPage = wizards.pop();
 		currentPage.dialog("close");                        		
 		}
-	closingAllPages = false;
+	wizards.closingAllPages = false;
 }
                         
