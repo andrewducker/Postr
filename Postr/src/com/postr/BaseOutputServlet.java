@@ -13,14 +13,26 @@ public abstract class BaseOutputServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		try {
-		resp.setContentType("text/plain");
+			resp.setContentType("text/plain");
 
-		resp.getWriter().println(VerifyPassword(req));
+			String method = req.getParameter("method");
+
+			MethodTypes methodType = MethodTypes.valueOf(method);
+
+			switch (methodType) {
+			case VerifyPassword:
+				resp.getWriter().print(VerifyPassword(req));	
+				break;
+			default:
+				throw new Exception("No such method found: "+method);
+			}
+
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-	
+
 	}
 
 	protected abstract String VerifyPassword(HttpServletRequest req) throws Exception;

@@ -30,7 +30,7 @@
 
 		function verifyDreamwidthCredentials()
 		{
-			var posting = $.post("dreamwidth",{username:$("#username").val(), password:$("#password").val()},function(data){
+			var posting = $.post("dreamwidth",{method:"VerifyPassword", username:$("#username").val(), password:$("#password").val()},function(data){
 				$("#dreamwidthResultsText").text(data);
 				showWizardPage($("#dreamwidthResults"));
 			});
