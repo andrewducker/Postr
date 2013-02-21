@@ -35,7 +35,11 @@
 			var sendParams = {params:stringParams};
 			var posting = $.post("dreamwidth",sendParams)
 			.done(function(data){
-				$("#dreamwidthResultsText").text(data);
+				var parsedData = $.parseJSON(data);
+				$("#dreamwidthResultsText").text(parsedData.result);
+				showWizardPage($("#dreamwidthResults"));
+			}).fail(function(data){
+				$("#dreamwidthResultsText").text("Call Failed: " + data.responseText);
 				showWizardPage($("#dreamwidthResults"));
 			});
 		}

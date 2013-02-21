@@ -14,18 +14,30 @@ import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
 
 import com.postr.DataTypes.LJData;
 import com.postr.DataTypes.PasswordEncryptor;
+import com.postr.DataTypes.StringResult;
 
 
 public class LJTranslator {
 
 		protected String serverURL = "http://www.livejournal.com/interface/xmlrpc";
 		
+		protected StringResult SuccessResult(String message){
+			StringResult result = new StringResult();
+			result.setResult(message);
+			return result;
+		}
+		
+		protected StringResult ErrorResult(String message){
+			StringResult result = new StringResult();
+			result.setErrorMessage(message);
+			return result;
+		}
 		
 		@SuppressWarnings("unchecked")
-		public String Login(String userName, String password) throws Exception
+		public StringResult Login(String userName, String password) throws Exception
 		{
 			if (true) {
-				return "Logged in as Test User";	
+				return  ErrorResult("Logged in as Test User");	
 			}
 		    
 		    XmlRpcClient client = getClient();
@@ -36,13 +48,13 @@ public class LJTranslator {
 		    try{
 		    	postResult =  (Map<String, String>) client.execute("LJ.XMLRPC.login", params);
 		    } catch (XmlRpcException e){
-		    	return e.getMessage();
+		    	return ErrorResult(e.getMessage());
 		    }
 		    
 		    if (postResult.get("success")=="FAIL"){
-		    	return postResult.get("errmsg");
+		    	return ErrorResult(postResult.get("errmsg"));
 		    }
-		    return "Logged in as " + postResult.get("fullname");
+		    return SuccessResult("Logged in as " + postResult.get("fullname"));
 		}
 
 		

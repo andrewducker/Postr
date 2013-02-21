@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
 import com.google.gson.internal.StringMap;
+import com.postr.DataTypes.StringResult;
 
 @SuppressWarnings("serial")
 public abstract class BaseOutputServlet extends HttpServlet {
@@ -34,7 +35,7 @@ public abstract class BaseOutputServlet extends HttpServlet {
 
 			switch (methodType) {
 			case VerifyPassword:
-				resp.getWriter().print(VerifyPassword());	
+				processResult(resp, VerifyPassword());
 				break;
 			default:
 				throw new Exception("No such method found: "+method);
@@ -42,11 +43,25 @@ public abstract class BaseOutputServlet extends HttpServlet {
 
 
 		} catch (Exception e) {
+			resp.setStatus(500);
+			resp.getWriter().print(e.getMessage());
 			e.printStackTrace();
 		}
 
 
 	}
 
-	protected abstract Object VerifyPassword() throws Exception;
+	private void processResult(HttpServletResponse resp, StringResult result)
+			throws IOException, Exception {
+		if (result.getResult() != null) {
+			resp.getWriter().print(new Gson().toJson(result));	
+		}
+		else
+		{
+			resp.setStatus(500);
+			resp.getWriter().print(result.getErrorMessage());	
+		}
+	}
+
+	protected abstract StringResult VerifyPassword() throws Exception;
 }
