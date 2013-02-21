@@ -36,4 +36,17 @@ function closeAllPages(){
 		}
 	wizards.closingAllPages = false;
 }
+
+function registerCallForWizardDisplay(posting, textToUpdate, wizardPageToShow){
+	posting.done(function(data){
+		var parsedData = $.parseJSON(data);
+		$("#"+textToUpdate).text(parsedData.result);
+		showWizardPage($("#"+wizardPageToShow));
+	});
+	posting.fail(function(data){
+		$("#"+textToUpdate).text("Call Failed: " + data.responseText);
+		showWizardPage($("#"+wizardPageToShow));
+	});
+
+}
                         

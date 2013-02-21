@@ -22,7 +22,7 @@
         </div>
 
         <div id="dreamwidthResults">
-            <h1>Other Important message</h1>
+            <h1>Check Complete</h1>
             <div id="dreamwidthResultsText"><h2>Did it work?</h2></div>
         </div>
 
@@ -31,17 +31,8 @@
 		function verifyDreamwidthCredentials()
 		{
 			var params = {method:"VerifyPassword", username:$("#username").val(), password:$("#password").val()};
-			var stringParams = JSON.stringify(params);
-			var sendParams = {params:stringParams};
-			var posting = $.post("dreamwidth",sendParams)
-			.done(function(data){
-				var parsedData = $.parseJSON(data);
-				$("#dreamwidthResultsText").text(parsedData.result);
-				showWizardPage($("#dreamwidthResults"));
-			}).fail(function(data){
-				$("#dreamwidthResultsText").text("Call Failed: " + data.responseText);
-				showWizardPage($("#dreamwidthResults"));
-			});
+			var posting = $.post("dreamwidth",{params:JSON.stringify(params)});
+			registerCallForWizardDisplay(posting, "dreamwidthResultsText", "dreamwidthResults");
 		}
 
 		registerWizard("#dreamwidthCredentials",{buttons: [{text:"ok", click: verifyDreamwidthCredentials}]});
@@ -54,6 +45,7 @@
 					});
 
                         })
+                        
 
         </script>
 </body>
