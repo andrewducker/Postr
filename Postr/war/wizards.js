@@ -1,5 +1,7 @@
 var wizards = new Array();
 wizards.closingAllPages = false;
+wizards.errorWizardPage = "errorReport";
+wizards.errorDiv = "errorText";
 
 function showWizardPage(boxToShow){
 	if(wizards.length > 0){
@@ -44,8 +46,8 @@ function registerCallForWizardDisplay(posting, textToUpdate, wizardPageToShow){
 		showWizardPage($("#"+wizardPageToShow));
 	});
 	posting.fail(function(data){
-		$("#"+textToUpdate).text("Call Failed: " + data.responseText);
-		showWizardPage($("#"+wizardPageToShow));
+		$("#"+wizards.errorDiv).text("Call Failed: " + data.responseText);
+		showWizardPage($("#"+wizards.errorWizardPage));
 	});
 
 }

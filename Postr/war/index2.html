@@ -25,6 +25,10 @@
             <h1>Check Complete</h1>
             <div id="dreamwidthResultsText"><h2>Did it work?</h2></div>
         </div>
+        <div id="errorReport">
+        <h1>Error!</h1>
+        <div id="errorText"><h2>An unknown error occurred</h2></div>
+        </div>
 
 		<script type="text/javascript">
 
@@ -37,6 +41,7 @@
 
 		registerWizard("#dreamwidthCredentials",{buttons: [{text:"ok", click: verifyDreamwidthCredentials}]});
 		registerWizard("#dreamwidthResults",{buttons: [{text:"Done", click: closeAllPages}]});
+		registerWizard("#errorReport",{buttons: [{text:"Cancel", click: closeAllPages},{text:"Back",click:function(){$("#errorReport").dialog("close")}}]});
                         
                         
 			$(function() {
