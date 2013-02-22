@@ -2,6 +2,7 @@ var wizards = new Array();
 wizards.closingAllPages = false;
 wizards.errorWizardPage = "errorReport";
 wizards.errorDiv = "errorText";
+
 wizards.showPage = function(boxToShow){
 	if(wizards.length > 0){
 		var currentPage = wizards[wizards.length-1];
@@ -10,10 +11,12 @@ wizards.showPage = function(boxToShow){
     wizards.push(boxToShow);
     boxToShow.dialog("open");
 }
+
 wizards.register = function(wizardToRegister, buttons){
 	$( wizardToRegister ).dialog({ autoOpen: false },{modal:true}, buttons);
 	$(wizardToRegister).on( "dialogclose", function( event, ui ) {wizards.rewindPage();} );
 }
+
 wizards.rewindPage = function(){
 	if(wizards.closingAllPages){
 		return;
@@ -46,6 +49,9 @@ wizards.registerCallForWizardDisplay = function(posting, textToUpdate, wizardPag
 		$("#"+wizards.errorDiv).text("Call Failed: " + data.responseText);
 		wizards.showPage($("#"+wizards.errorWizardPage));
 	});
-
 }
                         
+$(function(){
+	$('body').append('<div id="errorReport"><h1>Error!</h1><div id="errorText"><h2>An unknown error occurred</h2></div></div>');
+	wizards.register("#errorReport",{buttons: [{text:"Cancel", click: wizards.closeAllPages},{text:"Back",click:function(){$("#errorReport").dialog("close")}}]});
+	});
