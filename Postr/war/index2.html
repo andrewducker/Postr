@@ -15,10 +15,13 @@
 </fieldset>
 
         <div id="dreamwidthCredentials">
-            <h1>Enter your Dreamwidth user name and password.</h1>
+            <h1>Enter your Dreamwidth details.</h1>
             <form>
 				<input type="text" id="username" name="username">
 				<input type="password" id="password" name="password">
+				<button type="button" id="dreamwidthCredentialsVerify">Verify</button>
+				<div id="dreamwidthIdentity"></div>
+				<input type=text id="timeZone">
 			</form>
         </div>
 
@@ -31,9 +34,12 @@
 
 		function verifyDreamwidthCredentials()
 		{
-			var params = {method:"VerifyPassword", username:$("#username").val(), password:$("#password").val()};
-			var posting = $.post("dreamwidth",{params:JSON.stringify(params)});
-			wizards.registerCallForWizardDisplay(posting, "dreamwidthResultsText", "dreamwidthResults");
+			if($("#dreamwidthIdentity").text() != ""){
+				wizards.showPage($("#dreamwidthResults"));
+			}
+			else{
+				wizards.showError("Identity not validated");
+			}
 		}
 
 		wizards.register("#dreamwidthCredentials",{buttons: [{text:"ok", click: verifyDreamwidthCredentials}]});
@@ -42,6 +48,15 @@
 			$(function() {
 				$( "#AddNewInput1" ).click(function() {wizards.showPage($("#dreamwidthCredentials"));
 					});
+				$("#dreamwidthCredentialsVerify").click(function(){
+					var params = {method:"VerifyPassword", username:$("#username").val(), password:$("#password").val()};
+					var posting = $.post("dreamwidth",{params:JSON.stringify(params)});
+					posting.done(function(data){
+						var parsedData = $.parseJSON(data);
+						$("#dreamwidthIdentity").text(parsedData.result);
+					});
+					wizards.registerCallForWizardOnError(posting);
+				});
                         })
         </script>
         

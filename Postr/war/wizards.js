@@ -45,10 +45,18 @@ wizards.registerCallForWizardDisplay = function(posting, textToUpdate, wizardPag
 		$("#"+textToUpdate).text(parsedData.result);
 		wizards.showPage($("#"+wizardPageToShow));
 	});
+	wizards.registerCallForWizardOnError(posting);
+}
+
+wizards.registerCallForWizardOnError = function(posting){
 	posting.fail(function(data){
-		$("#"+wizards.errorDiv).text("Call Failed: " + data.responseText);
-		wizards.showPage($("#"+wizards.errorWizardPage));
+		wizards.showError("Call Failed: " + data.responseText);
 	});
+}
+
+wizards.showError = function(errorMessage){
+	$("#"+wizards.errorDiv).text(errorMessage);
+	wizards.showPage($("#"+wizards.errorWizardPage));
 }
                         
 $(function(){
