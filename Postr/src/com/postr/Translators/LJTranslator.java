@@ -37,7 +37,7 @@ public class LJTranslator {
 		public StringResult Login(String userName, String password) throws Exception
 		{
 			if (true) {
-				return  ErrorResult("Logged in as Test User");	
+				return  SuccessResult("Logged in as Test User");	
 			}
 		    
 		    XmlRpcClient client = getClient();

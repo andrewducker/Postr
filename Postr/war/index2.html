@@ -36,17 +36,16 @@
 		{
 			var params = {method:"VerifyPassword", username:$("#username").val(), password:$("#password").val()};
 			var posting = $.post("dreamwidth",{params:JSON.stringify(params)});
-			registerCallForWizardDisplay(posting, "dreamwidthResultsText", "dreamwidthResults");
+			wizards.registerCallForWizardDisplay(posting, "dreamwidthResultsText", "dreamwidthResults");
 		}
 
-		registerWizard("#dreamwidthCredentials",{buttons: [{text:"ok", click: verifyDreamwidthCredentials}]});
-		registerWizard("#dreamwidthResults",{buttons: [{text:"Done", click: closeAllPages}]});
-		registerWizard("#errorReport",{buttons: [{text:"Cancel", click: closeAllPages},{text:"Back",click:function(){$("#errorReport").dialog("close")}}]});
+		wizards.register("#dreamwidthCredentials",{buttons: [{text:"ok", click: verifyDreamwidthCredentials}]});
+		wizards.register("#dreamwidthResults",{buttons: [{text:"Done", click: wizards.closeAllPages}]});
+		wizards.register("#errorReport",{buttons: [{text:"Cancel", click: wizards.closeAllPages},{text:"Back",click:function(){$("#errorReport").dialog("close")}}]});
                         
                         
 			$(function() {
-				$( "#AddNewInput1" ).click(function() {
-					showWizardPage($("#dreamwidthCredentials"));
+				$( "#AddNewInput1" ).click(function() {wizards.showPage($("#dreamwidthCredentials"));
 					});
 
                         })

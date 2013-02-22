@@ -2,8 +2,7 @@ var wizards = new Array();
 wizards.closingAllPages = false;
 wizards.errorWizardPage = "errorReport";
 wizards.errorDiv = "errorText";
-
-function showWizardPage(boxToShow){
+wizards.showPage = function(boxToShow){
 	if(wizards.length > 0){
 		var currentPage = wizards[wizards.length-1];
 		currentPage.dialog( "widget" ).hide();
@@ -11,13 +10,11 @@ function showWizardPage(boxToShow){
     wizards.push(boxToShow);
     boxToShow.dialog("open");
 }
-
-function registerWizard(wizardToRegister, buttons){
+wizards.register = function(wizardToRegister, buttons){
 	$( wizardToRegister ).dialog({ autoOpen: false },{modal:true}, buttons);
-	$(wizardToRegister).on( "dialogclose", function( event, ui ) {rewindWizardPage();} );
+	$(wizardToRegister).on( "dialogclose", function( event, ui ) {wizards.rewindPage();} );
 }
-
-function rewindWizardPage(){
+wizards.rewindPage = function(){
 	if(wizards.closingAllPages){
 		return;
 	}
@@ -30,7 +27,7 @@ function rewindWizardPage(){
     }
 }
 
-function closeAllPages(){
+wizards.closeAllPages = function(){
 	wizards.closingAllPages = true;
 	while(wizards.length > 0){
     	var currentPage = wizards.pop();
@@ -39,15 +36,15 @@ function closeAllPages(){
 	wizards.closingAllPages = false;
 }
 
-function registerCallForWizardDisplay(posting, textToUpdate, wizardPageToShow){
+wizards.registerCallForWizardDisplay = function(posting, textToUpdate, wizardPageToShow){
 	posting.done(function(data){
 		var parsedData = $.parseJSON(data);
 		$("#"+textToUpdate).text(parsedData.result);
-		showWizardPage($("#"+wizardPageToShow));
+		wizards.showPage($("#"+wizardPageToShow));
 	});
 	posting.fail(function(data){
 		$("#"+wizards.errorDiv).text("Call Failed: " + data.responseText);
-		showWizardPage($("#"+wizards.errorWizardPage));
+		wizards.showPage($("#"+wizards.errorWizardPage));
 	});
 
 }
