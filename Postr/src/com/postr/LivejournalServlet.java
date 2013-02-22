@@ -13,4 +13,10 @@ public class LivejournalServlet extends BaseOutputServlet {
 		LJTranslator writer = new LJTranslator();
 		return writer.Login(userName, password);
 	}
+
+	@Override
+	protected StringResult SaveData() throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

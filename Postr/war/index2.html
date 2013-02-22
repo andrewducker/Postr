@@ -21,7 +21,7 @@
 				<input type="password" id="password" name="password">
 				<button type="button" id="dreamwidthCredentialsVerify">Verify</button>
 				<div id="dreamwidthIdentity"></div>
-				<input type=text id="timeZone">
+ 				<input type=text id="timeZoneee">
 			</form>
         </div>
 
@@ -35,7 +35,9 @@
 		function verifyDreamwidthCredentials()
 		{
 			if($("#dreamwidthIdentity").text() != ""){
-				wizards.showPage($("#dreamwidthResults"));
+				var params = {method:"SaveData", username:$("#username").val(), password:$("#password").val(), timeZone:$("timeZone").val()};
+				var posting = $.post("dreamwidth",{params:JSON.stringify(params)});
+				wizards.registerCallForWizardDisplay(posting,"dreamwidthResultsText","dreamwidthResults");
 			}
 			else{
 				wizards.showError("Identity not validated");

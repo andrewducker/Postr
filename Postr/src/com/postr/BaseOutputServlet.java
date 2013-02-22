@@ -32,14 +32,19 @@ public abstract class BaseOutputServlet extends HttpServlet {
 			String method = getStringParameter("method");
 
 			MethodTypes methodType = MethodTypes.valueOf(method);
-
+			StringResult result = null;
 			switch (methodType) {
 			case VerifyPassword:
-				processResult(resp, VerifyPassword());
+				result = VerifyPassword();
+				break;
+			case SaveData:
+				result = SaveData();
 				break;
 			default:
 				throw new Exception("No such method found: "+method);
 			}
+			
+			processResult(resp, result);
 
 
 		} catch (Exception e) {
@@ -47,8 +52,6 @@ public abstract class BaseOutputServlet extends HttpServlet {
 			resp.getWriter().print(e.getMessage());
 			e.printStackTrace();
 		}
-
-
 	}
 
 	private void processResult(HttpServletResponse resp, StringResult result)
@@ -64,4 +67,6 @@ public abstract class BaseOutputServlet extends HttpServlet {
 	}
 
 	protected abstract StringResult VerifyPassword() throws Exception;
+	
+	protected abstract StringResult SaveData() throws Exception;
 }

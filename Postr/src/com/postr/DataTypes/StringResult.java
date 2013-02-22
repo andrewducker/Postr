@@ -1,6 +1,8 @@
 package com.postr.DataTypes;
 
 public class StringResult {
+		private StringResult(){};
+		
 		private String result;
 		private String errorMessage;
 		public String getResult() {
@@ -15,4 +17,17 @@ public class StringResult {
 		public void setErrorMessage(String errorMessage) {
 			this.errorMessage = errorMessage;
 		}
+		public static StringResult SuccessResult(String message){
+			StringResult result = new StringResult();
+			result.setResult(message);
+			return result;
+		}
+		
+		public static StringResult ErrorResult(String message){
+			StringResult result = new StringResult();
+			result.setErrorMessage(message);
+			return result;
+		}
+		
+
 }

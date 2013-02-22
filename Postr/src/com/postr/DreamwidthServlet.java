@@ -14,4 +14,11 @@ public class DreamwidthServlet extends BaseOutputServlet {
 		return writer.Login(userName, password);
 	}
 
+	@Override
+	protected StringResult SaveData() throws Exception {
+		String userName = getStringParameter("username");
+		String password = getStringParameter("password");
+		return StringResult.SuccessResult("Saved!");
+	}
+
 }

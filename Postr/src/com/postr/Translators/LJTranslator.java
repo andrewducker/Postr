@@ -21,23 +21,11 @@ public class LJTranslator {
 
 		protected String serverURL = "http://www.livejournal.com/interface/xmlrpc";
 		
-		protected StringResult SuccessResult(String message){
-			StringResult result = new StringResult();
-			result.setResult(message);
-			return result;
-		}
-		
-		protected StringResult ErrorResult(String message){
-			StringResult result = new StringResult();
-			result.setErrorMessage(message);
-			return result;
-		}
-		
 		@SuppressWarnings("unchecked")
 		public StringResult Login(String userName, String password) throws Exception
 		{
 			if (true) {
-				return  SuccessResult("Logged in as Test User");	
+				return  StringResult.SuccessResult("Logged in as Test User");	
 			}
 		    
 		    XmlRpcClient client = getClient();
@@ -48,13 +36,13 @@ public class LJTranslator {
 		    try{
 		    	postResult =  (Map<String, String>) client.execute("LJ.XMLRPC.login", params);
 		    } catch (XmlRpcException e){
-		    	return ErrorResult(e.getMessage());
+		    	return StringResult.ErrorResult(e.getMessage());
 		    }
 		    
 		    if (postResult.get("success")=="FAIL"){
-		    	return ErrorResult(postResult.get("errmsg"));
+		    	return StringResult.ErrorResult(postResult.get("errmsg"));
 		    }
-		    return SuccessResult("Logged in as " + postResult.get("fullname"));
+		    return StringResult.SuccessResult("Logged in as " + postResult.get("fullname"));
 		}
 
 		
@@ -67,9 +55,9 @@ public class LJTranslator {
 		    
 		    postParams.put("event", contents);
 		    postParams.put("subject", header) ;
-		    if (ljData.getPostPrivately()) {
+//		    if (ljData.getPostPrivately()) {
 			    postParams.put("security","private");
-			}
+//			}
 
 		    Calendar calendar = Calendar.getInstance(ljData.getTimeZone());
 		    postParams.put("year",calendar.get(Calendar.YEAR));
