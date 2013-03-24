@@ -1,72 +1,30 @@
 
 package com.postr;
-import java.io.IOException;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import com.google.gson.Gson;
-import com.google.gson.internal.StringMap;
+import com.postr.DataTypes.Parameters;
 import com.postr.DataTypes.StringResult;
 
 @SuppressWarnings("serial")
-public abstract class BaseOutputServlet extends HttpServlet {
+public abstract class BaseOutputServlet extends BaseJSONServlet {
 
-	StringMap<Object> parameters;
-	
-	protected String getStringParameter(String key){
-		return (String)parameters.get(key);
-	}
-	
-	@SuppressWarnings("unchecked")
+
 	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
-		try {
-			resp.setContentType("text/plain");
-			
-			String params = req.getParameter("params");
-			parameters = (StringMap<Object>)new Gson().fromJson(params, Object.class);
+	protected StringResult ProcessRequest(Parameters parameters) throws Exception
+	{
+		String method = parameters.getStringParameter("method");
 
-			String method = getStringParameter("method");
-
-			MethodTypes methodType = MethodTypes.valueOf(method);
-			StringResult result = null;
-			switch (methodType) {
-			case VerifyPassword:
-				result = VerifyPassword();
-				break;
-			case SaveData:
-				result = SaveData();
-				break;
-			default:
-				throw new Exception("No such method found: "+method);
-			}
-			
-			processResult(resp, result);
-
-
-		} catch (Exception e) {
-			resp.setStatus(500);
-			resp.getWriter().print(e.getMessage());
-			e.printStackTrace();
+		MethodTypes methodType = MethodTypes.valueOf(method);
+		switch (methodType) {
+		case VerifyPassword:
+			return VerifyPassword(parameters);
+		case SaveData:
+			return SaveData(parameters);
+		default:
+			throw new Exception("No such method found: "+method);
 		}
+
 	}
 
-	private void processResult(HttpServletResponse resp, StringResult result)
-			throws IOException, Exception {
-		if (result.getResult() != null) {
-			resp.getWriter().print(new Gson().toJson(result));	
-		}
-		else
-		{
-			resp.setStatus(500);
-			resp.getWriter().print(result.getErrorMessage());	
-		}
-	}
-
-	protected abstract StringResult VerifyPassword() throws Exception;
+	protected abstract StringResult VerifyPassword(Parameters parameters) throws Exception;
 	
-	protected abstract StringResult SaveData() throws Exception;
+	protected abstract StringResult SaveData(Parameters parameters) throws Exception;
 }

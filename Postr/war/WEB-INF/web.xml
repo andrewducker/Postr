@@ -15,6 +15,14 @@
 	<servlet-name>Livejournal</servlet-name>
 	<url-pattern>/livejournal</url-pattern>
 </servlet-mapping>
+<servlet>
+	<servlet-name>PersonaVerification</servlet-name>
+	<servlet-class>com.postr.PersonaVerificationServlet</servlet-class>
+</servlet>
+<servlet-mapping>
+	<servlet-name>PersonaVerification</servlet-name>
+	<url-pattern>/personaverification</url-pattern>
+</servlet-mapping>
 <welcome-file-list>
 	<welcome-file>index.html</welcome-file>
 </welcome-file-list>
