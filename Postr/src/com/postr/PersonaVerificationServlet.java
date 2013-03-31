@@ -51,11 +51,17 @@ public class PersonaVerificationServlet extends HttpServlet {
     		}
     		
         	StringMap<Object> response = (StringMap<Object>)new Gson().fromJson(sb.toString(), Object.class);
+        	if (response.containsKey("status") && response.get("status").equals("okay")) {
+				req.getSession().setAttribute("EmailAddress", response.get("email"));
+			}
+        	else{
+        		req.getSession().setAttribute("EmailAddress", null);
+        	}
         	result = "Success!";
         } else {
-            result = "Error!";
+        	req.getSession().setAttribute("EmailAddress", null);
+        	result = "Fail";
         }
-
 
 		resp.getWriter().print(result);	
 	}
