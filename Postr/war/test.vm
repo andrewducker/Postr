@@ -1,0 +1,16 @@
+<html>
+  <head>
+  </head>
+  <body>
+  Lets count : #foreach($i in [1..5])$i #end<BR> 
+  #if($session.getAttribute("test"))
+  $session.getAttribute("test")
+  #else
+  Nothing set
+  #end
+  $session.setAttribute("test","testing")
+  
+  <BR>
+  $foo
+  </body>
+ </html>
