@@ -4,16 +4,17 @@ wizards.errorWizardPage = "errorReport";
 wizards.errorDiv = "errorText";
 
 wizards.showPage = function(boxToShow){
+	var foundBox = $("#"+boxToShow);
 	if(wizards.length > 0){
 		var currentPage = wizards[wizards.length-1];
 		currentPage.dialog( "widget" ).hide();
 	}
-    wizards.push(boxToShow);
-    boxToShow.dialog("open");
+    wizards.push(foundBox);
+    foundBox.dialog("open");
 }
 
 wizards.register = function(wizardToRegister, buttons){
-	$( wizardToRegister ).dialog({ autoOpen: false },{modal:true}, buttons);
+	$( wizardToRegister ).dialog({ autoOpen: false },{modal:true}, buttons, {minWidth: 100 }, {width:'auto'}, {height:'auto'} );
 	$(wizardToRegister).on( "dialogclose", function( event, ui ) {wizards.rewindPage();} );
 }
 
@@ -43,7 +44,7 @@ wizards.registerCallForWizardDisplay = function(posting, textToUpdate, wizardPag
 	posting.done(function(data){
 		var parsedData = $.parseJSON(data);
 		$("#"+textToUpdate).text(parsedData.result);
-		wizards.showPage($("#"+wizardPageToShow));
+		wizards.showPage(wizardPageToShow);
 	});
 	wizards.registerCallForWizardOnError(posting);
 }
@@ -56,7 +57,11 @@ wizards.registerCallForWizardOnError = function(posting){
 
 wizards.showError = function(errorMessage){
 	$("#"+wizards.errorDiv).text(errorMessage);
-	wizards.showPage($("#"+wizards.errorWizardPage));
+	wizards.showPage(wizards.errorWizardPage);
+}
+
+wizards.setProperty = function(wizardPage, property, value){
+	$( wizardPage ).dialog( "option", property, value);
 }
                         
 $(function(){
