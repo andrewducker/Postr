@@ -1,0 +1,45 @@
+ <div id="dwCredentials" title="Dreamwidth details">
+	<form>
+		<label for=dwUsername>User Name:</label> <input type="text" id="dwUsername" name="username"><BR>
+		<label for=dwPassword>Password:</label> <input type="password" id="dwPassword" name="password"><BR>
+		<button type="button" id="dwCredentialsVerify">Verify</button><BR>
+		<div id="dwIdentity"></div><BR>
+		<label for=dwTimeZone>Time Zone:</label><input type=text id="dwTimeZone">
+	</form>
+ </div>
+
+<div id="dwResults">
+	 <h1>Check Complete</h1>
+	 <div id="dwResultsText"><h2>Did it work?</h2></div>
+</div>
+
+<script type="text/javascript">
+function saveDreamwidthCredentials()
+{
+	if($("#dwIdentity").text() != ""){
+		var params = {method:"SaveData", username:j("#dwUsername").val(), password:j("#dwPassword").val(), timeZone:j("dwTimeZone").val()};
+		var posting = j.post("dreamwidth",{params:JSON.stringify(params)});
+		wizards.registerCallForWizardDisplay(posting,"dwResultsText","dwResults");
+	}
+	else{
+		wizards.showError("Identity not validated");
+	}
+}
+
+wizards.register("#dwCredentials",{buttons: [{text:"ok", click: saveDreamwidthCredentials}]});
+wizards.register("#dwResults",{buttons: [{text:"Done", click: wizards.closeAllPages}]});
+
+j(function() {
+	j("#dwCredentialsVerify").click(function(){
+		var params = {method:"VerifyPassword", username:j("#dwUsername").val(), password:j("#dwPassword").val()};
+		var posting = j.post("dreamwidth",{params:JSON.stringify(params)});
+		posting.done(function(data){
+			var parsedData = j.parseJSON(data);
+			j("#dwIdentity").text(parsedData.result);
+			wizards.setProperty("dwCredentials","height","auto");
+		});
+		wizards.registerCallForWizardOnError(posting);
+	});
+	j("#output").append(new Option("Dreamwidth","Dreamwidth"));
+});
+</script>

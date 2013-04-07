@@ -1,0 +1,45 @@
+ <div id="ljCredentials" title="Livejournal details">
+	<form>
+		<label for=ljUsername>User Name:</label> <input type="text" id="ljUsername" name="username"><BR>
+		<label for=ljPassword>Password:</label> <input type="password" id="ljPassword" name="password"><BR>
+		<button type="button" id="ljCredentialsVerify">Verify</button><BR>
+		<div id="ljIdentity"></div><BR>
+		<label for=ljTimeZone>Time Zone:</label><input type=text id="ljTimeZone">
+	</form>
+ </div>
+
+<div id="ljResults">
+	 <h1>Check Complete</h1>
+	 <div id="ljResultsText"><h2>Did it work?</h2></div>
+</div>
+
+<script type="text/javascript">
+function saveLivejournalCredentials()
+{
+	if($("#ljIdentity").text() != ""){
+		var params = {method:"SaveData", username:j("#ljUsername").val(), password:j("#ljPassword").val(), timeZone:j("ljTimeZone").val()};
+		var posting = j.post("livejournal",{params:JSON.stringify(params)});
+		wizards.registerCallForWizardDisplay(posting,"ljResultsText","ljResults");
+	}
+	else{
+		wizards.showError("Identity not validated");
+	}
+}
+
+wizards.register("#ljCredentials",{buttons: [{text:"ok", click: saveLivejournalCredentials}]});
+wizards.register("#ljResults",{buttons: [{text:"Done", click: wizards.closeAllPages}]});
+
+j(function() {
+	j("#ljCredentialsVerify").click(function(){
+		var params = {method:"VerifyPassword", username:j("#ljUsername").val(), password:j("#ljPassword").val()};
+		var posting = j.post("livejournal",{params:JSON.stringify(params)});
+		posting.done(function(data){
+			var parsedData = j.parseJSON(data);
+			j("#ljIdentity").text(parsedData.result);
+			wizards.setProperty("ljCredentials","height","auto");
+		});
+		wizards.registerCallForWizardOnError(posting);
+	});
+	j("#output").append(new Option("Livejournal","Livejournal"));
+});
+</script>

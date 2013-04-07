@@ -20,56 +20,13 @@ j = $;
 <input type="submit" id="AddNewInput1" value="Click here">
 </fieldset>
 
-        <div id="dreamwidthCredentials" title="Dreamwidth details">
-            <form>
-				<label for=username>User Name:</label> <input type="text" id="username" name="username"><BR>
-				<label for=password>Password:</label> <input type="password" id="password" name="password"><BR>
-				<button type="button" id="dreamwidthCredentialsVerify">Verify</button><BR>
-				<div id="dreamwidthIdentity"></div><BR>
- 				<label for=timeZone>Time Zone:</label><input type=text id="timeZone">
-			</form>
-        </div>
-
-        <div id="dreamwidthResults">
-            <h1>Check Complete</h1>
-            <div id="dreamwidthResultsText"><h2>Did it work?</h2></div>
-        </div>
-
-		<script type="text/javascript">
-		function saveDreamwidthCredentials()
-		{
-			if($("#dreamwidthIdentity").text() != ""){
-				var params = {method:"SaveData", username:j("#username").val(), password:j("#password").val(), timeZone:j("timeZone").val()};
-				var posting = j.post("dreamwidth",{params:JSON.stringify(params)});
-				wizards.registerCallForWizardDisplay(posting,"dreamwidthResultsText","dreamwidthResults");
-			}
-			else{
-				wizards.showError("Identity not validated");
-			}
-		}
-
-		wizards.register("#dreamwidthCredentials",{buttons: [{text:"ok", click: saveDreamwidthCredentials}]});
-		wizards.register("#dreamwidthResults",{buttons: [{text:"Done", click: wizards.closeAllPages}]});
-		
-			j(function() {
-				j("#dreamwidthCredentialsVerify").click(function(){
-					var params = {method:"VerifyPassword", username:j("#username").val(), password:j("#password").val()};
-					var posting = j.post("dreamwidth",{params:JSON.stringify(params)});
-					posting.done(function(data){
-						var parsedData = j.parseJSON(data);
-						j("#dreamwidthIdentity").text(parsedData.result);
-						wizards.setProperty("dreamwidthCredentials","height","auto");
-					});
-					wizards.registerCallForWizardOnError(posting);
-				});
-				var outputs = j("#output"); 
-				outputs.append(new Option("Dreamwidth","Dreamwidth"));
-                        });
-			
+		#parse("Dreamwidth.include.html")
+		#parse("Livejournal.include.html")
+						
+			<script type="text/javascript">
 			j(function(){
-				j( "#AddNewInput1" ).click(function() {wizards.showPage("dreamwidthCredentials");});
+				j( "#AddNewInput1" ).click(function() {wizards.showPage("ljCredentials");});
 			});
-
         </script>
         
 </body>
