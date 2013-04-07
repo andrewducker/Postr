@@ -38,9 +38,10 @@
 		}
 	);
 	</script>
-	#if($session.getAttribute("EmailAddress"))$session.getAttribute("EmailAddress")#{else}Not Logged In#{end}<BR>
-	<a href="#" class="persona-button orange" onclick = "navigator.id.request()"><span>Sign in</span> </a>
-	<button type="button" id=signin onclick = "navigator.id.request()" }>Sign In!</button>
-	<button type="button" id=signout onclick= "navigator.id.logout()">Sign Out!</button>
+	#if($session.getAttribute("EmailAddress"))
+	#parse("loggedin.html")
+	#else
+	#include("loggedout.html")
+	#end
 	</body>
 </html> 
