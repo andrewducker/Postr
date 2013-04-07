@@ -13,7 +13,9 @@ j = $;
 <body>
 
 <fieldset>
-<legend>Inputs</legend>
+<legend>Outputs</legend>
+<select id="output" name="output">
+</select>
 <label for="AddNewInput1">Add New 1:</label>
 <input type="submit" id="AddNewInput1" value="Click here">
 </fieldset>
@@ -34,8 +36,7 @@ j = $;
         </div>
 
 		<script type="text/javascript">
-
-		function verifyDreamwidthCredentials()
+		function saveDreamwidthCredentials()
 		{
 			if($("#dreamwidthIdentity").text() != ""){
 				var params = {method:"SaveData", username:j("#username").val(), password:j("#password").val(), timeZone:j("timeZone").val()};
@@ -47,11 +48,10 @@ j = $;
 			}
 		}
 
-		wizards.register("#dreamwidthCredentials",{buttons: [{text:"ok", click: verifyDreamwidthCredentials}]});
+		wizards.register("#dreamwidthCredentials",{buttons: [{text:"ok", click: saveDreamwidthCredentials}]});
 		wizards.register("#dreamwidthResults",{buttons: [{text:"Done", click: wizards.closeAllPages}]});
-                        
+		
 			j(function() {
-				j( "#AddNewInput1" ).click(function() {wizards.showPage("dreamwidthCredentials");});
 				j("#dreamwidthCredentialsVerify").click(function(){
 					var params = {method:"VerifyPassword", username:j("#username").val(), password:j("#password").val()};
 					var posting = j.post("dreamwidth",{params:JSON.stringify(params)});
@@ -62,7 +62,14 @@ j = $;
 					});
 					wizards.registerCallForWizardOnError(posting);
 				});
-                        })
+				var outputs = j("#output"); 
+				outputs.append(new Option("Dreamwidth","Dreamwidth"));
+                        });
+			
+			j(function(){
+				j( "#AddNewInput1" ).click(function() {wizards.showPage("dreamwidthCredentials");});
+			});
+
         </script>
         
 </body>
