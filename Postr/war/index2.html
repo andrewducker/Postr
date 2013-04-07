@@ -3,6 +3,7 @@
 <head>
 <meta http-equiv="X-UA-Compatible" content="IE=Edge">
 <title>Persona Test</title>
+<link rel="stylesheet" href="persona-buttons.css" />
 </head>
 <body>
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
@@ -25,14 +26,20 @@
 			},
   			onlogout: function() {
 				jQuery.ajax({  	
-					type: 'POST',	        
+					type: 'POST',        
 					url: '/personalogout',
-					success: function(res,status,xhr) {location.reload()}}); 
+					success: function(res,status,xhr) {location.reload()},
+					error: function(xhr, status, err) {
+						alert("Failed to log you out: "+err);
+						location.reload();
+					}
+				}); 
   			}
 		}
 	);
 	</script>
 	#if($session.getAttribute("EmailAddress"))$session.getAttribute("EmailAddress")#{else}Not Logged In#{end}<BR>
+	<a href="#" class="persona-button orange" onclick = "navigator.id.request()"><span>Sign in</span> </a>
 	<button type="button" id=signin onclick = "navigator.id.request()" }>Sign In!</button>
 	<button type="button" id=signout onclick= "navigator.id.logout()">Sign Out!</button>
 	</body>

@@ -21,5 +21,4 @@ public class DreamwidthServlet extends BaseOutputServlet {
 		String password = parameters.getStringParameter("password");
 		return StringResult.SuccessResult("Saved!");
 	}
-
 }
