@@ -1,4 +1,4 @@
- <div id="ljCredentials" title="Livejournal details">
+ <div id="ljCredentials" title="Livejournal Details">
 	<form>
 		<label for=ljUsername>User Name:</label> <input type="text" id="ljUsername" name="username"><BR>
 		<label for=ljPassword>Password:</label> <input type="password" id="ljPassword" name="password"><BR>
@@ -8,8 +8,7 @@
 	</form>
  </div>
 
-<div id="ljResults">
-	 <h1>Check Complete</h1>
+<div id="ljResults" title="Livejournal Details Updated">
 	 <div id="ljResultsText"><h2>Did it work?</h2></div>
 </div>
 
@@ -17,8 +16,8 @@
 function saveLivejournalCredentials()
 {
 	if($("#ljIdentity").text() != ""){
-		var params = {method:"SaveData", username:j("#ljUsername").val(), password:j("#ljPassword").val(), timeZone:j("ljTimeZone").val()};
-		var posting = j.post("livejournal",{params:JSON.stringify(params)});
+		var params = {method:"SaveData", username:$("#ljUsername").val(), password:$("#ljPassword").val(), timeZone:$("ljTimeZone").val()};
+		var posting = $.post("livejournal",{params:JSON.stringify(params)});
 		wizards.registerCallForWizardDisplay(posting,"ljResultsText","ljResults");
 	}
 	else{
@@ -29,17 +28,17 @@ function saveLivejournalCredentials()
 wizards.register("#ljCredentials",{buttons: [{text:"ok", click: saveLivejournalCredentials}]});
 wizards.register("#ljResults",{buttons: [{text:"Done", click: wizards.closeAllPages}]});
 
-j(function() {
-	j("#ljCredentialsVerify").click(function(){
-		var params = {method:"VerifyPassword", username:j("#ljUsername").val(), password:j("#ljPassword").val()};
-		var posting = j.post("livejournal",{params:JSON.stringify(params)});
+$(function() {
+	$("#ljCredentialsVerify").click(function(){
+		var params = {method:"VerifyPassword", username:$("#ljUsername").val(), password:$("#ljPassword").val()};
+		var posting = $.post("livejournal",{params:JSON.stringify(params)});
 		posting.done(function(data){
 			var parsedData = j.parseJSON(data);
-			j("#ljIdentity").text(parsedData.result);
+			$("#ljIdentity").text(parsedData.result);
 			wizards.setProperty("ljCredentials","height","auto");
 		});
 		wizards.registerCallForWizardOnError(posting);
 	});
-	j("#output").append(new Option("Livejournal","Livejournal"));
+	$("#output").append(new Option("Livejournal","ljCredentials"));
 });
 </script>

@@ -20,12 +20,15 @@ j = $;
 <input type="submit" id="AddNewInput1" value="Click here">
 </fieldset>
 
-		#parse("Dreamwidth.include.html")
-		#parse("Livejournal.include.html")
+		#include("Dreamwidth.include.html")
+		#include("Livejournal.include.html")
 						
 			<script type="text/javascript">
 			j(function(){
-				j( "#AddNewInput1" ).click(function() {wizards.showPage("ljCredentials");});
+				j( "#AddNewInput1" ).click(function() {
+					var selectedValue = j("#output option:selected").val();
+					wizards.showPage(selectedValue);
+					});
 			});
         </script>
         
