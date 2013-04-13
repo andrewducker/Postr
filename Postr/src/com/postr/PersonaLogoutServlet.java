@@ -9,6 +9,6 @@ import javax.servlet.http.HttpServletResponse;
 public class PersonaLogoutServlet extends BasePersonaSessionServlet {
 	protected void handlePost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-    	SetPersona(null);
+    	SetPersona(null); 
 	}
 }
