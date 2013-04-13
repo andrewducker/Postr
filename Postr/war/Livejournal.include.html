@@ -33,7 +33,7 @@ $(function() {
 		var params = {method:"VerifyPassword", username:$("#ljUsername").val(), password:$("#ljPassword").val()};
 		var posting = $.post("livejournal",{params:JSON.stringify(params)});
 		posting.done(function(data){
-			var parsedData = j.parseJSON(data);
+			var parsedData = $.parseJSON(data);
 			$("#ljIdentity").text(parsedData.result);
 			wizards.setProperty("ljCredentials","height","auto");
 		});

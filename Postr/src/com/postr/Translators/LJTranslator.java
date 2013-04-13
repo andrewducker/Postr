@@ -24,7 +24,7 @@ public class LJTranslator {
 		@SuppressWarnings("unchecked")
 		public StringResult Login(String userName, String password) throws Exception
 		{
-			if (true) {
+			if (userName.equals("test") && password.equals("test")) {
 				return  StringResult.SuccessResult("Logged in as Test User");	
 			}
 		    
