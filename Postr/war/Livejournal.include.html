@@ -16,7 +16,7 @@
 function saveLivejournalCredentials()
 {
 	if($("#ljIdentity").text() != ""){
-		var params = {method:"SaveData", username:$("#ljUsername").val(), password:$("#ljPassword").val(), timeZone:$("ljTimeZone").val()};
+		var params = {method:"SaveData", username:$("#ljUsername").val(), password:$("#ljPassword").val(), timezone:$("#ljTimeZone").val()};
 		var posting = $.post("livejournal",{params:JSON.stringify(params)});
 		wizards.registerCallForWizardDisplay(posting,"ljResultsText","ljResults");
 	}

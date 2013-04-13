@@ -2,10 +2,13 @@ package com.postr.DataTypes;
 
 import java.util.TimeZone;
 
+import com.googlecode.objectify.annotation.EntitySubclass;
+
+@EntitySubclass(index=true)
 public class LJData extends BaseSaveable {
-	private final String userName;
-	private final String password;
-	private final TimeZone timeZone;
+	private String userName;
+	private String password;
+	private TimeZone timeZone;
 	public String getUserName() {
 		return userName;
 	}
@@ -20,5 +23,7 @@ public class LJData extends BaseSaveable {
 		this.password = PasswordEncryptor.MD5Hex(password);
 		this.timeZone = timeZone;
 	}
+	
+	protected LJData(){}
 
 }

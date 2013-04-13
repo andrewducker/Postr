@@ -9,18 +9,16 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
 import com.google.gson.internal.StringMap;
 
-@SuppressWarnings("serial")
-public class PersonaVerificationServlet extends HttpServlet {
+public class PersonaVerificationServlet extends BasePersonaSessionServlet {
 
 	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+	protected void handlePost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		resp.setContentType("text/plain");
 
@@ -50,21 +48,23 @@ public class PersonaVerificationServlet extends HttpServlet {
     		sb.append(line);
     		}
     		
-        	StringMap<Object> response = (StringMap<Object>)new Gson().fromJson(sb.toString(), Object.class);
+        	@SuppressWarnings("unchecked")
+			StringMap<Object> response = (StringMap<Object>)new Gson().fromJson(sb.toString(), Object.class);
         	if (response.containsKey("status") && response.get("status").equals("okay")) {
-				req.getSession().setAttribute("EmailAddress", response.get("email"));
+        		SetPersona((String) response.get("email"));
 			}
         	else{
-        		req.getSession().setAttribute("EmailAddress", null);
+        		SetPersona(null);
         	}
         	result = "Success!";
         } else {
-        	req.getSession().setAttribute("EmailAddress", null);
+        	SetPersona(null);
         	result = "Fail";
         }
 
 		resp.getWriter().print(result);	
 	}
+
 }
 
 

@@ -3,25 +3,21 @@ package com.postr;
 import java.io.IOException;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import com.google.gson.Gson;
 import com.google.gson.internal.StringMap;
 import com.postr.DataTypes.Parameters;
 import com.postr.DataTypes.StringResult;
 
-@SuppressWarnings("serial")
-public abstract class BaseJSONServlet extends HttpServlet {
+public abstract class BaseJSONServlet extends BasePersonaSessionServlet {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+	protected void handlePost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		try {
 			resp.setContentType("text/plain");
-			
 			String params = req.getParameter("params");
 			Parameters parameters = new Parameters((StringMap<Object>)new Gson().fromJson(params, Object.class));
 			
@@ -49,7 +45,6 @@ public abstract class BaseJSONServlet extends HttpServlet {
 			resp.getWriter().print(result.getErrorMessage());	
 		}
 	}
-
 	
 	protected abstract StringResult ProcessRequest(Parameters parameters) throws Exception;
 }

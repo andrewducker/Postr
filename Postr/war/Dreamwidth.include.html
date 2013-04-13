@@ -16,7 +16,7 @@
 function saveDreamwidthCredentials()
 {
 	if($("#dwIdentity").text() != ""){
-		var params = {method:"SaveData", username:$("#dwUsername").val(), password:$("#dwPassword").val(), timeZone:$("dwTimeZone").val()};
+		var params = {method:"SaveData", username:$("#dwUsername").val(), password:$("#dwPassword").val(), timezone:$("#dwTimeZone").val()};
 		var posting = $.post("dreamwidth",{params:JSON.stringify(params)});
 		wizards.registerCallForWizardDisplay(posting,"dwResultsText","dwResults");
 	}

@@ -1,10 +1,12 @@
 package com.postr;
 
+import java.util.TimeZone;
+
+import com.postr.DataTypes.LJData;
 import com.postr.DataTypes.Parameters;
 import com.postr.DataTypes.StringResult;
 import com.postr.Translators.LJTranslator;
 
-@SuppressWarnings("serial")
 public class LivejournalServlet extends BaseOutputServlet {
 
 	@Override
@@ -17,7 +19,14 @@ public class LivejournalServlet extends BaseOutputServlet {
 
 	@Override
 	protected StringResult SaveData(Parameters parameters) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		String userName = parameters.getStringParameter("username");
+		String password = parameters.getStringParameter("password");
+		String timeZone = parameters.getStringParameter("timezone");
+		LJData ljData = new LJData(
+				userName, password,
+				TimeZone.getTimeZone(timeZone));
+		
+		DAO.SaveThing(ljData,GetPersona());
+		return StringResult.SuccessResult("Saved!");
 	}
 }

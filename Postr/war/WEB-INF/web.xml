@@ -32,14 +32,6 @@
 	<url-pattern>/personalogout</url-pattern>
 </servlet-mapping>
 <servlet>
-	<servlet-name>PersonaTest</servlet-name>
-	<servlet-class>com.postr.PersonaTestServlet</servlet-class>
-</servlet>
-<servlet-mapping>
-	<servlet-name>PersonaTest</servlet-name>
-	<url-pattern>/personatest</url-pattern>
-</servlet-mapping>
-<servlet>
 	<servlet-name>velocity</servlet-name> 
  	<servlet-class>org.apache.velocity.tools.view.VelocityViewServlet</servlet-class> 
  </servlet> 
