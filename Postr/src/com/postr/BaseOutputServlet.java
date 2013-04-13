@@ -3,6 +3,7 @@ package com.postr;
 import com.postr.DataTypes.Parameters;
 import com.postr.DataTypes.StringResult;
 
+@SuppressWarnings("serial")
 public abstract class BaseOutputServlet extends BaseJSONServlet {
 
 

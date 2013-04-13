@@ -10,6 +10,7 @@ import com.google.gson.internal.StringMap;
 import com.postr.DataTypes.Parameters;
 import com.postr.DataTypes.StringResult;
 
+@SuppressWarnings("serial")
 public abstract class BaseJSONServlet extends BasePersonaSessionServlet {
 	
 	@SuppressWarnings("unchecked")

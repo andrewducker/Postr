@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.gson.Gson;
 import com.google.gson.internal.StringMap;
 
+@SuppressWarnings("serial")
 public class PersonaVerificationServlet extends BasePersonaSessionServlet {
 
 	@Override

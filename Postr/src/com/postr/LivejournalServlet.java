@@ -7,6 +7,7 @@ import com.postr.DataTypes.Parameters;
 import com.postr.DataTypes.StringResult;
 import com.postr.Translators.LJTranslator;
 
+@SuppressWarnings("serial")
 public class LivejournalServlet extends BaseOutputServlet {
 
 	@Override

@@ -7,6 +7,7 @@ import com.postr.DataTypes.Parameters;
 import com.postr.DataTypes.StringResult;
 import com.postr.Translators.DWTranslator;
 
+@SuppressWarnings("serial")
 public class DreamwidthServlet extends BaseOutputServlet {
 
 	@Override
