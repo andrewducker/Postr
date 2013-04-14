@@ -1,6 +1,8 @@
 package com.postr;
 
 import java.util.List;
+import java.util.Vector;
+
 import javax.servlet.http.HttpSession;
 
 import com.postr.DataTypes.*;
@@ -17,10 +19,18 @@ public class UserData {
 		if (persona == null) {
 			persona = "Not logged in";
 		}
+		
+		List<BaseSaveable> saveables = DAO.LoadThings(BaseSaveable.class, persona);
+		for (BaseSaveable baseSaveable : saveables) {
+			if (baseSaveable instanceof BaseOutput) {
+				outputs.add((BaseOutput) baseSaveable);
+			}
+		}
 	}
 	
+	private Vector<BaseOutput> outputs = new Vector<BaseOutput>();
+	
 	public List<BaseOutput> getOutputs(){
-		List<BaseOutput> outputs = DAO.LoadThings(BaseOutput.class, persona);
 		return outputs;
 	}
 }
