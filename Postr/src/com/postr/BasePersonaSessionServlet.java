@@ -31,6 +31,4 @@ public abstract class BasePersonaSessionServlet extends HttpServlet {
 	{
 		session.setAttribute("Persona", persona);
 	}
-	
-
 }

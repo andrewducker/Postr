@@ -41,6 +41,10 @@
 </servlet-mapping>
 <servlet-mapping> 
  	<servlet-name>velocity</servlet-name> 
+ 	<url-pattern>*.js.vm</url-pattern> 
+</servlet-mapping>
+<servlet-mapping> 
+ 	<servlet-name>velocity</servlet-name> 
  	<url-pattern>*.html</url-pattern> 
 </servlet-mapping>
 
