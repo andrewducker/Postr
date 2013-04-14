@@ -11,6 +11,7 @@ public class BaseSaveable {
 		this.persona = persona;
 	}
 
+	
 	@Index
 	String persona;
 	

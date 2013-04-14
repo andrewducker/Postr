@@ -25,6 +25,11 @@ You are signed in as $userdata.Persona <a class="persona-button orange" onclick=
 <label for="AddNewInput1">Add New 1:</label>
 <input type="submit" id="AddNewInput1" value="Click here">
 </fieldset>
+
+#if($userdata.Outputs.size() > 0)
+You have set up the following Outputs:<BR>
+#foreach($feed in $userdata.Outputs)$feed.Description#end
+#end
 		#include("Dreamwidth.include.html")
 		#include("Livejournal.include.html")
 						

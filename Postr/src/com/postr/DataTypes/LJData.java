@@ -5,8 +5,8 @@ import java.util.TimeZone;
 import com.googlecode.objectify.annotation.EntitySubclass;
 
 @EntitySubclass(index=true)
-public class LJData extends BaseSaveable {
-	private String userName;
+public class LJData extends BaseOutput {
+	protected String userName;
 	private String password;
 	private TimeZone timeZone;
 	public String getUserName() {
@@ -25,5 +25,10 @@ public class LJData extends BaseSaveable {
 	}
 	
 	protected LJData(){}
+	
+	@Override
+	public String getDescription() {
+		return userName+"@Livejournal";
+	}
 
 }

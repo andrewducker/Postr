@@ -1,15 +1,15 @@
 package com.postr;
 
+import java.util.List;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.ObjectifyService;
-import com.postr.DataTypes.BaseSaveable;
-import com.postr.DataTypes.DWData;
-import com.postr.DataTypes.LJData;
+import com.postr.DataTypes.*;
 import static com.googlecode.objectify.ObjectifyService.ofy;
 
 class DAO {
 static {
 	ObjectifyService.register(BaseSaveable.class);
+	ObjectifyService.register(BaseOutput.class);
 	ObjectifyService.register(LJData.class);
 	ObjectifyService.register(DWData.class);
 }
@@ -21,6 +21,10 @@ public static <T extends BaseSaveable> Key<T> SaveThing(T thing, String persona)
 
 public static <T extends BaseSaveable> T LoadThing(Class<T> clazz, Long key){
 	return ofy().load().type(clazz).id(key).get();
+}
+
+public static <T extends BaseSaveable> List<T> LoadThings(Class<T> clazz, String persona){
+	return ofy().load().type(clazz).filter("persona", persona).list();
 }
 
 	

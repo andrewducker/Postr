@@ -11,6 +11,16 @@ public class DWData extends LJData {
 		super(userName, password, timeZone);
 	}
 	
-	public DWData(){}
+	
+	
+	@Override
+	public String getDescription() {
+		return userName+"@Dreamwidth";
+	}
+
+
+
+	@SuppressWarnings("unused")
+	private DWData(){}
 
 }
