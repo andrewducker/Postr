@@ -1,6 +1,6 @@
 package com.postr;
 
-import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 public class UserData {
 	public String getPersona(){
@@ -9,13 +9,10 @@ public class UserData {
 	
 	private String persona;
 	
-	
-
-	public void setRequest(HttpServletRequest request) {
-		persona = (String)request.getSession().getAttribute("Persona");
+	public void setSession(HttpSession session){
+		persona = (String)session.getAttribute("Persona");
 		if (persona == null) {
 			persona = "Not logged in";
 		}
-
 	}
 }
