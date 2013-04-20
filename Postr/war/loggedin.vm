@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
 <title>Postr</title>
 <link rel="stylesheet" href="persona-buttons.css" />
 <script src="https://login.persona.org/include.js"></script>
@@ -14,9 +14,10 @@
 <script type="text/javascript">
 j = $;
 outputs = new Object();
-function AddOutput(outputName, AddOutput) {
+function AddOutput(outputName, AddOutput, UpdateOutput, RemoveOutput) {
 	$("#output").append(new Option(outputName));
-	outputs[outputName] = AddOutput;
+	var outputFunctions = {Add:AddOutput,Update:UpdateOutput,Remove:RemoveOutput}
+	outputs[outputName] = outputFunctions;
 }
 </script>
 </head>
@@ -25,25 +26,35 @@ You are signed in as $userdata.Persona <a class="persona-button orange" onclick=
 
 <fieldset>
 <legend>Outputs</legend>
+<select id="existingOutputs">
+#if($userdata.Outputs.size() > 0)
+#foreach($feed in $userdata.Outputs)<option data-user-name=${feed.UserName} data-unique-id=${feed.Id}>
+${feed.UserName}@$feed.SiteName</option>#end
+#end
+</select>
+<label for="UpdateOutputs">Existing</label>
+<input type="submit" id="UpdateOutputs" value="Update">
+<BR>
 <select id="output" name="output">
 </select>
-<label for="AddNewInput1">Add New 1:</label>
-<input type="submit" id="AddNewInput1" value="Click here">
+<label for="AddNewOutput">New Input?</label>
+<input type="submit" id="AddNewOutput" value="Add">
 </fieldset>
 
-#if($userdata.Outputs.size() > 0)
-You have set up the following Outputs:<BR>
-#foreach($feed in $userdata.Outputs)${feed.UserName}@$feed.SiteName,#end
-#end
 		#include("outputs\Dreamwidth.include.html")
 		#include("outputs\Livejournal.include.html")
 						
 			<script type="text/javascript">
 			j(function(){
-				j( "#AddNewInput1" ).click(function() {
+				j( "#AddNewOutput" ).click(function() {
 					var selectedValue = j("#output option:selected").text();
-					outputs[selectedValue]();
+					outputs[selectedValue].Add();
 					});
+				j( "#UpdateOutputs" ).click(function() {
+					var selectedData = j("#existingOutputs option:selected").data();
+					alert(selectedData.uniqueId);
+					});
+
 			});
         </script>
         

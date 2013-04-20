@@ -7,6 +7,10 @@ import com.googlecode.objectify.annotation.Index;
 @Entity
 public class BaseSaveable {
 	@Id Long id;
+	public Long getId() {
+		return id;
+	}
+
 	public void setPersona(String persona) {
 		this.persona = persona;
 	}
