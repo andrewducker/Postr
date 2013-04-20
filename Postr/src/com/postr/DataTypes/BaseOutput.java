@@ -3,10 +3,26 @@ package com.postr.DataTypes;
 import com.googlecode.objectify.annotation.EntitySubclass;
 
 @EntitySubclass(index=true)
-public class BaseOutput extends BaseSaveable {
+public abstract class BaseOutput extends BaseSaveable {
 
-	public String getDescription(){
-		return "Needs to be implemented";
+	protected BaseOutput(){}
+	
+	protected BaseOutput(String userName, String password) throws Exception{
+		this.userName = userName;
+		this.password = password;
 	}
+	
+	protected String userName;
+	private String password;
+
+	
+	public String getUserName() {
+		return userName;
+	}
+	public String getPassword() {
+		return password;
+	}
+	
+	public abstract String getSiteName();
 	
 }

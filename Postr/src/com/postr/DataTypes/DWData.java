@@ -10,16 +10,12 @@ public class DWData extends LJData {
 	public DWData(String userName, String password, TimeZone timeZone) throws Exception {
 		super(userName, password, timeZone);
 	}
-	
-	
-	
+
 	@Override
-	public String getDescription() {
-		return userName+"@Dreamwidth";
-	}
-
-
-
+	public String getSiteName() {
+		return "Dreamwidth";
+	};
+	
 	@SuppressWarnings("unused")
 	private DWData(){}
 
