@@ -13,4 +13,9 @@ public class Parameters {
 		Object parameter = parameters.get(key); 
 		return (String)parameter;
 	}
+	
+	public Long getLongParameter(String key){
+		Double parameter = (Double)parameters.get(key); 
+		return parameter.longValue();
+	}
 }

@@ -31,8 +31,15 @@ function AddLivejournalOutput(){
 	wizards.showPage("ljCredentials");
 }
 
+function RemoveLivejournalOutput(key){
+	var params = {method:"RemoveData", key:parseInt(key)};
+	var posting = $.post("livejournal",{params:JSON.stringify(params)});
+	wizards.registerCallForWizardDisplay(posting,"ljResultsText","ljResults");
+}
+
+
 wizards.register("#ljCredentials",{buttons: [{text:"ok", click: saveLivejournalCredentials}]});
-wizards.register("#ljResults",{buttons: [{text:"Done", click: wizards.closeAllPages}]});
+wizards.register("#ljResults",{buttons: [{text:"Done", click: function(){location.reload()}}]});
 
 $(function() {
 	$("#ljCredentialsVerify").click(function(){
@@ -45,7 +52,7 @@ $(function() {
 		});
 		wizards.registerCallForWizardOnError(posting);
 	});
-	AddOutput("Livejournal", AddLivejournalOutput);
+	AddOutput("Livejournal", AddLivejournalOutput,null,RemoveLivejournalOutput);
 
 });
 </script>

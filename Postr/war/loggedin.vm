@@ -16,8 +16,7 @@ j = $;
 outputs = new Object();
 function AddOutput(outputName, AddOutput, UpdateOutput, RemoveOutput) {
 	$("#output").append(new Option(outputName));
-	var outputFunctions = {Add:AddOutput,Update:UpdateOutput,Remove:RemoveOutput}
-	outputs[outputName] = outputFunctions;
+	outputs[outputName] = {Add:AddOutput,Update:UpdateOutput,Remove:RemoveOutput};
 }
 </script>
 </head>
@@ -28,12 +27,14 @@ You are signed in as $userdata.Persona <a class="persona-button orange" onclick=
 <legend>Outputs</legend>
 <select id="existingOutputs">
 #if($userdata.Outputs.size() > 0)
-#foreach($feed in $userdata.Outputs)<option data-user-name=${feed.UserName} data-unique-id=${feed.Id}>
+#foreach($feed in $userdata.Outputs)<option data-user-name=${feed.UserName} data-unique-id=${feed.Id} data-site=$feed.SiteName>
 ${feed.UserName}@$feed.SiteName</option>#end
 #end
 </select>
 <label for="UpdateOutputs">Existing</label>
 <input type="submit" id="UpdateOutputs" value="Update">
+<label for="RemoveOutputs">Existing</label>
+<input type="submit" id="RemoveOutputs" value="Remove">
 <BR>
 <select id="output" name="output">
 </select>
@@ -54,7 +55,10 @@ ${feed.UserName}@$feed.SiteName</option>#end
 					var selectedData = j("#existingOutputs option:selected").data();
 					alert(selectedData.uniqueId);
 					});
-
+				j( "#RemoveOutputs" ).click(function() {
+					var selectedData = j("#existingOutputs option:selected").data();
+					outputs[selectedData.site].Remove(selectedData.uniqueId);
+					});
 			});
         </script>
         

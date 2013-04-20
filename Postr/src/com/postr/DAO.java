@@ -27,6 +27,7 @@ public static <T extends BaseSaveable> List<T> LoadThings(Class<T> clazz, String
 	return ofy().load().type(clazz).filter("persona", persona).list();
 }
 
-	
-	
+public static <T extends BaseSaveable> void RemoveThing(Class<T> clazz, Long key){
+	ofy().delete().type(clazz).id(key);
+}
 }

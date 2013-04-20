@@ -19,6 +19,13 @@ public class DreamwidthServlet extends BaseOutputServlet {
 	}
 
 	@Override
+	protected StringResult RemoveData(Parameters parameters) throws Exception {
+		Long key = parameters.getLongParameter("key");
+		DAO.RemoveThing(DWData.class, key);
+		return StringResult.SuccessResult("Removed!");
+	}
+
+	@Override
 	protected StringResult SaveData(Parameters parameters) throws Exception {
 		String userName = parameters.getStringParameter("username");
 		String password = parameters.getStringParameter("password");

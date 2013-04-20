@@ -26,12 +26,18 @@ function saveDreamwidthCredentials()
 }
 
 wizards.register("#dwCredentials",{buttons: [{text:"ok", click: saveDreamwidthCredentials}]});
-wizards.register("#dwResults",{buttons: [{text:"Done", click: wizards.closeAllPages}]});
+wizards.register("#dwResults",{buttons: [{text:"Done", click: function(){location.reload()}}]});
 
 function AddDreamwidthOutput(){
 	$("#dwIdentity").text("");
 	$("#dwTimeZone").val("");
 	wizards.showPage("dwCredentials");
+}
+
+function RemoveDreamwidthOutput(key){
+	var params = {method:"RemoveData", key:parseInt(key)};
+	var posting = $.post("dreamwidth",{params:JSON.stringify(params)});
+	wizards.registerCallForWizardDisplay(posting,"dwResultsText","dwResults");
 }
 
 $(function() {
@@ -45,6 +51,6 @@ $(function() {
 		});
 		wizards.registerCallForWizardOnError(posting);
 	});
-	AddOutput("Dreamwidth", AddDreamwidthOutput);
+	AddOutput("Dreamwidth", AddDreamwidthOutput,null,RemoveDreamwidthOutput);
 });
 </script>

@@ -18,12 +18,16 @@ public abstract class BaseOutputServlet extends BaseJSONServlet {
 			return VerifyPassword(parameters);
 		case SaveData:
 			return SaveData(parameters);
+		case RemoveData:
+			return RemoveData(parameters);
 		default:
 			throw new Exception("No such method found: "+method);
 		}
 
 	}
 
+	protected abstract StringResult RemoveData	(Parameters parameters) throws Exception;
+	
 	protected abstract StringResult VerifyPassword(Parameters parameters) throws Exception;
 	
 	protected abstract StringResult SaveData(Parameters parameters) throws Exception;
