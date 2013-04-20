@@ -5,14 +5,19 @@
 <title>Postr</title>
 <link rel="stylesheet" href="persona-buttons.css" />
 <script src="https://login.persona.org/include.js"></script>
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.0/themes/base/jquery-ui.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.0/themes/base/jquery-ui.css">
 <link rel="stylesheet" href="styles.css">
-<script src="http://code.jquery.com/ui/1.10.0/jquery-ui.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js"></script>
 <script src="wizards.js"></script>
 <script src="persona.js.vm"></script>
 <script type="text/javascript">
 j = $;
+outputs = new Object();
+function AddOutput(outputName, AddOutput) {
+	$("#output").append(new Option(outputName));
+	outputs[outputName] = AddOutput;
+}
 </script>
 </head>
 <body>
@@ -30,14 +35,14 @@ You are signed in as $userdata.Persona <a class="persona-button orange" onclick=
 You have set up the following Outputs:<BR>
 #foreach($feed in $userdata.Outputs)$feed.Description,#end
 #end
-		#include("Dreamwidth.include.html")
-		#include("Livejournal.include.html")
+		#include("outputs\Dreamwidth.include.html")
+		#include("outputs\Livejournal.include.html")
 						
 			<script type="text/javascript">
 			j(function(){
 				j( "#AddNewInput1" ).click(function() {
-					var selectedValue = j("#output option:selected").val();
-					wizards.showPage(selectedValue);
+					var selectedValue = j("#output option:selected").text();
+					outputs[selectedValue]();
 					});
 			});
         </script>

@@ -25,6 +25,12 @@ function saveLivejournalCredentials()
 	}
 }
 
+function AddLivejournalOutput(){
+	$("#ljIdentity").text("");
+	$("#ljTimeZone").val("");
+	wizards.showPage("ljCredentials");
+}
+
 wizards.register("#ljCredentials",{buttons: [{text:"ok", click: saveLivejournalCredentials}]});
 wizards.register("#ljResults",{buttons: [{text:"Done", click: wizards.closeAllPages}]});
 
@@ -39,6 +45,7 @@ $(function() {
 		});
 		wizards.registerCallForWizardOnError(posting);
 	});
-	$("#output").append(new Option("Livejournal","ljCredentials"));
+	AddOutput("Livejournal", AddLivejournalOutput);
+
 });
 </script>

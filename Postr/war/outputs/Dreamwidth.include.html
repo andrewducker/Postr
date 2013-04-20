@@ -28,6 +28,12 @@ function saveDreamwidthCredentials()
 wizards.register("#dwCredentials",{buttons: [{text:"ok", click: saveDreamwidthCredentials}]});
 wizards.register("#dwResults",{buttons: [{text:"Done", click: wizards.closeAllPages}]});
 
+function AddDreamwidthOutput(){
+	$("#dwIdentity").text("");
+	$("#dwTimeZone").val("");
+	wizards.showPage("dwCredentials");
+}
+
 $(function() {
 	$("#dwCredentialsVerify").click(function(){
 		var params = {method:"VerifyPassword", username:$("#dwUsername").val(), password:$("#dwPassword").val()};
@@ -39,6 +45,6 @@ $(function() {
 		});
 		wizards.registerCallForWizardOnError(posting);
 	});
-	$("#output").append(new Option("Dreamwidth","dwCredentials"));
+	AddOutput("Dreamwidth", AddDreamwidthOutput);
 });
 </script>
