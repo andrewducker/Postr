@@ -1,16 +1,15 @@
 
 package com.postr;
-import com.postr.DataTypes.Parameters;
-import com.postr.DataTypes.StringResult;
+import com.postr.DataTypes.Json;
 
 @SuppressWarnings("serial")
 public abstract class BaseOutputServlet extends BaseJSONServlet {
 
 
 	@Override
-	protected StringResult ProcessRequest(Parameters parameters) throws Exception
+	protected Json ProcessRequest(Json parameters) throws Exception
 	{
-		String method = parameters.getStringParameter("method");
+		String method = parameters.getString("method");
 
 		MethodTypes methodType = MethodTypes.valueOf(method);
 		switch (methodType) {
@@ -26,9 +25,9 @@ public abstract class BaseOutputServlet extends BaseJSONServlet {
 
 	}
 
-	protected abstract StringResult RemoveData	(Parameters parameters) throws Exception;
+	protected abstract Json RemoveData	(Json parameters) throws Exception;
 	
-	protected abstract StringResult VerifyPassword(Parameters parameters) throws Exception;
+	protected abstract Json VerifyPassword(Json parameters) throws Exception;
 	
-	protected abstract StringResult SaveData(Parameters parameters) throws Exception;
+	protected abstract Json SaveData(Json parameters) throws Exception;
 }

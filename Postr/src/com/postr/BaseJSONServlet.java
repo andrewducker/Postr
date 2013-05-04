@@ -5,24 +5,20 @@ import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import com.google.gson.Gson;
-import com.google.gson.internal.StringMap;
-import com.postr.DataTypes.Parameters;
-import com.postr.DataTypes.StringResult;
+import com.postr.DataTypes.Json;
 
 @SuppressWarnings("serial")
 public abstract class BaseJSONServlet extends BasePersonaSessionServlet {
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	protected void handlePost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		try {
 			resp.setContentType("text/plain");
 			String params = req.getParameter("params");
-			Parameters parameters = new Parameters((StringMap<Object>)new Gson().fromJson(params, Object.class));
+			Json parameters = new Json(params);
 			
-			StringResult result = ProcessRequest(parameters);
+			Json result = ProcessRequest(parameters);
 			
 			processResult(resp, result);
 
@@ -32,20 +28,19 @@ public abstract class BaseJSONServlet extends BasePersonaSessionServlet {
 			resp.getWriter().print(e.getMessage());
 			e.printStackTrace();
 		}
-
 	}
 	
-	private void processResult(HttpServletResponse resp, StringResult result)
+	private void processResult(HttpServletResponse resp, Json result)
 			throws IOException, Exception {
-		if (result.getResult() != null) {
-			resp.getWriter().print(new Gson().toJson(result));	
+		if (result.getString(Json.RESULT) != null) {
+			resp.getWriter().print(result.ToJson());	
 		}
 		else
 		{
 			resp.setStatus(500);
-			resp.getWriter().print(result.getErrorMessage());	
+			resp.getWriter().print(result.getString(Json.ERROR_MESSAGE));	
 		}
 	}
 	
-	protected abstract StringResult ProcessRequest(Parameters parameters) throws Exception;
+	protected abstract Json ProcessRequest(Json parameters) throws Exception;
 }

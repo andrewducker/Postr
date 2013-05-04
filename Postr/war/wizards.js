@@ -41,12 +41,15 @@ wizards.closeAllPages = function(){
 }
 
 wizards.registerCallForWizardDisplay = function(posting, textToUpdate, wizardPageToShow){
+	var deferral = $.Deferred();
 	posting.done(function(data){
 		var parsedData = $.parseJSON(data);
 		$("#"+textToUpdate).text(parsedData.result);
 		wizards.showPage(wizardPageToShow);
+		deferral.resolve(parsedData);
 	});
 	wizards.registerCallForWizardOnError(posting);
+	return deferral;
 }
 
 wizards.registerCallForWizardOnError = function(posting){

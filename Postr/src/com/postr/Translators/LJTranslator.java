@@ -12,9 +12,9 @@ import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.client.XmlRpcClient;
 import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
 
+import com.postr.DataTypes.Json;
 import com.postr.DataTypes.LJData;
 import com.postr.DataTypes.PasswordEncryptor;
-import com.postr.DataTypes.StringResult;
 
 
 public class LJTranslator {
@@ -22,10 +22,10 @@ public class LJTranslator {
 		protected String serverURL = "http://www.livejournal.com/interface/xmlrpc";
 		
 		@SuppressWarnings("unchecked")
-		public StringResult Login(String userName, String password) throws Exception
+		public Json Login(String userName, String password) throws Exception
 		{
 			if (userName.equals("test") && password.equals("test")) {
-				return  StringResult.SuccessResult("Logged in as Test User");	
+				return  Json.SuccessResult("Logged in as Test User");	
 			}
 		    
 		    XmlRpcClient client = getClient();
@@ -36,13 +36,13 @@ public class LJTranslator {
 		    try{
 		    	postResult =  (Map<String, String>) client.execute("LJ.XMLRPC.login", params);
 		    } catch (XmlRpcException e){
-		    	return StringResult.ErrorResult(e.getMessage());
+		    	return Json.ErrorResult(e.getMessage());
 		    }
 		    
 		    if (postResult.get("success")=="FAIL"){
-		    	return StringResult.ErrorResult(postResult.get("errmsg"));
+		    	return Json.ErrorResult(postResult.get("errmsg"));
 		    }
-		    return StringResult.SuccessResult("Logged in as " + postResult.get("fullname"));
+		    return Json.SuccessResult("Logged in as " + postResult.get("fullname"));
 		}
 
 		

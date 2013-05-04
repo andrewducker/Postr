@@ -18,6 +18,14 @@ function AddOutput(outputName, AddOutput, UpdateOutput, RemoveOutput) {
 	$("#output").append(new Option(outputName));
 	outputs[outputName] = {Add:AddOutput,Update:UpdateOutput,Remove:RemoveOutput};
 }
+
+function addExistingOutput(userName,id,siteName){
+	var newOption = new Option(userName+"@"+siteName);
+	newOption.setAttribute("data-user-name",userName);
+	newOption.setAttribute("data-unique-id",id);
+	newOption.setAttribute("data-site",siteName);
+	$("#existingOutputs").append(newOption);
+}
 </script>
 </head>
 <body>
@@ -49,16 +57,20 @@ ${feed.UserName}@$feed.SiteName</option>#end
 			j(function(){
 				j( "#AddNewOutput" ).click(function() {
 					var selectedValue = j("#output option:selected").text();
-					outputs[selectedValue].Add();
+					outputs[selectedValue].Add().done(function(data){
+						addExistingOutput(data.username,data.key,data.siteName);
 					});
+				});
 				j( "#UpdateOutputs" ).click(function() {
 					var selectedData = j("#existingOutputs option:selected").data();
 					alert(selectedData.uniqueId);
-					});
+				});
 				j( "#RemoveOutputs" ).click(function() {
 					var selectedData = j("#existingOutputs option:selected").data();
-					outputs[selectedData.site].Remove(selectedData.uniqueId);
+					outputs[selectedData.site].Remove(selectedData.uniqueId).done(function(){
+						j("#existingOutputs option:selected").remove();
 					});
+				});
 			});
         </script>
         

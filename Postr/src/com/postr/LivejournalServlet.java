@@ -2,39 +2,41 @@ package com.postr;
 
 import java.util.TimeZone;
 
+import com.googlecode.objectify.Key;
+import com.postr.DataTypes.Json;
 import com.postr.DataTypes.LJData;
-import com.postr.DataTypes.Parameters;
-import com.postr.DataTypes.StringResult;
 import com.postr.Translators.LJTranslator;
 
 @SuppressWarnings("serial")
 public class LivejournalServlet extends BaseOutputServlet {
 
 	@Override
-	protected StringResult VerifyPassword(Parameters parameters) throws Exception {
-		String userName = parameters.getStringParameter("username");
-		String password = parameters.getStringParameter("password");
+	protected Json VerifyPassword(Json parameters) throws Exception {
+		String userName = parameters.getString("username");
+		String password = parameters.getString("password");
 		LJTranslator writer = new LJTranslator();
 		return writer.Login(userName, password);
 	}
 
 	@Override
-	protected StringResult RemoveData(Parameters parameters) throws Exception {
-		Long key = parameters.getLongParameter("key");
+	protected Json RemoveData(Json parameters) throws Exception {
+		Long key = parameters.getLong("key");
 		DAO.RemoveThing(LJData.class, key);
-		return StringResult.SuccessResult("Removed!");
+		return Json.SuccessResult("Removed!");
 	}
 
 	@Override
-	protected StringResult SaveData(Parameters parameters) throws Exception {
-		String userName = parameters.getStringParameter("username");
-		String password = parameters.getStringParameter("password");
-		String timeZone = parameters.getStringParameter("timezone");
+	protected Json SaveData(Json parameters) throws Exception {
+		String userName = parameters.getString("username");
+		String password = parameters.getString("password");
+		String timeZone = parameters.getString("timezone");
 		LJData ljData = new LJData(
 				userName, password,
 				TimeZone.getTimeZone(timeZone));
 		
-		DAO.SaveThing(ljData,GetPersona());
-		return StringResult.SuccessResult("Saved!");
+		Key<LJData> result = DAO.SaveThing(ljData,GetPersona());
+		Json toReturn = Json.SuccessResult("Saved!");
+		toReturn.setData("key", result.getId());
+		return toReturn;
 	}
 }

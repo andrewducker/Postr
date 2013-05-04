@@ -13,31 +13,42 @@
 </div>
 
 <script type="text/javascript">
-function saveDreamwidthCredentials()
-{
+
+dreamwidth = new Object();
+
+dreamwidth.sitename = "Dreamwidth";
+
+dreamwidth.saveCredentials = function(){
 	if($("#dwIdentity").text() != ""){
 		var params = {method:"SaveData", username:$("#dwUsername").val(), password:$("#dwPassword").val(), timezone:$("#dwTimeZone").val()};
 		var posting = $.post("dreamwidth",{params:JSON.stringify(params)});
-		wizards.registerCallForWizardDisplay(posting,"dwResultsText","dwResults");
+		wizards.registerCallForWizardDisplay(posting,"dwResultsText","dwResults").done(function(data){
+			data.siteName=dreamwidth.sitename;
+			data.username = params.username;
+			dreamwidth.currentDeferral.resolve(data);
+		});
 	}
 	else{
 		wizards.showError("Identity not validated");
 	}
 }
 
-wizards.register("#dwCredentials",{buttons: [{text:"ok", click: saveDreamwidthCredentials}]});
-wizards.register("#dwResults",{buttons: [{text:"Done", click: function(){location.reload()}}]});
+wizards.register("#dwCredentials",{buttons: [{text:"ok", click: dreamwidth.saveCredentials}]});
+wizards.register("#dwResults",{buttons: [{text:"Done", click: function(){wizards.closeAllPages()}}]});
 
-function AddDreamwidthOutput(){
+dreamwidth.AddOutput = function(){
 	$("#dwIdentity").text("");
 	$("#dwTimeZone").val("");
+	dreamwidth.currentDeferral = $.Deferred();
 	wizards.showPage("dwCredentials");
+	return dreamwidth.currentDeferral;
 }
 
-function RemoveDreamwidthOutput(key){
+dreamwidth.RemoveOutput = function(key){
 	var params = {method:"RemoveData", key:parseInt(key)};
-	var posting = $.post("dreamwidth",{params:JSON.stringify(params)});
-	wizards.registerCallForWizardDisplay(posting,"dwResultsText","dwResults");
+	dreamwidth.currentDeferral = $.post("dreamwidth",{params:JSON.stringify(params)});
+	wizards.registerCallForWizardDisplay(dreamwidth.currentDeferral,"dwResultsText","dwResults");
+	return dreamwidth.currentDeferral;
 }
 
 $(function() {
@@ -51,6 +62,6 @@ $(function() {
 		});
 		wizards.registerCallForWizardOnError(posting);
 	});
-	AddOutput("Dreamwidth", AddDreamwidthOutput,null,RemoveDreamwidthOutput);
+	AddOutput(dreamwidth.sitename, dreamwidth.AddOutput,null,dreamwidth.RemoveOutput);
 });
 </script>

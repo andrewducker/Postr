@@ -3,38 +3,40 @@ package com.postr;
 import java.util.TimeZone;
 
 import com.postr.DataTypes.DWData;
-import com.postr.DataTypes.Parameters;
-import com.postr.DataTypes.StringResult;
+import com.postr.DataTypes.Json;
 import com.postr.Translators.DWTranslator;
+import com.googlecode.objectify.Key;
 
 @SuppressWarnings("serial")
 public class DreamwidthServlet extends BaseOutputServlet {
 
 	@Override
-	protected StringResult VerifyPassword(Parameters parameters) throws Exception {
-		String userName = parameters.getStringParameter("username");
-		String password = parameters.getStringParameter("password");
+	protected Json VerifyPassword(Json parameters) throws Exception {
+		String userName = parameters.getString("username");
+		String password = parameters.getString("password");
 		DWTranslator writer = new DWTranslator();
 		return writer.Login(userName, password);
 	}
 
 	@Override
-	protected StringResult RemoveData(Parameters parameters) throws Exception {
-		Long key = parameters.getLongParameter("key");
+	protected Json RemoveData(Json parameters) throws Exception {
+		Long key = parameters.getLong("key");
 		DAO.RemoveThing(DWData.class, key);
-		return StringResult.SuccessResult("Removed!");
+		return Json.SuccessResult("Removed!");
 	}
 
 	@Override
-	protected StringResult SaveData(Parameters parameters) throws Exception {
-		String userName = parameters.getStringParameter("username");
-		String password = parameters.getStringParameter("password");
-		String timeZone = parameters.getStringParameter("timezone");
+	protected Json SaveData(Json parameters) throws Exception {
+		String userName = parameters.getString("username");
+		String password = parameters.getString("password");
+		String timeZone = parameters.getString("timezone");
 		DWData dwData = new DWData(
 				userName, password,
 				TimeZone.getTimeZone(timeZone));
 		
-		DAO.SaveThing(dwData,GetPersona());
-		return StringResult.SuccessResult("Saved!");
+		Key<DWData> result = DAO.SaveThing(dwData,GetPersona());
+		Json toReturn =Json.SuccessResult("Saved!"); 
+		toReturn.setData("key", result.getId());
+		return toReturn;
 	}
 }

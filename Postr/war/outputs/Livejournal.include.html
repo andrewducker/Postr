@@ -13,33 +13,43 @@
 </div>
 
 <script type="text/javascript">
-function saveLivejournalCredentials()
-{
+
+livejournal = new Object();
+
+livejournal.sitename="Livejournal";
+
+livejournal.saveCredentials = function(){
 	if($("#ljIdentity").text() != ""){
 		var params = {method:"SaveData", username:$("#ljUsername").val(), password:$("#ljPassword").val(), timezone:$("#ljTimeZone").val()};
 		var posting = $.post("livejournal",{params:JSON.stringify(params)});
-		wizards.registerCallForWizardDisplay(posting,"ljResultsText","ljResults");
+		wizards.registerCallForWizardDisplay(posting,"ljResultsText","ljResults").done(function(data){
+			data.siteName=livejournal.sitename;
+			data.username = params.username;
+			livejournal.currentDeferral.resolve(data);
+		});
 	}
 	else{
 		wizards.showError("Identity not validated");
 	}
 }
 
-function AddLivejournalOutput(){
+wizards.register("#ljCredentials",{buttons: [{text:"ok", click: livejournal.saveCredentials}]});
+wizards.register("#ljResults",{buttons: [{text:"Done", click: wizards.closeAllPages}]});
+
+livejournal.AddOutput = function(){
 	$("#ljIdentity").text("");
 	$("#ljTimeZone").val("");
+	livejournal.currentDeferral = $.Deferred();
 	wizards.showPage("ljCredentials");
+	return livejournal.currentDeferral;
 }
 
-function RemoveLivejournalOutput(key){
+livejournal.removeOutput = function(key){
 	var params = {method:"RemoveData", key:parseInt(key)};
-	var posting = $.post("livejournal",{params:JSON.stringify(params)});
-	wizards.registerCallForWizardDisplay(posting,"ljResultsText","ljResults");
+	livejournal.currentDeferral = $.post("livejournal",{params:JSON.stringify(params)});
+	wizards.registerCallForWizardDisplay(livejournal.currentDeferral,"ljResultsText","ljResults");
+	return livejournal.currentDeferral;
 }
-
-
-wizards.register("#ljCredentials",{buttons: [{text:"ok", click: saveLivejournalCredentials}]});
-wizards.register("#ljResults",{buttons: [{text:"Done", click: function(){location.reload()}}]});
 
 $(function() {
 	$("#ljCredentialsVerify").click(function(){
@@ -52,7 +62,6 @@ $(function() {
 		});
 		wizards.registerCallForWizardOnError(posting);
 	});
-	AddOutput("Livejournal", AddLivejournalOutput,null,RemoveLivejournalOutput);
-
+	AddOutput(livejournal.sitename, livejournal.AddOutput,null,livejournal.removeOutput);
 });
 </script>
