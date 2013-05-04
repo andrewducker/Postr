@@ -62,8 +62,11 @@ ${feed.UserName}@$feed.SiteName</option>#end
 					});
 				});
 				j( "#UpdateOutputs" ).click(function() {
-					var selectedData = j("#existingOutputs option:selected").data();
-					alert(selectedData.uniqueId);
+					var selectedOption = j("#existingOutputs option:selected");
+					var selectedValue = selectedOption.text();
+					var selectedData = selectedOption.data();
+					//outputs[selectedValue].Update(selectedData,uniqueId,selectedData.userName);
+					alert(selectedData.uniqueId +" - " + selectedData.userName);
 				});
 				j( "#RemoveOutputs" ).click(function() {
 					var selectedData = j("#existingOutputs option:selected").data();
