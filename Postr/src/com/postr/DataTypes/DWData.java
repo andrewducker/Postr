@@ -19,4 +19,8 @@ public class DWData extends LJData {
 	@SuppressWarnings("unused")
 	private DWData(){}
 
+	public DWData(DWData existingDWData, String password, TimeZone timeZone) throws Exception {
+		super(existingDWData,password,timeZone);
+	}
+
 }

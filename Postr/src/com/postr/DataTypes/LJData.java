@@ -11,6 +11,7 @@ public class LJData extends BaseOutput {
 	public TimeZone getTimeZone() {
 		return timeZone;
 	}
+	
 	public LJData(String userName, String password, TimeZone timeZone) throws Exception{
 		super(userName,PasswordEncryptor.MD5Hex(password));
 		this.timeZone = timeZone;
@@ -18,6 +19,11 @@ public class LJData extends BaseOutput {
 	
 	protected LJData(){}
 	
+	public LJData(LJData existingLJData, String password, TimeZone timeZone) throws Exception {
+		super(existingLJData,PasswordEncryptor.MD5Hex(password));
+		this.timeZone = timeZone;
+	}
+
 	@Override
 	public String getSiteName() {
 		return "Livejournal";

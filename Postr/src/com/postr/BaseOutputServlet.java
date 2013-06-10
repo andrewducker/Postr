@@ -19,11 +19,15 @@ public abstract class BaseOutputServlet extends BaseJSONServlet {
 			return SaveData(parameters);
 		case RemoveData:
 			return RemoveData(parameters);
+		case UpdateData:
+			return UpdateData(parameters);
 		default:
 			throw new Exception("No such method found: "+method);
 		}
 
 	}
+
+	protected abstract Json UpdateData	(Json parameters) throws Exception;
 
 	protected abstract Json RemoveData	(Json parameters) throws Exception;
 	

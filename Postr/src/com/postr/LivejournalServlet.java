@@ -39,4 +39,19 @@ public class LivejournalServlet extends BaseOutputServlet {
 		toReturn.setData("key", result.getId());
 		return toReturn;
 	}
+
+	@Override
+	protected Json UpdateData(Json parameters) throws Exception {
+		Long key = parameters.getLong("key");
+		String password = parameters.getString("password");
+		String timeZone = parameters.getString("timezone");
+		LJData existingDWData = DAO.LoadThing(LJData.class, key);
+		
+		LJData newDWData = new LJData(existingDWData,password,TimeZone.getTimeZone(timeZone));
+		
+		Key<LJData> result = DAO.SaveThing(newDWData,GetPersona());
+		Json toReturn =Json.SuccessResult("Saved!"); 
+		toReturn.setData("key", result.getId());
+		return toReturn;
+	}
 }

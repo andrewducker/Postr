@@ -20,4 +20,8 @@ public class BaseSaveable {
 	String persona;
 	
 	protected BaseSaveable(){}
+
+	public BaseSaveable(BaseSaveable existingData) {
+		this.id = existingData.id;
+	}
 }

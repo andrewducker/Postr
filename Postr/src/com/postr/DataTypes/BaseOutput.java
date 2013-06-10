@@ -12,6 +12,12 @@ public abstract class BaseOutput extends BaseSaveable {
 		this.password = password;
 	}
 	
+	public BaseOutput(BaseOutput existingData, String password) {
+		super(existingData);
+		this.userName = existingData.userName;
+		this.password = password;
+	}
+
 	protected String userName;
 	private String password;
 
