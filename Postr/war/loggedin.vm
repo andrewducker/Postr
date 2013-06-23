@@ -4,11 +4,11 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <title>Postr</title>
 <link rel="stylesheet" href="persona-buttons.css" />
-<script src="https://login.persona.org/include.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.0/themes/base/jquery-ui.css">
+<script src="http://login.persona.org/include.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.0/themes/base/jquery-ui.css">
 <link rel="stylesheet" href="styles.css">
-<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js"></script>
 <script src="wizards.js"></script>
 <script src="persona.js.vm"></script>
 <script type="text/javascript">
@@ -19,13 +19,19 @@ function AddOutput(outputName, AddOutput, UpdateOutput, RemoveOutput) {
 	outputs[outputName] = {Add:AddOutput,Update:UpdateOutput,Remove:RemoveOutput};
 }
 
-function addExistingOutput(userName,id,siteName){
+function addNewOutput(userName,id,siteName,timezone){
 	var newOption = new Option(userName+"@"+siteName);
 	newOption.setAttribute("data-user-name",userName);
 	newOption.setAttribute("data-unique-id",id);
 	newOption.setAttribute("data-site",siteName);
+	newOption.setAttribute("data-timezone",timezone)
 	$("#existingOutputs").append(newOption);
 }
+
+function updateExistingOutput(existingOutput,timezone){
+	existingOutput.data().timezone = timezone;
+}
+
 </script>
 </head>
 <body>
@@ -35,7 +41,7 @@ You are signed in as $userdata.Persona <a class="persona-button orange" onclick=
 <legend>Outputs</legend>
 <select id="existingOutputs">
 #if($userdata.Outputs.size() > 0)
-#foreach($feed in $userdata.Outputs)<option data-user-name=${feed.UserName} data-unique-id=${feed.Id} data-site=$feed.SiteName>
+#foreach($feed in $userdata.Outputs)<option data-user-name=${feed.UserName} data-unique-id=${feed.Id} data-site=$feed.SiteName data-timezone=$feed.TimeZone.ID>
 ${feed.UserName}@$feed.SiteName</option>#end
 #end
 </select>
@@ -58,15 +64,15 @@ ${feed.UserName}@$feed.SiteName</option>#end
 				j( "#AddNewOutput" ).click(function() {
 					var selectedValue = j("#output option:selected").text();
 					outputs[selectedValue].Add().done(function(data){
-						addExistingOutput(data.username,data.key,data.siteName);
+						addNewOutput(data.username,data.key,data.siteName, data.timezone);
 					});
 				});
 				j( "#UpdateOutputs" ).click(function() {
 					var selectedOption = j("#existingOutputs option:selected");
-					var selectedValue = selectedOption.text();
 					var selectedData = selectedOption.data();
-					//outputs[selectedValue].Update(selectedData,uniqueId,selectedData.userName);
-					alert(selectedData.uniqueId +" - " + selectedData.userName);
+					outputs[selectedData.site].Update(selectedData).done(function(data){
+						updateExistingOutput(selectedOption,data.timezone)
+					});
 				});
 				j( "#RemoveOutputs" ).click(function() {
 					var selectedData = j("#existingOutputs option:selected").data();

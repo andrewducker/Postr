@@ -23,8 +23,23 @@ dreamwidth.saveCredentials = function(){
 		var params = {method:"SaveData", username:$("#dwUsername").val(), password:$("#dwPassword").val(), timezone:$("#dwTimeZone").val()};
 		var posting = $.post("dreamwidth",{params:JSON.stringify(params)});
 		wizards.registerCallForWizardDisplay(posting,"dwResultsText","dwResults").done(function(data){
-			data.siteName=dreamwidth.sitename;
+			data.siteName = dreamwidth.sitename;
 			data.username = params.username;
+			data.timezone = params.timezone;
+			dreamwidth.currentDeferral.resolve(data);
+		});
+	}
+	else{
+		wizards.showError("Identity not validated");
+	}
+}
+
+dreamwidth.updateCredentials = function(){
+	if($("#dwIdentity").text() != ""){
+		var params = {method:"UpdateData", password:$("#dwPassword").val(), timezone:$("#dwTimeZone").val(), key:dreamwidth.currentOutput};
+		var posting = $.post("dreamwidth",{params:JSON.stringify(params)});
+		wizards.registerCallForWizardDisplay(posting,"dwResultsText","dwResults").done(function(data){
+			data.timezone = params.timezone;
 			dreamwidth.currentDeferral.resolve(data);
 		});
 	}
@@ -39,6 +54,10 @@ wizards.register("#dwResults",{buttons: [{text:"Done", click: function(){wizards
 dreamwidth.AddOutput = function(){
 	$("#dwIdentity").text("");
 	$("#dwTimeZone").val("");
+	$("#dwPassword").val("");
+	$("#dwUsername").val("");
+	$("#dwUsername").removeProp('disabled');
+	var buttons = $( "#dwCredentials" ).dialog( "option", "buttons", [{text:"ok", click: function(){dreamwidth.saveCredentials()}}]);
 	dreamwidth.currentDeferral = $.Deferred();
 	wizards.showPage("dwCredentials");
 	return dreamwidth.currentDeferral;
@@ -48,6 +67,19 @@ dreamwidth.RemoveOutput = function(key){
 	var params = {method:"RemoveData", key:parseInt(key)};
 	dreamwidth.currentDeferral = $.post("dreamwidth",{params:JSON.stringify(params)});
 	wizards.registerCallForWizardDisplay(dreamwidth.currentDeferral,"dwResultsText","dwResults");
+	return dreamwidth.currentDeferral;
+}
+
+dreamwidth.UpdateOutput = function(existingData){
+	$("#dwIdentity").text("");
+	$("#dwPassword").val("");
+	$("#dwUsername").val(existingData.userName);
+	$("#dwTimeZone").val(existingData.timezone);
+	$("#dwUsername").prop('disabled','disabled');
+	var buttons = $( "#dwCredentials" ).dialog( "option", "buttons", [{text:"ok", click: function(){dreamwidth.updateCredentials()}}]);
+	dreamwidth.currentOutput = existingData.uniqueId;
+	dreamwidth.currentDeferral = $.Deferred();
+	wizards.showPage("dwCredentials");
 	return dreamwidth.currentDeferral;
 }
 
@@ -62,6 +94,6 @@ $(function() {
 		});
 		wizards.registerCallForWizardOnError(posting);
 	});
-	AddOutput(dreamwidth.sitename, dreamwidth.AddOutput,null,dreamwidth.RemoveOutput);
+	AddOutput(dreamwidth.sitename, dreamwidth.AddOutput,dreamwidth.UpdateOutput,dreamwidth.RemoveOutput);
 });
 </script>
