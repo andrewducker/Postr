@@ -1,10 +1,10 @@
 var wizards = new Array();
 wizards.closingAllPages = false;
-wizards.errorWizardPage = "errorReport";
-wizards.errorDiv = "errorText";
+wizards.errorWizardPage = "#errorReport";
+wizards.errorDiv = "#errorText";
 
 wizards.showPage = function(boxToShow){
-	var foundBox = $("#"+boxToShow);
+	var foundBox = $(boxToShow);
 	if(wizards.length > 0){
 		var currentPage = wizards[wizards.length-1];
 		currentPage.dialog( "widget" ).hide();
@@ -44,7 +44,7 @@ wizards.registerCallForWizardDisplay = function(posting, textToUpdate, wizardPag
 	var deferral = $.Deferred();
 	posting.done(function(data){
 		var parsedData = $.parseJSON(data);
-		$("#"+textToUpdate).text(parsedData.result);
+		$(textToUpdate).text(parsedData.result);
 		wizards.showPage(wizardPageToShow);
 		deferral.resolve(parsedData);
 	});
@@ -59,7 +59,7 @@ wizards.registerCallForWizardOnError = function(posting){
 }
 
 wizards.showError = function(errorMessage){
-	$("#"+wizards.errorDiv).text(errorMessage);
+	$(wizards.errorDiv).text(errorMessage);
 	wizards.showPage(wizards.errorWizardPage);
 }
 

@@ -14,86 +14,104 @@
 
 <script type="text/javascript">
 
-dreamwidth = new Object();
-
-dreamwidth.sitename = "Dreamwidth";
-
-dreamwidth.saveCredentials = function(){
-	if($("#dwIdentity").text() != ""){
-		var params = {method:"SaveData", username:$("#dwUsername").val(), password:$("#dwPassword").val(), timezone:$("#dwTimeZone").val()};
-		var posting = $.post("dreamwidth",{params:JSON.stringify(params)});
-		wizards.registerCallForWizardDisplay(posting,"dwResultsText","dwResults").done(function(data){
-			data.siteName = dreamwidth.sitename;
-			data.username = params.username;
-			data.timezone = params.timezone;
-			dreamwidth.currentDeferral.resolve(data);
-		});
+var Dreamwidth = function Dreamwidth(){
+	sitename = "Dreamwidth";
+	siteID = "dreamwidth";
+	usernameID = "#dwUsername";
+	passwordID = "#dwPassword";
+	timezoneID = "#dwTimeZone";
+	credentialsWizard = "#dwCredentials"
+	resultsWizard = "#dwResults";
+	resultsID = "#dwResultsText";
+	identityID = "#dwIdentity"; 
+	verifyID = "#dwCredentialsVerify";
+	that = this;
+	
+	this.saveCredentials = function(){
+		if($("#dwIdentity").text() != ""){
+			var params = {method:"SaveData", username:$(usernameID).val(), password:$(passwordID).val(), timezone:$(timezoneID).val()};
+			var posting = $.post(siteID,{params:JSON.stringify(params)});
+			wizards.registerCallForWizardDisplay(posting,resultsID,resultsWizard).done(function(data){
+				data.siteName = sitename;
+				data.username = params.username;
+				data.timezone = params.timezone;
+				that.currentDeferral.resolve(data);
+			});
+		}
+		else{
+			wizards.showError("Identity not validated");
+		}
 	}
-	else{
-		wizards.showError("Identity not validated");
+
+	this.updateCredentials = function(){
+		if($(identityID).text() != ""){
+			var params = {method:"UpdateData", password:$(passwordID).val(), timezone:$(timezoneID).val(), key:that.currentOutput};
+			var posting = $.post(siteID,{params:JSON.stringify(params)});
+			wizards.registerCallForWizardDisplay(posting,resultsID,resultsWizard).done(function(data){
+				data.timezone = params.timezone;
+				that.currentDeferral.resolve(data);
+			});
+		}
+		else{
+			wizards.showError("Identity not validated");
+		}
 	}
-}
-
-dreamwidth.updateCredentials = function(){
-	if($("#dwIdentity").text() != ""){
-		var params = {method:"UpdateData", password:$("#dwPassword").val(), timezone:$("#dwTimeZone").val(), key:dreamwidth.currentOutput};
-		var posting = $.post("dreamwidth",{params:JSON.stringify(params)});
-		wizards.registerCallForWizardDisplay(posting,"dwResultsText","dwResults").done(function(data){
-			data.timezone = params.timezone;
-			dreamwidth.currentDeferral.resolve(data);
-		});
+	
+	this.AddOutput = function(){
+		$(identityID).text("");
+		$(timezoneID).val("");
+		$(passwordID).val("");
+		$(usernameID).val("");
+		$(usernameID).removeProp('disabled');
+		var buttons = $(credentialsWizard ).dialog( "option", "buttons", [{text:"ok", click: function(){that.saveCredentials()}}]);
+		that.currentDeferral = $.Deferred();
+		wizards.showPage(credentialsWizard);
+		return that.currentDeferral;
 	}
-	else{
-		wizards.showError("Identity not validated");
+
+	this.RemoveOutput = function(key){
+		var params = {method:"RemoveData", key:parseInt(key)};
+		that.currentDeferral = $.post(siteID,{params:JSON.stringify(params)});
+		wizards.registerCallForWizardDisplay(that.currentDeferral,resultsID,resultsWizard);
+		return that.currentDeferral;
 	}
-}
 
-wizards.register("#dwCredentials",{buttons: [{text:"ok", click: dreamwidth.saveCredentials}]});
-wizards.register("#dwResults",{buttons: [{text:"Done", click: function(){wizards.closeAllPages()}}]});
-
-dreamwidth.AddOutput = function(){
-	$("#dwIdentity").text("");
-	$("#dwTimeZone").val("");
-	$("#dwPassword").val("");
-	$("#dwUsername").val("");
-	$("#dwUsername").removeProp('disabled');
-	var buttons = $( "#dwCredentials" ).dialog( "option", "buttons", [{text:"ok", click: function(){dreamwidth.saveCredentials()}}]);
-	dreamwidth.currentDeferral = $.Deferred();
-	wizards.showPage("dwCredentials");
-	return dreamwidth.currentDeferral;
-}
-
-dreamwidth.RemoveOutput = function(key){
-	var params = {method:"RemoveData", key:parseInt(key)};
-	dreamwidth.currentDeferral = $.post("dreamwidth",{params:JSON.stringify(params)});
-	wizards.registerCallForWizardDisplay(dreamwidth.currentDeferral,"dwResultsText","dwResults");
-	return dreamwidth.currentDeferral;
-}
-
-dreamwidth.UpdateOutput = function(existingData){
-	$("#dwIdentity").text("");
-	$("#dwPassword").val("");
-	$("#dwUsername").val(existingData.userName);
-	$("#dwTimeZone").val(existingData.timezone);
-	$("#dwUsername").prop('disabled','disabled');
-	var buttons = $( "#dwCredentials" ).dialog( "option", "buttons", [{text:"ok", click: function(){dreamwidth.updateCredentials()}}]);
-	dreamwidth.currentOutput = existingData.uniqueId;
-	dreamwidth.currentDeferral = $.Deferred();
-	wizards.showPage("dwCredentials");
-	return dreamwidth.currentDeferral;
-}
-
-$(function() {
-	$("#dwCredentialsVerify").click(function(){
-		var params = {method:"VerifyPassword", username:$("#dwUsername").val(), password:$("#dwPassword").val()};
-		var posting = $.post("dreamwidth",{params:JSON.stringify(params)});
+	this.UpdateOutput = function(existingData){
+		$(identityID).text("");
+		$(passwordID).val("");
+		$(usernameID).val(existingData.userName);
+		$(timezoneID).val(existingData.timezone);
+		$(usernameID).prop('disabled','disabled');
+		var buttons = $( credentialsWizard ).dialog( "option", "buttons", [{text:"ok", click: function(){that.updateCredentials()}}]);
+		that.currentOutput = existingData.uniqueId;
+		that.currentDeferral = $.Deferred();
+		wizards.showPage(credentialsWizard);
+		return that.currentDeferral;
+	}
+	
+	$(verifyID).click(function(){
+		var params = {method:"VerifyPassword", username:$(usernameID).val(), password:$(passwordID).val()};
+		var posting = $.post(siteID,{params:JSON.stringify(params)});
 		posting.done(function(data){
 			var parsedData = $.parseJSON(data);
-			$("#dwIdentity").text(parsedData.result);
-			wizards.setProperty("dwCredentials","height","auto");
+			$(identityID).text(parsedData.result);
+			wizards.setProperty(credentialsWizard,"height","auto");
 		});
 		wizards.registerCallForWizardOnError(posting);
 	});
-	AddOutput(dreamwidth.sitename, dreamwidth.AddOutput,dreamwidth.UpdateOutput,dreamwidth.RemoveOutput);
+	AddOutput(sitename, this.AddOutput,this.UpdateOutput,this.RemoveOutput);
+
+};
+
+
+
+
+$(function() {
+
+	var dreamwidth = new Dreamwidth();
+
+	wizards.register("#dwCredentials");
+	wizards.register("#dwResults",{buttons: [{text:"Done", click: function(){wizards.closeAllPages()}}]});
+
 });
 </script>
