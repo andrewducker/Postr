@@ -41,6 +41,12 @@ wizards.closeAllPages = function(){
 }
 
 wizards.registerCallForWizardDisplay = function(posting, textToUpdate, wizardPageToShow){
+	if (!textToUpdate) {
+		textToUpdate = "#resultsText";
+	}
+	if (!wizardPageToShow) {
+		wizardPageToShow = "#results"; 
+	}
 	var deferral = $.Deferred();
 	posting.done(function(data){
 		var parsedData = $.parseJSON(data);
@@ -70,4 +76,6 @@ wizards.setProperty = function(wizardPage, property, value){
 $(function(){
 	$('body').append('<div id="errorReport"><h1>Error!</h1><div id="errorText"><h2>An unknown error occurred</h2></div></div>');
 	wizards.register("#errorReport",{buttons: [{text:"Cancel", click: wizards.closeAllPages},{text:"Back",click:function(){$("#errorReport").dialog("close")}}]});
+	$('body').append('<div id="results" title="Details Updated"><div id="resultsText"><h2>Did it work?</h2></div></div>');
+	wizards.register("#results",{buttons: [{text:"Done", click: function(){wizards.closeAllPages()}}]});
 	});

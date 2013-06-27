@@ -18,17 +18,16 @@ var Dreamwidth = function Dreamwidth(){
 	passwordID = "#dwPassword";
 	timezoneID = "#dwTimeZone";
 	credentialsWizard = "#dwCredentials"
-	resultsWizard = "#results";
-	resultsID = "#resultsText";
 	identityID = "#dwIdentity"; 
 	verifyID = "#dwCredentialsVerify";
+	
 	that = this;
 	
 	saveCredentials = function(){
 		if($("#dwIdentity").text() != ""){
 			var params = {method:"SaveData", username:$(usernameID).val(), password:$(passwordID).val(), timezone:$(timezoneID).val()};
 			var posting = $.post(siteID,{params:JSON.stringify(params)});
-			wizards.registerCallForWizardDisplay(posting,resultsID,resultsWizard).done(function(data){
+			wizards.registerCallForWizardDisplay(posting).done(function(data){
 				data.siteName = sitename;
 				data.username = params.username;
 				data.timezone = params.timezone;
@@ -44,7 +43,7 @@ var Dreamwidth = function Dreamwidth(){
 		if($(identityID).text() != ""){
 			var params = {method:"UpdateData", password:$(passwordID).val(), timezone:$(timezoneID).val(), key:that.currentOutput};
 			var posting = $.post(siteID,{params:JSON.stringify(params)});
-			wizards.registerCallForWizardDisplay(posting,resultsID,resultsWizard).done(function(data){
+			wizards.registerCallForWizardDisplay(posting).done(function(data){
 				data.timezone = params.timezone;
 				that.currentDeferral.resolve(data);
 			});
@@ -69,7 +68,7 @@ var Dreamwidth = function Dreamwidth(){
 	removeOutput = function(key){
 		var params = {method:"RemoveData", key:parseInt(key)};
 		that.currentDeferral = $.post(siteID,{params:JSON.stringify(params)});
-		wizards.registerCallForWizardDisplay(that.currentDeferral,resultsID,resultsWizard);
+		wizards.registerCallForWizardDisplay(that.currentDeferral);
 		return that.currentDeferral;
 	}
 
