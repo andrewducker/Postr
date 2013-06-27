@@ -58,9 +58,14 @@ ${feed.UserName}@$feed.SiteName</option>#end
 
 		#include("outputs\Dreamwidth.include.html")
 		#include("outputs\Livejournal.include.html")
+
+     <div id="results" title="Details Updated">
+		 <div id="resultsText"><h2>Did it work?</h2></div>
+	</div>
 						
 			<script type="text/javascript">
 			j(function(){
+				wizards.register("#results",{buttons: [{text:"Done", click: function(){wizards.closeAllPages()}}]});
 				j( "#AddNewOutput" ).click(function() {
 					var selectedValue = j("#output option:selected").text();
 					outputs[selectedValue].Add().done(function(data){
@@ -82,6 +87,9 @@ ${feed.UserName}@$feed.SiteName</option>#end
 				});
 			});
         </script>
+        
+</div>
+        
         
 </body>
 

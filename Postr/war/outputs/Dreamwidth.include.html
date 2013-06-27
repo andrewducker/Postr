@@ -8,9 +8,6 @@
 	</form>
  </div>
 
-<div id="dwResults" title="Dreamwidth Details Updated">
-	 <div id="dwResultsText"><h2>Did it work?</h2></div>
-</div>
 
 <script type="text/javascript">
 
@@ -21,8 +18,8 @@ var Dreamwidth = function Dreamwidth(){
 	passwordID = "#dwPassword";
 	timezoneID = "#dwTimeZone";
 	credentialsWizard = "#dwCredentials"
-	resultsWizard = "#dwResults";
-	resultsID = "#dwResultsText";
+	resultsWizard = "#results";
+	resultsID = "#resultsText";
 	identityID = "#dwIdentity"; 
 	verifyID = "#dwCredentialsVerify";
 	that = this;
@@ -105,7 +102,6 @@ var Dreamwidth = function Dreamwidth(){
 
 $(function() {
 	wizards.register("#dwCredentials");
-	wizards.register("#dwResults",{buttons: [{text:"Done", click: function(){wizards.closeAllPages()}}]});
 
 	var dreamwidth = new Dreamwidth();
 
