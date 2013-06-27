@@ -12,19 +12,19 @@
 <script type="text/javascript">
 
 var Dreamwidth = function Dreamwidth(){
-	sitename = "Dreamwidth";
-	siteID = "dreamwidth";
-	usernameID = "#dwUsername";
-	passwordID = "#dwPassword";
-	timezoneID = "#dwTimeZone";
-	credentialsWizard = "#dwCredentials"
-	identityID = "#dwIdentity"; 
-	verifyID = "#dwCredentialsVerify";
+	var sitename = "Dreamwidth";
+	var siteID = "dreamwidth";
+	var usernameID = "#dwUsername";
+	var passwordID = "#dwPassword";
+	var timezoneID = "#dwTimeZone";
+	var credentialsWizard = "#dwCredentials"
+	var identityID = "#dwIdentity"; 
+	var verifyID = "#dwCredentialsVerify";
 	
-	that = this;
+	var that = this;
 	
-	saveCredentials = function(){
-		if($("#dwIdentity").text() != ""){
+	var saveCredentials = function(){
+		if($(identityID).text() != ""){
 			var params = {method:"SaveData", username:$(usernameID).val(), password:$(passwordID).val(), timezone:$(timezoneID).val()};
 			var posting = $.post(siteID,{params:JSON.stringify(params)});
 			wizards.registerCallForWizardDisplay(posting).done(function(data){
@@ -39,7 +39,7 @@ var Dreamwidth = function Dreamwidth(){
 		}
 	}
 
-	updateCredentials = function(){
+	var updateCredentials = function(){
 		if($(identityID).text() != ""){
 			var params = {method:"UpdateData", password:$(passwordID).val(), timezone:$(timezoneID).val(), key:that.currentOutput};
 			var posting = $.post(siteID,{params:JSON.stringify(params)});
@@ -53,7 +53,7 @@ var Dreamwidth = function Dreamwidth(){
 		}
 	}
 	
-	addOutput = function(){
+	var addOutput = function(){
 		$(identityID).text("");
 		$(timezoneID).val("");
 		$(passwordID).val("");
@@ -65,14 +65,14 @@ var Dreamwidth = function Dreamwidth(){
 		return that.currentDeferral;
 	}
 
-	removeOutput = function(key){
+	var removeOutput = function(key){
 		var params = {method:"RemoveData", key:parseInt(key)};
 		that.currentDeferral = $.post(siteID,{params:JSON.stringify(params)});
 		wizards.registerCallForWizardDisplay(that.currentDeferral);
 		return that.currentDeferral;
 	}
 
-	updateOutput = function(existingData){
+	var updateOutput = function(existingData){
 		$(identityID).text("");
 		$(passwordID).val("");
 		$(usernameID).val(existingData.userName);
@@ -103,7 +103,5 @@ $(function() {
 	wizards.register("#dwCredentials");
 
 	var dreamwidth = new Dreamwidth();
-
-
 });
 </script>
