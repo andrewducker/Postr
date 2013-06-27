@@ -27,7 +27,7 @@ var Dreamwidth = function Dreamwidth(){
 	verifyID = "#dwCredentialsVerify";
 	that = this;
 	
-	this.saveCredentials = function(){
+	saveCredentials = function(){
 		if($("#dwIdentity").text() != ""){
 			var params = {method:"SaveData", username:$(usernameID).val(), password:$(passwordID).val(), timezone:$(timezoneID).val()};
 			var posting = $.post(siteID,{params:JSON.stringify(params)});
@@ -43,7 +43,7 @@ var Dreamwidth = function Dreamwidth(){
 		}
 	}
 
-	this.updateCredentials = function(){
+	updateCredentials = function(){
 		if($(identityID).text() != ""){
 			var params = {method:"UpdateData", password:$(passwordID).val(), timezone:$(timezoneID).val(), key:that.currentOutput};
 			var posting = $.post(siteID,{params:JSON.stringify(params)});
@@ -57,32 +57,32 @@ var Dreamwidth = function Dreamwidth(){
 		}
 	}
 	
-	this.AddOutput = function(){
+	addOutput = function(){
 		$(identityID).text("");
 		$(timezoneID).val("");
 		$(passwordID).val("");
 		$(usernameID).val("");
 		$(usernameID).removeProp('disabled');
-		var buttons = $(credentialsWizard ).dialog( "option", "buttons", [{text:"ok", click: function(){that.saveCredentials()}}]);
+		var buttons = $(credentialsWizard ).dialog( "option", "buttons", [{text:"ok", click: function(){saveCredentials()}}]);
 		that.currentDeferral = $.Deferred();
 		wizards.showPage(credentialsWizard);
 		return that.currentDeferral;
 	}
 
-	this.RemoveOutput = function(key){
+	removeOutput = function(key){
 		var params = {method:"RemoveData", key:parseInt(key)};
 		that.currentDeferral = $.post(siteID,{params:JSON.stringify(params)});
 		wizards.registerCallForWizardDisplay(that.currentDeferral,resultsID,resultsWizard);
 		return that.currentDeferral;
 	}
 
-	this.UpdateOutput = function(existingData){
+	updateOutput = function(existingData){
 		$(identityID).text("");
 		$(passwordID).val("");
 		$(usernameID).val(existingData.userName);
 		$(timezoneID).val(existingData.timezone);
 		$(usernameID).prop('disabled','disabled');
-		var buttons = $( credentialsWizard ).dialog( "option", "buttons", [{text:"ok", click: function(){that.updateCredentials()}}]);
+		var buttons = $( credentialsWizard ).dialog( "option", "buttons", [{text:"ok", click: function(){updateCredentials()}}]);
 		that.currentOutput = existingData.uniqueId;
 		that.currentDeferral = $.Deferred();
 		wizards.showPage(credentialsWizard);
@@ -99,19 +99,16 @@ var Dreamwidth = function Dreamwidth(){
 		});
 		wizards.registerCallForWizardOnError(posting);
 	});
-	AddOutput(sitename, this.AddOutput,this.UpdateOutput,this.RemoveOutput);
+	AddOutput(sitename, addOutput,updateOutput,removeOutput);
 
 };
 
-
-
-
 $(function() {
+	wizards.register("#dwCredentials");
+	wizards.register("#dwResults",{buttons: [{text:"Done", click: function(){wizards.closeAllPages()}}]});
 
 	var dreamwidth = new Dreamwidth();
 
-	wizards.register("#dwCredentials");
-	wizards.register("#dwResults",{buttons: [{text:"Done", click: function(){wizards.closeAllPages()}}]});
 
 });
 </script>
