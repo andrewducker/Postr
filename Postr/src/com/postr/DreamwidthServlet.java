@@ -16,16 +16,7 @@ public class DreamwidthServlet extends BaseOutputServlet {
 		String password = parameters.getString("password");
 		DWTranslator writer = new DWTranslator();
 		return writer.Login(userName, password);
-	}
-
-	@Override
-	protected Json RemoveData(Json parameters) throws Exception {
-		Long key = parameters.getLong("key");
-		DAO.RemoveThing(DWData.class, key);
-		return Json.SuccessResult("Removed!");
-	}
-	
-	
+	}	
 
 	@Override
 	protected Json SaveData(Json parameters) throws Exception {

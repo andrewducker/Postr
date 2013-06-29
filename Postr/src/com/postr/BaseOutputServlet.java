@@ -17,8 +17,6 @@ public abstract class BaseOutputServlet extends BaseJSONServlet {
 			return VerifyPassword(parameters);
 		case SaveData:
 			return SaveData(parameters);
-		case RemoveData:
-			return RemoveData(parameters);
 		case UpdateData:
 			return UpdateData(parameters);
 		default:
@@ -29,8 +27,6 @@ public abstract class BaseOutputServlet extends BaseJSONServlet {
 
 	protected abstract Json UpdateData	(Json parameters) throws Exception;
 
-	protected abstract Json RemoveData	(Json parameters) throws Exception;
-	
 	protected abstract Json VerifyPassword(Json parameters) throws Exception;
 	
 	protected abstract Json SaveData(Json parameters) throws Exception;

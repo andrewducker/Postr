@@ -19,13 +19,6 @@ public class LivejournalServlet extends BaseOutputServlet {
 	}
 
 	@Override
-	protected Json RemoveData(Json parameters) throws Exception {
-		Long key = parameters.getLong("key");
-		DAO.RemoveThing(LJData.class, key);
-		return Json.SuccessResult("Removed!");
-	}
-
-	@Override
 	protected Json SaveData(Json parameters) throws Exception {
 		String userName = parameters.getString("username");
 		String password = parameters.getString("password");

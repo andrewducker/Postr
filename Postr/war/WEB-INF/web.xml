@@ -16,6 +16,14 @@
 	<url-pattern>/livejournal</url-pattern>
 </servlet-mapping>
 <servlet>
+	<servlet-name>DataManagement</servlet-name>
+	<servlet-class>com.postr.DataManagementServlet</servlet-class>
+</servlet>
+<servlet-mapping>
+	<servlet-name>DataManagement</servlet-name>
+	<url-pattern>/datamanagement</url-pattern>
+</servlet-mapping>
+<servlet>
 	<servlet-name>PersonaVerification</servlet-name>
 	<servlet-class>com.postr.PersonaVerificationServlet</servlet-class>
 </servlet>

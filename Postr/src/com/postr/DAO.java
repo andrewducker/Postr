@@ -30,4 +30,8 @@ public static <T extends BaseSaveable> List<T> LoadThings(Class<T> clazz, String
 public static <T extends BaseSaveable> void RemoveThing(Class<T> clazz, Long key){
 	ofy().delete().type(clazz).id(key);
 }
+
+public static  void RemoveThing(Long key){
+	ofy().delete().type(BaseSaveable.class).id(key);
+}
 }
