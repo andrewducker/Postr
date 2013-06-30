@@ -71,7 +71,7 @@
 					$(timezoneID).val(existingData.timezone);
 					$(usernameID).prop('disabled','disabled');
 					var buttons = $( credentialsWizard ).dialog( "option", "buttons", [{text:"ok", click: function(){updateCredentials()}}]);
-					that.currentOutput = existingData.uniqueId;
+					that.currentOutput = existingData.key;
 					that.currentDeferral = $.Deferred();
 					wizards.showPage(credentialsWizard);
 					return that.currentDeferral;

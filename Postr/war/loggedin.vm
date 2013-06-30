@@ -19,10 +19,10 @@
 				outputs[outputName] = {Add:AddOutput,Update:UpdateOutput};
 			}
 			
-			function addNewOutput(userName,id,siteName,timezone){
+			function addNewOutput(userName,key,siteName,timezone){
 				var newOption = new Option(userName+"@"+siteName);
 				newOption.setAttribute("data-user-name",userName);
-				newOption.setAttribute("data-unique-id",id);
+				newOption.setAttribute("data-key",key);
 				newOption.setAttribute("data-site",siteName);
 				newOption.setAttribute("data-timezone",timezone)
 				$("#existingOutputs").append(newOption);
@@ -75,7 +75,7 @@
 				});
 				j( "#RemoveOutputs" ).click(function() {
 					var selectedData = j("#existingOutputs option:selected").data();
-					RemoveData(selectedData.uniqueId).done(function(){
+					RemoveData(selectedData.key).done(function(){
 						j("#existingOutputs option:selected").remove();
 					});
 				});
