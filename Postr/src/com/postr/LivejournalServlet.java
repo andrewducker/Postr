@@ -12,7 +12,7 @@ public class LivejournalServlet extends BaseOutputServlet {
 
 	@Override
 	protected Json VerifyPassword(Json parameters) throws Exception {
-		String userName = parameters.getString("username");
+		String userName = parameters.getString("userName");
 		String password = parameters.getString("password");
 		LJTranslator writer = new LJTranslator();
 		return writer.Login(userName, password);
@@ -20,9 +20,9 @@ public class LivejournalServlet extends BaseOutputServlet {
 
 	@Override
 	protected Json SaveData(Json parameters) throws Exception {
-		String userName = parameters.getString("username");
+		String userName = parameters.getString("userName");
 		String password = parameters.getString("password");
-		String timeZone = parameters.getString("timezone");
+		String timeZone = parameters.getString("timeZone");
 		LJData ljData = new LJData(
 				userName, password,
 				TimeZone.getTimeZone(timeZone));
@@ -37,7 +37,7 @@ public class LivejournalServlet extends BaseOutputServlet {
 	protected Json UpdateData(Json parameters) throws Exception {
 		Long key = parameters.getLong("key");
 		String password = parameters.getString("password");
-		String timeZone = parameters.getString("timezone");
+		String timeZone = parameters.getString("timeZone");
 		LJData existingDWData = DAO.LoadThing(LJData.class, key);
 		
 		LJData newDWData = new LJData(existingDWData,password,TimeZone.getTimeZone(timeZone));

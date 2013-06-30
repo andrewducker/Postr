@@ -12,7 +12,7 @@ public class DreamwidthServlet extends BaseOutputServlet {
 
 	@Override
 	protected Json VerifyPassword(Json parameters) throws Exception {
-		String userName = parameters.getString("username");
+		String userName = parameters.getString("userName");
 		String password = parameters.getString("password");
 		DWTranslator writer = new DWTranslator();
 		return writer.Login(userName, password);
@@ -20,9 +20,9 @@ public class DreamwidthServlet extends BaseOutputServlet {
 
 	@Override
 	protected Json SaveData(Json parameters) throws Exception {
-		String userName = parameters.getString("username");
+		String userName = parameters.getString("userName");
 		String password = parameters.getString("password");
-		String timeZone = parameters.getString("timezone");
+		String timeZone = parameters.getString("timeZone");
 		DWData dwData = new DWData(
 				userName, password,
 				TimeZone.getTimeZone(timeZone));
@@ -37,7 +37,7 @@ public class DreamwidthServlet extends BaseOutputServlet {
 	protected Json UpdateData(Json parameters) throws Exception {
 		Long key = parameters.getLong("key");
 		String password = parameters.getString("password");
-		String timeZone = parameters.getString("timezone");
+		String timeZone = parameters.getString("timeZone");
 		DWData existingDWData = DAO.LoadThing(DWData.class, key);
 		
 		DWData newDWData = new DWData(existingDWData,password,TimeZone.getTimeZone(timeZone));

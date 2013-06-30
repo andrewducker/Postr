@@ -19,17 +19,18 @@
 				outputs[outputName] = {Add:AddOutput,Update:UpdateOutput};
 			}
 			
-			function addNewOutput(userName,key,siteName,timezone){
-				var newOption = new Option(userName+"@"+siteName);
-				newOption.setAttribute("data-user-name",userName);
-				newOption.setAttribute("data-key",key);
-				newOption.setAttribute("data-site",siteName);
-				newOption.setAttribute("data-timezone",timezone)
+			function addNewOutput(data){
+				var newOption = new Option(data.userName+"@"+data.siteName);
 				$("#existingOutputs").append(newOption);
+				var newComboItem = $('#existingOutputs option:last-child');
+				var oldData = newComboItem.data();
+				debugger;
+				newComboItem.data(data);
+				oldData = newComboItem.data();
 			}
 			
 			function updateExistingOutput(existingOutput,timezone){
-				existingOutput.data().timezone = timezone;
+				existingOutput.data().timeZone = timezone;
 			}
 		</script>
 	</head>
@@ -40,7 +41,7 @@
 			<legend>Outputs</legend>
 			<select id="existingOutputs">
 			#if($userdata.Outputs.size() > 0)
-			#foreach($feed in $userdata.Outputs)<option data-user-name=${feed.UserName} data-unique-id=${feed.Id} data-site=$feed.SiteName data-timezone=$feed.TimeZone.ID>
+			#foreach($feed in $userdata.Outputs)<option data-user-name=${feed.UserName} data-key=${feed.Id} data-site-name=$feed.SiteName data-time-zone=$feed.TimeZone.ID>
 			${feed.UserName}@$feed.SiteName</option>#end
 			#end
 			</select>
@@ -63,14 +64,14 @@
 				j( "#AddNewOutput" ).click(function() {
 					var selectedValue = j("#output option:selected").text();
 					outputs[selectedValue].Add().done(function(data){
-						addNewOutput(data.username,data.key,data.siteName, data.timezone);
+						addNewOutput(data);
 					});
 				});
 				j( "#UpdateOutputs" ).click(function() {
 					var selectedOption = j("#existingOutputs option:selected");
 					var selectedData = selectedOption.data();
-					outputs[selectedData.site].Update(selectedData).done(function(data){
-						updateExistingOutput(selectedOption,data.timezone)
+					outputs[selectedData.siteName].Update(selectedData).done(function(data){
+						updateExistingOutput(selectedOption,data.timeZone)
 					});
 				});
 				j( "#RemoveOutputs" ).click(function() {

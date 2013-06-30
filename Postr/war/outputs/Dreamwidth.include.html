@@ -11,7 +11,7 @@
 		<script type="text/javascript">
 		
 			var Dreamwidth = function Dreamwidth(){
-				var sitename = "Dreamwidth";
+				var siteName = "Dreamwidth";
 				var siteID = "dreamwidth";
 				var usernameID = "#dwUsername";
 				var passwordID = "#dwPassword";
@@ -24,12 +24,12 @@
 				
 				var saveCredentials = function(){
 					if($(identityID).text() != ""){
-						var params = {method:"SaveData", username:$(usernameID).val(), password:$(passwordID).val(), timezone:$(timezoneID).val()};
+						var params = {method:"SaveData", userName:$(usernameID).val(), password:$(passwordID).val(), timeZone:$(timezoneID).val()};
 						var posting = $.post(siteID,{params:JSON.stringify(params)});
 						wizards.registerCallForWizardDisplay(posting).done(function(data){
-							data.siteName = sitename;
-							data.username = params.username;
-							data.timezone = params.timezone;
+							data.siteName = siteName;
+							data.userName = params.userName;
+							data.timeZone = params.timeZone;
 							that.currentDeferral.resolve(data);
 						});
 					}
@@ -40,10 +40,10 @@
 			
 				var updateCredentials = function(){
 					if($(identityID).text() != ""){
-						var params = {method:"UpdateData", password:$(passwordID).val(), timezone:$(timezoneID).val(), key:that.currentOutput};
+						var params = {method:"UpdateData", password:$(passwordID).val(), timeZone:$(timezoneID).val(), key:that.currentOutput};
 						var posting = $.post(siteID,{params:JSON.stringify(params)});
 						wizards.registerCallForWizardDisplay(posting).done(function(data){
-							data.timezone = params.timezone;
+							data.timeZone = params.timeZone;
 							that.currentDeferral.resolve(data);
 						});
 					}
@@ -68,7 +68,7 @@
 					$(identityID).text("");
 					$(passwordID).val("");
 					$(usernameID).val(existingData.userName);
-					$(timezoneID).val(existingData.timezone);
+					$(timezoneID).val(existingData.timeZone);
 					$(usernameID).prop('disabled','disabled');
 					var buttons = $( credentialsWizard ).dialog( "option", "buttons", [{text:"ok", click: function(){updateCredentials()}}]);
 					that.currentOutput = existingData.key;
@@ -78,7 +78,7 @@
 				}
 				
 				$(verifyID).click(function(){
-					var params = {method:"VerifyPassword", username:$(usernameID).val(), password:$(passwordID).val()};
+					var params = {method:"VerifyPassword", userName:$(usernameID).val(), password:$(passwordID).val()};
 					var posting = $.post(siteID,{params:JSON.stringify(params)});
 					posting.done(function(data){
 						var parsedData = $.parseJSON(data);
@@ -87,7 +87,7 @@
 					});
 					wizards.registerCallForWizardOnError(posting);
 				});
-				AddOutput(sitename, addOutput,updateOutput);
+				AddOutput(siteName, addOutput,updateOutput);
 			};
 		
 			$(function() {
