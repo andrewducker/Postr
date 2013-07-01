@@ -23,15 +23,9 @@
 				var newOption = new Option(data.userName+"@"+data.siteName);
 				$("#existingOutputs").append(newOption);
 				var newComboItem = $('#existingOutputs option:last-child');
-				var oldData = newComboItem.data();
-				debugger;
 				newComboItem.data(data);
-				oldData = newComboItem.data();
 			}
 			
-			function updateExistingOutput(existingOutput,timezone){
-				existingOutput.data().timeZone = timezone;
-			}
 		</script>
 	</head>
 	<body>
@@ -70,9 +64,7 @@
 				j( "#UpdateOutputs" ).click(function() {
 					var selectedOption = j("#existingOutputs option:selected");
 					var selectedData = selectedOption.data();
-					outputs[selectedData.siteName].Update(selectedData).done(function(data){
-						updateExistingOutput(selectedOption,data.timeZone)
-					});
+					outputs[selectedData.siteName].Update(selectedData)
 				});
 				j( "#RemoveOutputs" ).click(function() {
 					var selectedData = j("#existingOutputs option:selected").data();

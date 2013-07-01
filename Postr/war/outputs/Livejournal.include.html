@@ -39,11 +39,11 @@
 			
 				var updateCredentials = function(){
 					if($(identityID).text() != ""){
-						var params = {method:"UpdateData", password:$(passwordID).val(), timeZone:$(timezoneID).val(), key:that.currentOutput};
+						var params = {method:"UpdateData", password:$(passwordID).val(), timeZone:$(timezoneID).val(), key:that.currentOutput.key};
 						var posting = $.post(siteID,{params:JSON.stringify(params)});
 						wizards.registerCallForWizardDisplay(posting).done(function(data){
-							data.timeZone = params.timeZone;
-							that.currentDeferral.resolve(data);
+							that.currentOutput.timeZone = params.timeZone;
+							that.currentDeferral.resolve();
 						});
 					}
 					else{
@@ -70,7 +70,7 @@
 					$(timezoneID).val(existingData.timeZone);
 					$(usernameID).prop('disabled','disabled');
 					var buttons = $( credentialsWizard ).dialog( "option", "buttons", [{text:"ok", click: function(){updateCredentials()}}]);
-					that.currentOutput = existingData.key;
+					that.currentOutput = existingData;
 					that.currentDeferral = $.Deferred();
 					wizards.showPage(credentialsWizard);
 					return that.currentDeferral;
@@ -88,7 +88,7 @@
 				});
 				AddOutput(siteName, addOutput,updateOutput);
 			};
-				
+		
 			$(function() {
 				wizards.register("#ljCredentials");
 				var livejournal = new Livejournal();
