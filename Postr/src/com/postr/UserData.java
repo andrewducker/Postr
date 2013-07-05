@@ -25,9 +25,18 @@ public class UserData {
 			if (baseSaveable instanceof BaseOutput) {
 				outputs.add((BaseOutput) baseSaveable);
 			}
+			if (baseSaveable instanceof BaseInput) {
+				inputs.add((BaseInput) baseSaveable);
+			}
 		}
 	}
 	
+	private Vector<BaseInput> inputs = new Vector<BaseInput>();
+	
+	public List<BaseInput> getInputs(){
+		return inputs;
+	}
+
 	private Vector<BaseOutput> outputs = new Vector<BaseOutput>();
 	
 	public List<BaseOutput> getOutputs(){

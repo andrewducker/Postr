@@ -16,6 +16,14 @@
 	<url-pattern>/livejournal</url-pattern>
 </servlet-mapping>
 <servlet>
+	<servlet-name>Delicious</servlet-name>
+	<servlet-class>com.postr.DeliciousServlet</servlet-class>
+</servlet>
+<servlet-mapping>
+	<servlet-name>Delicious</servlet-name>
+	<url-pattern>/delicious</url-pattern>
+</servlet-mapping>
+<servlet>
 	<servlet-name>DataManagement</servlet-name>
 	<servlet-class>com.postr.DataManagementServlet</servlet-class>
 </servlet>

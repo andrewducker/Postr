@@ -1,0 +1,66 @@
+		<div id="delCredentials" title="Delicious Details">
+			<form>
+				<label for=delUsername>User Name:</label> <input type="text" id="delUsername" name="username"><BR>
+				<button type="button" id="delCredentialsVerify">Verify</button><BR>
+				<div id="delIdentity"></div><BR>
+			</form>
+		</div>
+		
+		<script type="text/javascript">
+		
+			var Delicious = function Delicious(){
+				var siteName = "Delicious";
+				var siteID = "delicious";
+				var usernameID = "#delUsername";
+				var credentialsWizard = "#delCredentials"
+				var identityID = "#delIdentity"; 
+				var verifyID = "#delCredentialsVerify";
+				
+				var that = this;
+				
+				var saveCredentials = function(){
+					if($(identityID).text() != ""){
+						var params = {method:"SaveData", userName:$(usernameID).val()};
+						var posting = $.post(siteID,{params:JSON.stringify(params)});
+						wizards.registerCallForWizardDisplay(posting).done(function(data){
+							data.siteName = siteName;
+							data.userName = params.userName;
+							that.currentDeferral.resolve(data);
+						});
+					}
+					else{
+						wizards.showError("Identity not validated");
+					}
+				}
+			
+				var addInput = function(){
+					$(identityID).text("");
+					$(usernameID).val("");
+					var buttons = $(credentialsWizard ).dialog( "option", "buttons", [{text:"ok", click: function(){saveCredentials()}}]);
+					that.currentDeferral = $.Deferred();
+					wizards.showPage(credentialsWizard);
+					return that.currentDeferral;
+				}
+				
+				var updateInput = function(){
+					
+				}
+			
+				$(verifyID).click(function(){
+					var params = {method:"VerifyUserExists", userName:$(usernameID).val()};
+					var posting = $.post(siteID,{params:JSON.stringify(params)});
+					posting.done(function(data){
+						var parsedData = $.parseJSON(data);
+						$(identityID).text("Verified");
+						wizards.setProperty(credentialsWizard,"height","auto");
+					});
+					wizards.registerCallForWizardOnError(posting);
+				});
+				AddInput(siteName, addInput,updateInput);
+			};
+		
+			$(function() {
+				wizards.register("#delCredentials");
+				var delicious = new Delicious();
+			});
+		</script>

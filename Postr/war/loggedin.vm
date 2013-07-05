@@ -14,18 +14,31 @@
 		<script type="text/javascript">
 			j = $;
 			outputs = new Object();
+			inputs = new Object();
 			function AddOutput(outputName, AddOutput, UpdateOutput) {
 				$("#output").append(new Option(outputName));
 				outputs[outputName] = {Add:AddOutput,Update:UpdateOutput};
 			}
 			
-			function addNewOutput(data){
-				var newOption = new Option(data.userName+"@"+data.siteName);
-				$("#existingOutputs").append(newOption);
-				var newComboItem = $('#existingOutputs option:last-child');
+			function AddInput(inputName, AddInput, UpdateInput) {
+				$("#input").append(new Option(inputName));
+				inputs[inputName] = {Add:AddInput,Update:UpdateInput};
+			}
+
+			function addNewComboItem(id, text, data){
+				var newOption = new Option(text);
+				$(id).append(newOption);
+				var newComboItem = $(id+' option:last-child');
 				newComboItem.data(data);
 			}
-			
+
+			function addNewOutput(data){
+				addNewComboItem("#existingOutputs",data.userName+"@"+data.siteName,data);
+			}
+
+			function addNewInput(data){
+				addNewComboItem("#existingInputs",data.userName+"@"+data.siteName,data);
+			}
 		</script>
 	</head>
 	<body>
@@ -35,8 +48,8 @@
 			<legend>Outputs</legend>
 			<select id="existingOutputs">
 			#if($userdata.Outputs.size() > 0)
-			#foreach($feed in $userdata.Outputs)<option data-user-name=${feed.UserName} data-key=${feed.Id} data-site-name=$feed.SiteName data-time-zone=$feed.TimeZone.ID>
-			${feed.UserName}@$feed.SiteName</option>#end
+			#foreach($output in $userdata.Outputs)<option data-user-name=${output.UserName} data-key=${output.Id} data-site-name=$output.SiteName data-time-zone=$output.TimeZone.ID>
+			${output.UserName}@$output.SiteName</option>#end
 			#end
 			</select>
 			<label for="UpdateOutputs">Existing</label>
@@ -46,12 +59,32 @@
 			<BR>
 			<select id="output" name="output">
 			</select>
-			<label for="AddNewOutput">New Input?</label>
+			<label for="AddNewOutput">New Output?</label>
 			<input type="submit" id="AddNewOutput" value="Add">
 		</fieldset>
 		
+		<fieldset>
+			<legend>Inputs</legend>
+			<select id="existingInputs">
+			#if($userdata.Inputs.size() > 0)
+			#foreach($input in $userdata.Inputs)<option data-user-name=${input.UserName} data-key=${input.Id} data-site-name=$input.SiteName>
+			${input.UserName}@$input.SiteName</option>#end
+			#end
+			</select>
+			<label for="UpdateInputs">Existing</label>
+			<input type="submit" id="UpdateInputs" value="Update">
+			<label for="RemoveIntputs">Existing</label>
+			<input type="submit" id="RemoveInputs" value="Remove">
+			<BR>
+			<select id="input" name="input">
+			</select>
+			<label for="AddNewInput">New Input?</label>
+			<input type="submit" id="AddNewInput" value="Add">
+		</fieldset>
+
 #include("outputs\Dreamwidth.include.html")
 #include("outputs\Livejournal.include.html")
+#include("inputs\Delicious.include.html")
 		
 		<script type="text/javascript">
 			j(function(){
@@ -70,6 +103,23 @@
 					var selectedData = j("#existingOutputs option:selected").data();
 					RemoveData(selectedData.key).done(function(){
 						j("#existingOutputs option:selected").remove();
+					});
+				});
+				j( "#AddNewInput" ).click(function() {
+					var selectedValue = j("#input option:selected").text();
+					inputs[selectedValue].Add().done(function(data){
+						addNewInput(data);
+					});
+				});
+				j( "#UpdateInputs" ).click(function() {
+					var selectedOption = j("#existingInputs option:selected");
+					var selectedData = selectedOption.data();
+					inputs[selectedData.siteName].Update(selectedData)
+				});
+				j( "#RemoveInputs" ).click(function() {
+					var selectedData = j("#existingInputs option:selected").data();
+					RemoveData(selectedData.key).done(function(){
+						j("#existingInputs option:selected").remove();
 					});
 				});
 			});

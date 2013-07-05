@@ -21,8 +21,6 @@ public abstract class BaseJSONServlet extends BasePersonaSessionServlet {
 			Json result = ProcessRequest(parameters);
 			
 			processResult(resp, result);
-
-
 		} catch (Exception e) {
 			resp.setStatus(500);
 			resp.getWriter().print(e.getMessage());
@@ -32,13 +30,14 @@ public abstract class BaseJSONServlet extends BasePersonaSessionServlet {
 	
 	private void processResult(HttpServletResponse resp, Json result)
 			throws IOException, Exception {
+		String res = result.ToJson();
 		if (result.getString(Json.RESULT) != null) {
-			resp.getWriter().print(result.ToJson());	
+			resp.getWriter().print(res);	
 		}
 		else
 		{
 			resp.setStatus(500);
-			resp.getWriter().print(result.getString(Json.ERROR_MESSAGE));	
+			resp.getWriter().print(result.getString(Json.ERROR_MESSAGE));
 		}
 	}
 	

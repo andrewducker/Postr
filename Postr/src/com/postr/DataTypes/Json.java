@@ -27,13 +27,13 @@ public class Json  {
 		
 		public static Json SuccessResult(String message){
 			Json result = new Json();
-			result.data.put("result", message);
+			result.data.put(RESULT, message);
 			return result;
 		}
 		
 		public static Json ErrorResult(String message){
 			Json result = new Json();
-			result.data.put("ErrorMessage", message);
+			result.data.put(ERROR_MESSAGE, message);
 			return result;
 		}
 		
