@@ -12,7 +12,6 @@
 		<script src="wizards.js"></script>
 		<script src="persona.js.vm"></script>
 		<script type="text/javascript">
-			j = $;
 			outputs = new Object();
 			inputs = new Object();
 			function AddOutput(outputName, AddOutput, UpdateOutput) {
@@ -87,45 +86,45 @@
 #include("inputs\Delicious.include.html")
 		
 		<script type="text/javascript">
-			j(function(){
-				j( "#AddNewOutput" ).click(function() {
-					var selectedValue = j("#output option:selected").text();
+			$(function(){
+				$( "#AddNewOutput" ).click(function() {
+					var selectedValue = $("#output option:selected").text();
 					outputs[selectedValue].Add().done(function(data){
 						addNewOutput(data);
 					});
 				});
-				j( "#UpdateOutputs" ).click(function() {
-					var selectedOption = j("#existingOutputs option:selected");
+				$( "#UpdateOutputs" ).click(function() {
+					var selectedOption = $("#existingOutputs option:selected");
 					var selectedData = selectedOption.data();
 					outputs[selectedData.siteName].Update(selectedData)
 				});
-				j( "#RemoveOutputs" ).click(function() {
-					var selectedData = j("#existingOutputs option:selected").data();
+				$( "#RemoveOutputs" ).click(function() {
+					var selectedData = $("#existingOutputs option:selected").data();
 					RemoveData(selectedData.key).done(function(){
-						j("#existingOutputs option:selected").remove();
+						$("#existingOutputs option:selected").remove();
 					});
 				});
-				j( "#AddNewInput" ).click(function() {
-					var selectedValue = j("#input option:selected").text();
+				$( "#AddNewInput" ).click(function() {
+					var selectedValue = $("#input option:selected").text();
 					inputs[selectedValue].Add().done(function(data){
 						addNewInput(data);
 					});
 				});
-				j( "#UpdateInputs" ).click(function() {
-					var selectedOption = j("#existingInputs option:selected");
+				$( "#UpdateInputs" ).click(function() {
+					var selectedOption = $("#existingInputs option:selected");
 					var selectedData = selectedOption.data();
 					inputs[selectedData.siteName].Update(selectedData)
 				});
-				j( "#RemoveInputs" ).click(function() {
-					var selectedData = j("#existingInputs option:selected").data();
+				$( "#RemoveInputs" ).click(function() {
+					var selectedData = $("#existingInputs option:selected").data();
 					RemoveData(selectedData.key).done(function(){
-						j("#existingInputs option:selected").remove();
+						$("#existingInputs option:selected").remove();
 					});
 				});
 			});
 			function RemoveData(key){
 				var params = {method:"RemoveData", key:parseInt(key)};
-				var deferral = j.post("datamanagement",{params:JSON.stringify(params)});
+				var deferral = jQuery.post("datamanagement",{params:JSON.stringify(params)});
 				wizards.registerCallForWizardDisplay(deferral);
 				return deferral;
 			}
