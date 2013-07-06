@@ -19,9 +19,9 @@
 				outputs[outputName] = {Add:AddOutput,Update:UpdateOutput};
 			}
 			
-			function AddInput(inputName, AddInput, UpdateInput) {
+			function AddInput(inputName, AddInput) {
 				$("#input").append(new Option(inputName));
-				inputs[inputName] = {Add:AddInput,Update:UpdateInput};
+				inputs[inputName] = {Add:AddInput};
 			}
 
 			function addNewComboItem(id, text, data){
@@ -70,8 +70,6 @@
 			${input.UserName}@$input.SiteName</option>#end
 			#end
 			</select>
-			<label for="UpdateInputs">Existing</label>
-			<input type="submit" id="UpdateInputs" value="Update">
 			<label for="RemoveIntputs">Existing</label>
 			<input type="submit" id="RemoveInputs" value="Remove">
 			<BR>
@@ -115,11 +113,6 @@
 						addNewInput(data);
 						DisableIfComboEmpty("#existingInputs","#RemoveInputs")
 					});
-				});
-				$( "#UpdateInputs" ).click(function() {
-					var selectedOption = $("#existingInputs option:selected");
-					var selectedData = selectedOption.data();
-					inputs[selectedData.siteName].Update(selectedData)
 				});
 				$( "#RemoveInputs" ).click(function() {
 					var selectedData = $("#existingInputs option:selected").data();

@@ -42,10 +42,6 @@
 					return that.currentDeferral;
 				}
 				
-				var updateInput = function(){
-					
-				}
-			
 				$(usernameID).change(function(){
 					$(identityID).text("");
 				})
@@ -60,7 +56,7 @@
 					});
 					wizards.registerCallForWizardOnError(posting);
 				});
-				AddInput(siteName, addInput,updateInput);
+				AddInput(siteName, addInput);
 			};
 		
 			$(function() {
