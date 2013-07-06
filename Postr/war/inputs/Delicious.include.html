@@ -46,6 +46,10 @@
 					
 				}
 			
+				$(usernameID).change(function(){
+					$(identityID).text("");
+				})
+				
 				$(verifyID).click(function(){
 					var params = {method:"VerifyUserExists", userName:$(usernameID).val()};
 					var posting = $.post(siteID,{params:JSON.stringify(params)});

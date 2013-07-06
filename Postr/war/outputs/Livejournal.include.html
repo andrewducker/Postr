@@ -76,6 +76,14 @@
 					return that.currentDeferral;
 				}
 				
+				$(usernameID).change(function(){
+					$(identityID).text("");
+				})
+
+				$(passwordID).change(function(){
+					$(identityID).text("");
+				})
+
 				$(verifyID).click(function(){
 					var params = {method:"VerifyPassword", userName:$(usernameID).val(), password:$(passwordID).val()};
 					var posting = $.post(siteID,{params:JSON.stringify(params)});
