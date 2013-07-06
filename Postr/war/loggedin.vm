@@ -91,6 +91,8 @@
 					var selectedValue = $("#output option:selected").text();
 					outputs[selectedValue].Add().done(function(data){
 						addNewOutput(data);
+						DisableIfComboEmpty("#existingOutputs","#RemoveOutputs")
+						DisableIfComboEmpty("#existingOutputs","#UpdateOutputs")
 					});
 				});
 				$( "#UpdateOutputs" ).click(function() {
@@ -102,12 +104,15 @@
 					var selectedData = $("#existingOutputs option:selected").data();
 					RemoveData(selectedData.key).done(function(){
 						$("#existingOutputs option:selected").remove();
+						DisableIfComboEmpty("#existingOutputs","#RemoveOutputs")
+						DisableIfComboEmpty("#existingOutputs","#UpdateOutputs")
 					});
 				});
 				$( "#AddNewInput" ).click(function() {
 					var selectedValue = $("#input option:selected").text();
 					inputs[selectedValue].Add().done(function(data){
 						addNewInput(data);
+						DisableIfComboEmpty("#existingInputs","#RemoveInputs")
 					});
 				});
 				$( "#UpdateInputs" ).click(function() {
@@ -119,9 +124,25 @@
 					var selectedData = $("#existingInputs option:selected").data();
 					RemoveData(selectedData.key).done(function(){
 						$("#existingInputs option:selected").remove();
+						DisableIfComboEmpty("#existingInputs","#RemoveInputs")
 					});
 				});
+				DisableIfComboEmpty("#existingOutputs","#RemoveOutputs")
+				DisableIfComboEmpty("#existingOutputs","#UpdateOutputs")
+				DisableIfComboEmpty("#existingInputs","#RemoveInputs")
 			});
+			
+			
+			
+			function DisableIfComboEmpty(comboID, itemID){
+				if($(comboID + " option").length == 0){
+					$(itemID).prop('disabled','disabled');
+				}
+				else{
+					$(itemID).removeProp('disabled');
+				}
+			}
+			
 			function RemoveData(key){
 				var params = {method:"RemoveData", key:parseInt(key)};
 				var deferral = jQuery.post("datamanagement",{params:JSON.stringify(params)});
