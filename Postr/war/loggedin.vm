@@ -84,6 +84,7 @@
 #include("outputs\Dreamwidth.include.html")
 #include("outputs\Livejournal.include.html")
 #include("inputs\Delicious.include.html")
+#include("inputs\Pinboard.include.html")
 		
 		<script type="text/javascript">
 			$(function(){
@@ -132,8 +133,6 @@
 				DisableIfComboEmpty("#existingInputs","#RemoveInputs")
 			});
 			
-			
-			
 			function DisableIfComboEmpty(comboID, itemID){
 				if($(comboID + " option").length == 0){
 					$(itemID).prop('disabled','disabled');
@@ -150,9 +149,5 @@
 				return deferral;
 			}
 		</script>
-	        
-	        
-	        
 	</body>
-
 </html>

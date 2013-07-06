@@ -13,6 +13,7 @@ static {
 	ObjectifyService.register(LJData.class);
 	ObjectifyService.register(DWData.class);
 	ObjectifyService.register(DeliciousData.class);
+	ObjectifyService.register(PinboardData.class);
 }
 
 public static <T extends BaseSaveable> Key<T> SaveThing(T thing, String persona){

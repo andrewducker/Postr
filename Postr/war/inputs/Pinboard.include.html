@@ -1,0 +1,70 @@
+		<div id="pinCredentials" title="Pinboard Details">
+			<form>
+				<label for=pinUsername>User Name:</label> <input type="text" id="pinUsername" name="username"><BR>
+				<button type="button" id="pinCredentialsVerify">Verify</button><BR>
+				<div id="pinIdentity"></div><BR>
+			</form>
+		</div>
+		
+		<script type="text/javascript">
+		
+			var Pinboard = function Pinboard(){
+				var siteName = "Pinboard";
+				var siteID = "pinboard";
+				var usernameID = "#pinUsername";
+				var credentialsWizard = "#pinCredentials"
+				var identityID = "#pinIdentity"; 
+				var verifyID = "#pinCredentialsVerify";
+				
+				var that = this;
+				
+				var saveCredentials = function(){
+					if($(identityID).text() != ""){
+						var params = {method:"SaveData", userName:$(usernameID).val()};
+						var posting = $.post(siteID,{params:JSON.stringify(params)});
+						wizards.registerCallForWizardDisplay(posting).done(function(data){
+							data.siteName = siteName;
+							data.userName = params.userName;
+							that.currentDeferral.resolve(data);
+						});
+					}
+					else{
+						wizards.showError("Identity not validated");
+					}
+				}
+			
+				var addInput = function(){
+					$(identityID).text("");
+					$(usernameID).val("");
+					var buttons = $(credentialsWizard ).dialog( "option", "buttons", [{text:"ok", click: function(){saveCredentials()}}]);
+					that.currentDeferral = $.Deferred();
+					wizards.showPage(credentialsWizard);
+					return that.currentDeferral;
+				}
+				
+				var updateInput = function(){
+					
+				}
+			
+				$(usernameID).change(function(){
+					$(identityID).text("");
+				})
+				
+				$(verifyID).click(function(){
+					var params = {method:"VerifyUserExists", userName:$(usernameID).val()};
+					var posting = $.post(siteID,{params:JSON.stringify(params)});
+					posting.done(function(data){
+						var parsedData = $.parseJSON(data);
+						$(identityID).text("Verified");
+						wizards.setProperty(credentialsWizard,"height","auto");
+					});
+					wizards.registerCallForWizardOnError(posting);
+				});
+				AddInput(siteName, addInput,updateInput);
+			};
+		
+			$(function() {
+				wizards.register("#pinCredentials");
+				var pinboard = new Pinboard();
+			});
+		</script>

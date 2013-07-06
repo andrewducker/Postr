@@ -24,6 +24,14 @@
 	<url-pattern>/delicious</url-pattern>
 </servlet-mapping>
 <servlet>
+	<servlet-name>Pinboard</servlet-name>
+	<servlet-class>com.postr.PinboardServlet</servlet-class>
+</servlet>
+<servlet-mapping>
+	<servlet-name>Pinboard</servlet-name>
+	<url-pattern>/pinboard</url-pattern>
+</servlet-mapping>
+<servlet>
 	<servlet-name>DataManagement</servlet-name>
 	<servlet-class>com.postr.DataManagementServlet</servlet-class>
 </servlet>
