@@ -127,12 +127,20 @@
 			});
 			
 			function DisableIfComboEmpty(comboID, itemID){
-				if($(comboID + " option").length == 0){
+				SetDisabledState(itemID,ComboEmpty(comboID));
+			}
+			
+			function SetDisabledState(itemID, state){
+				if(state){
 					$(itemID).prop('disabled','disabled');
 				}
 				else{
 					$(itemID).removeProp('disabled');
 				}
+			}
+			
+			function ComboEmpty(comboID){
+				return $(comboID + " option").length == 0;
 			}
 			
 			function RemoveData(key){
