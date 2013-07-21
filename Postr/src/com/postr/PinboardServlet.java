@@ -26,7 +26,7 @@ public class PinboardServlet extends BaseInputServlet {
 		String userName = parameters.getString("userName");
 		PinboardData pinboardData = new PinboardData(userName);
 		
-		Key<PinboardData> result = DAO.SaveThing(pinboardData,GetPersona());
+		Key<PinboardData> result = DAO.SaveThing(pinboardData,GetUserID());
 		Json toReturn = Json.SuccessResult("Saved!");
 		toReturn.setData("key", result.getId());
 		return toReturn;

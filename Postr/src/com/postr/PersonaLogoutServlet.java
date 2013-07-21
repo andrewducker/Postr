@@ -10,6 +10,11 @@ import javax.servlet.http.HttpServletResponse;
 public class PersonaLogoutServlet extends BasePersonaSessionServlet {
 	protected void handlePost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-    	SetPersona(null); 
+    	try {
+			SetPersona(null);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
 	}
 }

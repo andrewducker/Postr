@@ -27,7 +27,7 @@ public class DreamwidthServlet extends BaseOutputServlet {
 				userName, password,
 				TimeZone.getTimeZone(timeZone));
 		
-		Key<DWData> result = DAO.SaveThing(dwData,GetPersona());
+		Key<DWData> result = DAO.SaveThing(dwData,GetUserID());
 		Json toReturn =Json.SuccessResult("Saved!"); 
 		toReturn.setData("key", result.getId());
 		return toReturn;
@@ -42,7 +42,7 @@ public class DreamwidthServlet extends BaseOutputServlet {
 		
 		DWData newDWData = new DWData(existingDWData,password,TimeZone.getTimeZone(timeZone));
 		
-		Key<DWData> result = DAO.SaveThing(newDWData,GetPersona());
+		Key<DWData> result = DAO.SaveThing(newDWData,GetUserID());
 		Json toReturn =Json.SuccessResult("Saved!"); 
 		toReturn.setData("key", result.getId());
 		return toReturn;

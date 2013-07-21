@@ -2,13 +2,11 @@ package com.postr;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -20,7 +18,7 @@ public class PersonaVerificationServlet extends BasePersonaSessionServlet {
 
 	@Override
 	protected void handlePost(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
+			throws Exception {
 		resp.setContentType("text/plain");
 
 		String assertion = req.getParameter("assertion");

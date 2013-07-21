@@ -26,7 +26,7 @@ public class DeliciousServlet extends BaseInputServlet {
 		String userName = parameters.getString("userName");
 		DeliciousData deliciousData = new DeliciousData(userName);
 		
-		Key<DeliciousData> result = DAO.SaveThing(deliciousData,GetPersona());
+		Key<DeliciousData> result = DAO.SaveThing(deliciousData,GetUserID());
 		Json toReturn = Json.SuccessResult("Saved!");
 		toReturn.setData("key", result.getId());
 		return toReturn;

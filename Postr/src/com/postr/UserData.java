@@ -8,19 +8,18 @@ import javax.servlet.http.HttpSession;
 import com.postr.DataTypes.*;
 
 public class UserData {
-	public String getPersona(){
+	
+	String persona; 
+	
+	public String getPersona() {
 		return persona;
 	}
-	
-	private String persona;
-	
+
 	public void setSession(HttpSession session){
+		Long userID = (long)session.getAttribute("UserID");
 		persona = (String)session.getAttribute("Persona");
-		if (persona == null) {
-			persona = "Not logged in";
-		}
 		
-		List<BaseSaveable> saveables = DAO.LoadThings(BaseSaveable.class, persona);
+		List<BaseSaveable> saveables = DAO.LoadThings(BaseSaveable.class, userID);
 		for (BaseSaveable baseSaveable : saveables) {
 			if (baseSaveable instanceof BaseOutput) {
 				outputs.add((BaseOutput) baseSaveable);

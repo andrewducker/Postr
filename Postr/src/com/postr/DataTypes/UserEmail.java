@@ -5,23 +5,21 @@ import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
 
 @Entity
-public class BaseSaveable {
+public class UserEmail {
 	@Id Long id;
 	public Long getId() {
 		return id;
 	}
 
-	public void setUserID(Long userID) {
-		this.userID = userID;
+	
+	@Index String email;
+	public String getEmail() {
+		return email;
 	}
 
-	
-	@Index
-	long userID;
-	
-	protected BaseSaveable(){}
-
-	public BaseSaveable(BaseSaveable existingData) {
-		this.id = existingData.id;
+	public void setEmail(String email) {
+		this.email = email;
 	}
+	
+
 }

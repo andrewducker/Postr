@@ -16,19 +16,36 @@ public abstract class BasePersonaSessionServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 			session = req.getSession();
-			handlePost(req, resp);
+			try {
+				handlePost(req, resp);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 	}
 	
 	abstract void handlePost(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException;
+			throws ServletException, IOException, Exception;
 	
 	protected String GetPersona()
 	{
 		return (String) session.getAttribute("Persona");
 	}
+	
+	protected Long GetUserID()
+	{
+		return (Long) session.getAttribute("UserID");
+	}
+	
 
-	protected void SetPersona(String persona)
+	protected void SetPersona(String persona) throws Exception
 	{
 		session.setAttribute("Persona", persona);
+		if (persona == null) {
+			session.setAttribute("UserID",null);
+		}else{
+			Long userID = DAO.GetUserID(persona);
+			session.setAttribute("UserID",userID);
+		}
 	}
 }

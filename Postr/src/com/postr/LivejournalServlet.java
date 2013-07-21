@@ -27,7 +27,7 @@ public class LivejournalServlet extends BaseOutputServlet {
 				userName, password,
 				TimeZone.getTimeZone(timeZone));
 		
-		Key<LJData> result = DAO.SaveThing(ljData,GetPersona());
+		Key<LJData> result = DAO.SaveThing(ljData,GetUserID());
 		Json toReturn = Json.SuccessResult("Saved!");
 		toReturn.setData("key", result.getId());
 		return toReturn;
@@ -38,11 +38,11 @@ public class LivejournalServlet extends BaseOutputServlet {
 		Long key = parameters.getLong("key");
 		String password = parameters.getString("password");
 		String timeZone = parameters.getString("timeZone");
-		LJData existingDWData = DAO.LoadThing(LJData.class, key);
+		LJData existingLJData = DAO.LoadThing(LJData.class, key);
 		
-		LJData newDWData = new LJData(existingDWData,password,TimeZone.getTimeZone(timeZone));
+		LJData newDWData = new LJData(existingLJData,password,TimeZone.getTimeZone(timeZone));
 		
-		Key<LJData> result = DAO.SaveThing(newDWData,GetPersona());
+		Key<LJData> result = DAO.SaveThing(newDWData,GetUserID());
 		Json toReturn =Json.SuccessResult("Saved!"); 
 		toReturn.setData("key", result.getId());
 		return toReturn;
