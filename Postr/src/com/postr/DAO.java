@@ -3,7 +3,6 @@ package com.postr;
 import java.util.List;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.ObjectifyService;
-import com.googlecode.objectify.cmd.Query;
 import com.postr.DataTypes.*;
 
 import static com.googlecode.objectify.ObjectifyService.ofy;
@@ -41,15 +40,15 @@ public static  void RemoveThing(Long key){
 }
 
 public static long GetUserID(String persona) throws Exception {
-	Query<UserEmail> email = ofy().load().type(UserEmail.class).filter("email",persona);
-	if (email.count() == 0) {
+	List<Key<UserEmail>> email = ofy().load().type(UserEmail.class).filter("email",persona).keys().list();
+	if (email.size() == 0) {
 		UserEmail emailToSave = new UserEmail();
 		emailToSave.setEmail(persona);
 		ofy().save().entity(emailToSave).now();
 		return emailToSave.getId();
 	}
-	if(email.count() == 1){
-		return email.first().get().getId();
+	if(email.size() == 1){
+		return email.get(0).getId();
 	}
 	
 	throw new Exception("Multiple emails found with address: "+persona);

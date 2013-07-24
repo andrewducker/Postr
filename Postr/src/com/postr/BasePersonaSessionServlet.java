@@ -36,7 +36,6 @@ public abstract class BasePersonaSessionServlet extends HttpServlet {
 	{
 		return (Long) session.getAttribute("UserID");
 	}
-	
 
 	protected void SetPersona(String persona) throws Exception
 	{
