@@ -16,19 +16,26 @@ static {
 	ObjectifyService.register(DeliciousData.class);
 	ObjectifyService.register(PinboardData.class);
 	ObjectifyService.register(UserEmail.class);
+	ObjectifyService.register(User.class);
 }
 
 public static <T extends BaseSaveable> Key<T> SaveThing(T thing, Long userID){
-	thing.setUserID(userID);
+	thing.setParent(userID);
 	return ofy().save().entity(thing).now();
 }
+
+public static Key<User> SaveUser(User user){
+	return ofy().save().entity(user).now();
+}
+ 
 
 public static <T extends BaseSaveable> T LoadThing(Class<T> clazz, Long key){
 	return ofy().load().type(clazz).id(key).get();
 }
 
 public static <T extends BaseSaveable> List<T> LoadThings(Class<T> clazz, Long userID){
-	return ofy().load().type(clazz).filter("userID", userID).list();
+	Key<User> key = Key.create(User.class, userID);
+	return ofy().load().type(clazz).ancestor(key).list();
 }
 
 public static <T extends BaseSaveable> void RemoveThing(Class<T> clazz, Long key){
@@ -42,13 +49,16 @@ public static  void RemoveThing(Long key){
 public static long GetUserID(String persona) throws Exception {
 	List<Key<UserEmail>> email = ofy().load().type(UserEmail.class).filter("email",persona).keys().list();
 	if (email.size() == 0) {
+		User user = new User();
+		long parent = ofy().save().entity(user).now().getId();
 		UserEmail emailToSave = new UserEmail();
 		emailToSave.setEmail(persona);
+		emailToSave.setParent(parent);
 		ofy().save().entity(emailToSave).now();
-		return emailToSave.getId();
+		return parent;
 	}
 	if(email.size() == 1){
-		return email.get(0).getId();
+		return email.get(0).getParent().getId();
 	}
 	
 	throw new Exception("Multiple emails found with address: "+persona);
