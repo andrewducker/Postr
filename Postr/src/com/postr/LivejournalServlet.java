@@ -38,7 +38,7 @@ public class LivejournalServlet extends BaseOutputServlet {
 		Long key = parameters.getLong("key");
 		String password = parameters.getString("password");
 		String timeZone = parameters.getString("timeZone");
-		LJData existingLJData = DAO.LoadThing(LJData.class, key);
+		LJData existingLJData = DAO.LoadThing(LJData.class, key, GetUserID());
 		
 		LJData newDWData = new LJData(existingLJData,password,TimeZone.getTimeZone(timeZone));
 		

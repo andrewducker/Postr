@@ -38,7 +38,7 @@ public class DreamwidthServlet extends BaseOutputServlet {
 		Long key = parameters.getLong("key");
 		String password = parameters.getString("password");
 		String timeZone = parameters.getString("timeZone");
-		DWData existingDWData = DAO.LoadThing(DWData.class, key);
+		DWData existingDWData = DAO.LoadThing(DWData.class, key, GetUserID());
 		
 		DWData newDWData = new DWData(existingDWData,password,TimeZone.getTimeZone(timeZone));
 		
