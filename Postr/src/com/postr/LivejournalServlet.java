@@ -4,7 +4,6 @@ import java.util.TimeZone;
 
 import com.googlecode.objectify.Key;
 import com.postr.DataTypes.Json;
-import com.postr.DataTypes.Outputs.DWData;
 import com.postr.DataTypes.Outputs.LJData;
 import com.postr.Translators.LJTranslator;
 
@@ -40,10 +39,10 @@ public class LivejournalServlet extends BaseOutputServlet {
 		String subject = parameters.getString("subject");
 		String[] tags = parameters.getString("tags").split(",");
 		long output = parameters.getLong("output");
-		DWData dwData = DAO.LoadThing(DWData.class, output, GetUserID());
+		LJData ljData = DAO.LoadThing(LJData.class, output, GetUserID());
 		
 		LJTranslator translator = new LJTranslator();
-		translator.MakePost(dwData, contents, subject, tags);
+		translator.MakePost(ljData, contents, subject, tags);
 		
 		Json toReturn =Json.SuccessResult("Posted!"); 
 		return toReturn;
