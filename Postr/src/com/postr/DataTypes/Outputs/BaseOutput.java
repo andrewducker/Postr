@@ -1,6 +1,7 @@
-package com.postr.DataTypes;
+package com.postr.DataTypes.Outputs;
 
 import com.googlecode.objectify.annotation.EntitySubclass;
+import com.postr.DataTypes.BaseSaveable;
 
 @EntitySubclass(index=true)
 public abstract class BaseOutput extends BaseSaveable {

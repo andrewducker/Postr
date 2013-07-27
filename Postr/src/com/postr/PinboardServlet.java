@@ -2,7 +2,7 @@ package com.postr;
 
 import com.googlecode.objectify.Key;
 import com.postr.DataTypes.Json;
-import com.postr.DataTypes.PinboardData;
+import com.postr.DataTypes.Inputs.PinboardData;
 
 @SuppressWarnings("serial")
 public class PinboardServlet extends BaseInputServlet {

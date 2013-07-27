@@ -7,8 +7,9 @@ import com.googlecode.objectify.annotation.Parent;
 
 @Entity
 public class BaseSaveable {
-	@Id long id;
-	public Long getId() {
+	//Must be Long, not long, otherwise not auto-generated.
+	@Id Long id;
+	public long getId() {
 		return id;
 	}
 

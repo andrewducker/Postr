@@ -4,7 +4,7 @@ import java.util.TimeZone;
 
 import com.googlecode.objectify.Key;
 import com.postr.DataTypes.Json;
-import com.postr.DataTypes.LJData;
+import com.postr.DataTypes.Outputs.LJData;
 import com.postr.Translators.LJTranslator;
 
 @SuppressWarnings("serial")

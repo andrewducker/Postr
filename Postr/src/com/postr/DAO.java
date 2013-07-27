@@ -4,6 +4,8 @@ import java.util.List;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.ObjectifyService;
 import com.postr.DataTypes.*;
+import com.postr.DataTypes.Inputs.*;
+import com.postr.DataTypes.Outputs.*;
 
 import static com.googlecode.objectify.ObjectifyService.ofy;
 

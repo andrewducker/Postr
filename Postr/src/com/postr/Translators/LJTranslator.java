@@ -13,8 +13,8 @@ import org.apache.xmlrpc.client.XmlRpcClient;
 import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
 
 import com.postr.DataTypes.Json;
-import com.postr.DataTypes.LJData;
 import com.postr.DataTypes.PasswordEncryptor;
+import com.postr.DataTypes.Outputs.LJData;
 
 
 public class LJTranslator {

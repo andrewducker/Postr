@@ -1,4 +1,4 @@
-package com.postr.DataTypes;
+package com.postr.DataTypes.Inputs;
 
 import com.googlecode.objectify.annotation.EntitySubclass;
 

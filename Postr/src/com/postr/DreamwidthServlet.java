@@ -2,8 +2,8 @@ package com.postr;
 
 import java.util.TimeZone;
 
-import com.postr.DataTypes.DWData;
 import com.postr.DataTypes.Json;
+import com.postr.DataTypes.Outputs.DWData;
 import com.postr.Translators.DWTranslator;
 import com.googlecode.objectify.Key;
 

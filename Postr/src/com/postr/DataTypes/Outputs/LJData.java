@@ -1,8 +1,9 @@
-package com.postr.DataTypes;
+package com.postr.DataTypes.Outputs;
 
 import java.util.TimeZone;
 
 import com.googlecode.objectify.annotation.EntitySubclass;
+import com.postr.DataTypes.PasswordEncryptor;
 
 @EntitySubclass(index=true)
 public class LJData extends BaseOutput {

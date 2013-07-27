@@ -1,4 +1,4 @@
-package com.postr.DataTypes;
+package com.postr.DataTypes.Outputs;
 
 import java.util.TimeZone;
 

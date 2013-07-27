@@ -6,6 +6,8 @@ import java.util.Vector;
 import javax.servlet.http.HttpSession;
 
 import com.postr.DataTypes.*;
+import com.postr.DataTypes.Inputs.BaseInput;
+import com.postr.DataTypes.Outputs.BaseOutput;
 
 public class UserData {
 	
