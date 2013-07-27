@@ -5,7 +5,6 @@ import java.net.URL;
 import java.security.NoSuchAlgorithmException;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.apache.xmlrpc.XmlRpcException;
@@ -48,7 +47,7 @@ public class LJTranslator {
 		
 		
 		@SuppressWarnings("unchecked")
-		public String Write(LJData ljData, String contents, String header, List<String> tags)  throws Exception{
+		public Json MakePost(LJData ljData, String contents, String header, String[] tags)  throws Exception{
 		    XmlRpcClient client = getClient();
 		    
 		    HashMap<String, Object> postParams = getInitialisedCallParams(client,ljData.getUserName(),ljData.getPassword());
@@ -85,19 +84,17 @@ public class LJTranslator {
 		    	postResult =  (Map<String, String>) client.execute("LJ.XMLRPC.postevent", params);
 		    } catch (XmlRpcException e){
 		    	if (e.getMessage().equals("Invalid password")){
-		    		return "Invalid Password";
+		    		return Json.ErrorResult("Invalid Password");
 		    	} else{
 		    		throw e;
 		    	}
 		    }
 		    
 		    if (postResult.get("success")=="FAIL"){
-		    	return postResult.get("errmsg");
+		    	return Json.ErrorResult(postResult.get("errmsg"));
 		    }
-		    return "<A href=" + postResult.get("url")+ ">Link posted</A>";
+		    return Json.SuccessResult("<A href=" + postResult.get("url")+ ">Link posted</A>");
 		}
-
-
 
 		@SuppressWarnings("unchecked")
 		private HashMap<String, Object> getInitialisedCallParams(

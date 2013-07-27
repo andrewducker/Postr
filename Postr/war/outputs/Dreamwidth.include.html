@@ -7,7 +7,13 @@
 				<label for=dwTimeZone>Time Zone:</label><input type=text id="dwTimeZone">
 			</form>
 		</div>
-		
+		<div id="dwPostMaker" title="Dreamwidth Posting">
+			<form>
+				<label for=dwSubjectLine>Subject Line:</label> <input type="text" id="dwSubjectLine" name="subjectLine"><BR>
+				<label for=dwText>Text:</label> <input type="textarea" id="dwText" name="text"><BR>
+				<label for=dwTags>Tags:</label> <input type="text" id="dwTags" name="text"><BR>
+			</form>
+		</div>		
 		<script type="text/javascript">
 		
 			var Dreamwidth = function Dreamwidth(){
@@ -19,6 +25,10 @@
 				var credentialsWizard = "#dwCredentials"
 				var identityID = "#dwIdentity"; 
 				var verifyID = "#dwCredentialsVerify";
+				var postingWizard = "#dwPostMaker";
+				var subjectID = "#dwSubjectLine";
+				var textID = "#dwText";
+				var tagsID = "#dwTags";
 				
 				var that = this;
 				
@@ -50,6 +60,26 @@
 					else{
 						wizards.showError("Identity not validated");
 					}
+				}
+				
+				var makePost = function(){
+					var params = {method:"MakePost", contents:$(textID).val(), subject:$(subjectID).val(),tags:$(tagsID).val(), output:that.currentOutput.key};
+					var posting = $.post(siteID,{params:JSON.stringify(params)});
+					wizards.registerCallForWizardDisplay(posting).done(function(data){
+						that.currentDeferral.resolve();
+					});
+
+				}
+				
+				var addPosting = function(existingData){
+					$(subjectID).val("");
+					$(textID).val("");
+					$(tagsID).val("");
+					var buttons = $(postingWizard).dialog( "option", "buttons", [{text:"ok", click: function(){makePost()}}]);
+					that.currentDeferral = $.Deferred();
+					that.currentOutput = existingData;
+					wizards.showPage(postingWizard);
+					return that.currentDeferral;
 				}
 				
 				var addOutput = function(){
@@ -95,11 +125,12 @@
 					});
 					wizards.registerCallForWizardOnError(posting);
 				});
-				AddOutput(siteName, addOutput,updateOutput);
+				AddOutput(siteName, addOutput,updateOutput,addPosting);
 			};
 		
 			$(function() {
 				wizards.register("#dwCredentials");
+				wizards.register("#dwPostMaker");
 				var dreamwidth = new Dreamwidth();
 			});
 		</script>

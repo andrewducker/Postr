@@ -14,9 +14,9 @@
 		<script type="text/javascript">
 			outputs = new Object();
 			inputs = new Object();
-			function AddOutput(outputName, AddOutput, UpdateOutput) {
+			function AddOutput(outputName, AddOutput, UpdateOutput, PostFromOutput) {
 				$("#output").append(new Option(outputName));
-				outputs[outputName] = {Add:AddOutput,Update:UpdateOutput};
+				outputs[outputName] = {Add:AddOutput,Update:UpdateOutput,Post:PostFromOutput};
 			}
 			
 			function AddInput(inputName, AddInput) {
@@ -51,6 +51,8 @@
 			${output.UserName}@$output.SiteName</option>#end
 			#end
 			</select>
+			<label for="PostFromOutput">Existing</label>
+			<input type="submit" id="PostFromOutput" value="Post">
 			<label for="UpdateOutputs">Existing</label>
 			<input type="submit" id="UpdateOutputs" value="Update">
 			<label for="RemoveOutputs">Existing</label>
@@ -92,7 +94,13 @@
 						addNewOutput(data);
 						DisableIfComboEmpty("#existingOutputs","#RemoveOutputs")
 						DisableIfComboEmpty("#existingOutputs","#UpdateOutputs")
+						DisableIfComboEmpty("#existingOutputs","#PostFromOutput")
 					});
+				});
+				$( "#PostFromOutput" ).click(function() {
+					var selectedOption = $("#existingOutputs option:selected");
+					var selectedData = selectedOption.data();
+					outputs[selectedData.siteName].Post(selectedData)
 				});
 				$( "#UpdateOutputs" ).click(function() {
 					var selectedOption = $("#existingOutputs option:selected");
@@ -105,6 +113,7 @@
 						$("#existingOutputs option:selected").remove();
 						DisableIfComboEmpty("#existingOutputs","#RemoveOutputs")
 						DisableIfComboEmpty("#existingOutputs","#UpdateOutputs")
+						DisableIfComboEmpty("#existingOutputs","#PostFromOutput")
 					});
 				});
 				$( "#AddNewInput" ).click(function() {
@@ -112,6 +121,7 @@
 					inputs[selectedValue].Add().done(function(data){
 						addNewInput(data);
 						DisableIfComboEmpty("#existingInputs","#RemoveInputs")
+						DisableIfComboEmpty("#existingOutputs","#PostFromOutput")
 					});
 				});
 				$( "#RemoveInputs" ).click(function() {
@@ -124,6 +134,7 @@
 				DisableIfComboEmpty("#existingOutputs","#RemoveOutputs")
 				DisableIfComboEmpty("#existingOutputs","#UpdateOutputs")
 				DisableIfComboEmpty("#existingInputs","#RemoveInputs")
+				DisableIfComboEmpty("#existingOutputs","#PostFromOutput")
 			});
 			
 			function DisableIfComboEmpty(comboID, itemID){

@@ -5,5 +5,6 @@ public enum MethodTypes {
 	VerifyUserExists,
 	SaveData,
 	RemoveData,
-	UpdateData
+	UpdateData, 
+	MakePost
 }
