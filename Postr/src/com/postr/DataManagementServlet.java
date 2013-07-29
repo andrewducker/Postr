@@ -20,7 +20,7 @@ public class DataManagementServlet extends BaseJSONServlet {
 
 	private Json RemoveData(Json parameters) {
 		Long key = parameters.getLong("key");
-		DAO.RemoveThing(key, GetUserID());
+		DAO.RemoveThing(key);
 		return Json.SuccessResult("Removed!");
 	}
 

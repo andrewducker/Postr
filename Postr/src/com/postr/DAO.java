@@ -32,23 +32,23 @@ public static Key<User> SaveUser(User user){
  
 
 public static <T extends BaseSaveable> T LoadThing(Class<T> clazz, Long key, Long userID){
-	return ofy().load().type(clazz).parent(userKey(userID)).id(key).get();
+	return ofy().load().type(clazz).id(key).get();
 }
 
 public static <T extends BaseSaveable> List<T> LoadThings(Class<T> clazz, Long userID){
-	return ofy().load().type(clazz).ancestor(userKey(userID)).list();
+	return ofy().load().type(clazz).filter("parent", userKey(userID)).list();
 }
 
-public static <T extends BaseSaveable> void RemoveThing(Class<T> clazz, Long key, Long userID){
-	ofy().delete().type(clazz).parent(userKey(userID)).id(key);
+public static <T extends BaseSaveable> void RemoveThing(Class<T> clazz, Long key){
+	ofy().delete().type(clazz).id(key);
 }
 
 private static Key<User> userKey(long userID){
 	return Key.create(User.class,userID);
 }
 
-public static  void RemoveThing(Long key, long userID){
-	ofy().delete().type(BaseSaveable.class).parent(userKey(userID)).id(key);
+public static  void RemoveThing(Long key){
+	ofy().delete().type(BaseSaveable.class).id(key);
 }
 
 public static long GetUserID(String persona) throws Exception {
