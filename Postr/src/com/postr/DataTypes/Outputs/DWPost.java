@@ -4,27 +4,27 @@ import com.postr.DAO;
 import com.postr.DataTypes.Json;
 import com.postr.Translators.DWTranslator;
 
-public class DWPost extends BasePost {
+public class DWPost extends LJPost {
 
-	private String subject;
-	private String contents;
-	private String[] tags;
-	
 	public DWPost(String subject, String contents, String tags, long output){
-		this.subject = subject;
-		this.contents = contents;
-		this.tags = tags.split(",");
-		this.output = output;
+		super(subject,contents,tags,output);
 	}
+	
+	public DWPost(DWPost originalPost, String subject, String contents, String tags){
+		super(originalPost, subject,contents,tags);
+	}
+	
+	@SuppressWarnings("unused")
+	private DWPost(){}
 	
 	
 	@Override
 	
 	public Json MakePost() throws Exception {
-		DWData dwData = DAO.LoadThing(DWData.class, output, getParent());
+		DWData dwData = DAO.LoadThing(DWData.class, getOutput(), getParent());
 		
 		DWTranslator translator = new DWTranslator();
-		return translator.MakePost(dwData, contents, subject, tags);
+		return translator.MakePost(dwData, getContents(), getSubject(), getTags());
 		
 	}
 

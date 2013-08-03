@@ -23,12 +23,14 @@ public abstract class BaseOutputServlet extends BaseJSONServlet {
 			return MakePost(parameters);
 		case SavePost:
 			return SavePost(parameters);
+		case UpdatePost:
+			return UpdatePost(parameters);
 		default:
 			throw new Exception("No such method found: "+method);
 		}
 
 	}
-
+	
 	protected abstract Json UpdateData	(Json parameters) throws Exception;
 
 	protected abstract Json VerifyPassword(Json parameters) throws Exception;
@@ -38,4 +40,6 @@ public abstract class BaseOutputServlet extends BaseJSONServlet {
 	protected abstract Json MakePost(Json parameters) throws Exception;
 
 	protected abstract Json SavePost(Json parameters) throws Exception;
+
+	protected abstract Json UpdatePost(Json parameters) throws Exception;
 }

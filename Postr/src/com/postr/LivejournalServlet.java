@@ -63,6 +63,22 @@ public class LivejournalServlet extends BaseOutputServlet {
 	}
 	
 	@Override
+	protected Json UpdatePost(Json parameters) throws Exception {
+		String contents = parameters.getString("contents");
+		String subject = parameters.getString("subject");
+		String tags = parameters.getString("tags");
+		Long key = parameters.getLong("key");
+		
+		LJPost post = DAO.LoadThing(LJPost.class, key, GetUserID());
+		
+		LJPost newPost = new LJPost(post, subject, contents, tags);
+		
+		DAO.SaveThing(newPost, GetUserID());
+		
+		return Json.SuccessResult("Saved!");
+	}
+	
+	@Override
 	protected Json UpdateData(Json parameters) throws Exception {
 		Long key = parameters.getLong("key");
 		String password = parameters.getString("password");

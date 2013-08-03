@@ -27,7 +27,7 @@ public class BaseSaveable {
 	
 	protected BaseSaveable(){}
 
-	public BaseSaveable(BaseSaveable existingData) {
+	protected BaseSaveable(BaseSaveable existingData) {
 		this.id = existingData.id;
 	}
 }
