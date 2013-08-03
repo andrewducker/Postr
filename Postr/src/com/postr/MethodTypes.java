@@ -6,5 +6,6 @@ public enum MethodTypes {
 	SaveData,
 	RemoveData,
 	UpdateData, 
-	MakePost
+	MakePost,
+	SavePost
 }

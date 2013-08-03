@@ -5,6 +5,7 @@ import java.util.TimeZone;
 import com.googlecode.objectify.Key;
 import com.postr.DataTypes.Json;
 import com.postr.DataTypes.Outputs.LJData;
+import com.postr.DataTypes.Outputs.LJPost;
 import com.postr.Translators.LJTranslator;
 
 @SuppressWarnings("serial")
@@ -37,14 +38,27 @@ public class LivejournalServlet extends BaseOutputServlet {
 	protected Json MakePost(Json parameters) throws Exception {
 		String contents = parameters.getString("contents");
 		String subject = parameters.getString("subject");
-		String[] tags = parameters.getString("tags").split(",");
+		String tags = parameters.getString("tags");
 		long output = parameters.getLong("output");
-		LJData ljData = DAO.LoadThing(LJData.class, output, GetUserID());
 		
-		LJTranslator translator = new LJTranslator();
-		translator.MakePost(ljData, contents, subject, tags);
+		LJPost post = new LJPost(subject, contents, tags, output);
 		
-		Json toReturn =Json.SuccessResult("Posted!"); 
+		return post.MakePost();
+	}
+	
+	@Override
+	protected Json SavePost(Json parameters) throws Exception {
+		String contents = parameters.getString("contents");
+		String subject = parameters.getString("subject");
+		String tags = parameters.getString("tags");
+		long output = parameters.getLong("output");
+		
+		LJPost post = new LJPost(subject, contents, tags, output);
+		
+		Key<LJPost> result = DAO.SaveThing(post, GetUserID());
+		
+		Json toReturn = Json.SuccessResult("Saved!");
+		toReturn.setData("key", result.getId());
 		return toReturn;
 	}
 	

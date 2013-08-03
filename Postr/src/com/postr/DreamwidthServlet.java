@@ -4,6 +4,7 @@ import java.util.TimeZone;
 
 import com.postr.DataTypes.Json;
 import com.postr.DataTypes.Outputs.DWData;
+import com.postr.DataTypes.Outputs.DWPost;
 import com.postr.Translators.DWTranslator;
 import com.googlecode.objectify.Key;
 
@@ -37,14 +38,27 @@ public class DreamwidthServlet extends BaseOutputServlet {
 	protected Json MakePost(Json parameters) throws Exception {
 		String contents = parameters.getString("contents");
 		String subject = parameters.getString("subject");
-		String[] tags = parameters.getString("tags").split(",");
+		String tags = parameters.getString("tags");
 		long output = parameters.getLong("output");
-		DWData dwData = DAO.LoadThing(DWData.class, output, GetUserID());
 		
-		DWTranslator translator = new DWTranslator();
-		translator.MakePost(dwData, contents, subject, tags);
+		DWPost post = new DWPost(subject, contents, tags, output);
 		
-		Json toReturn =Json.SuccessResult("Posted!"); 
+		return post.MakePost();
+	}
+	
+	@Override
+	protected Json SavePost(Json parameters) throws Exception {
+		String contents = parameters.getString("contents");
+		String subject = parameters.getString("subject");
+		String tags = parameters.getString("tags");
+		long output = parameters.getLong("output");
+		
+		DWPost post = new DWPost(subject, contents, tags, output);
+		
+		Key<DWPost> result = DAO.SaveThing(post, GetUserID());
+		
+		Json toReturn = Json.SuccessResult("Saved!");
+		toReturn.setData("key", result.getId());
 		return toReturn;
 	}
 

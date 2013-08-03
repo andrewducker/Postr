@@ -9,7 +9,7 @@ import com.postr.DataTypes.Outputs.*;
 
 import static com.googlecode.objectify.ObjectifyService.ofy;
 
-class DAO {
+public class DAO {
 static {
 	ObjectifyService.register(BaseSaveable.class);
 	ObjectifyService.register(BaseOutput.class);
@@ -31,8 +31,12 @@ public static Key<User> SaveUser(User user){
 }
  
 
-public static <T extends BaseSaveable> T LoadThing(Class<T> clazz, Long key, Long userID){
-	return ofy().load().type(clazz).id(key).get();
+public static <T extends BaseSaveable> T LoadThing(Class<T> clazz, Long key, Long userID) throws Exception{
+	T retrieved = ofy().load().type(clazz).id(key).get();
+	if (retrieved.getParent() != userID) {
+		throw new Exception("Parent ID did not match - possible security attack");
+	}
+	return retrieved;
 }
 
 public static <T extends BaseSaveable> List<T> LoadThings(Class<T> clazz, Long userID){

@@ -16,6 +16,10 @@ public class BaseSaveable {
 	public void setParent(long userID) {
 		this.parent = Key.create(User.class, userID);
 	}
+	
+	public long getParent(){
+		return parent.getId();
+	}
 
 	
 	@Index
