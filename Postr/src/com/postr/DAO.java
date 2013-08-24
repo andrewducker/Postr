@@ -67,7 +67,7 @@ public static long GetUserID(String persona) throws Exception {
 		return parent;
 	}
 	if(email.size() == 1){
-		return email.get(0).getParent().getId();
+		return ofy().load().key(email.get(0)).get().getParent();
 	}
 	
 	throw new Exception("Multiple emails found with address: "+persona);

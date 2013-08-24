@@ -4,7 +4,8 @@
 				<label for=dwPassword>Password:</label> <input type="password" id="dwPassword" name="password"><BR>
 				<button type="button" id="dwCredentialsVerify">Verify</button><BR>
 				<div id="dwIdentity"></div><BR>
-				<label for=dwTimeZone>Time Zone:</label><input type=text id="dwTimeZone">
+				<label for=dwTimeZone>Time Zone:</label>
+				<select name='dwTimeZone' id='dwTimeZone' />#foreach($zone in $staticdata.TimeZones)<option>$zone</option>#end</select>
 			</form>
 		</div>
 		<div id="dwPostMaker" title="Dreamwidth Posting">

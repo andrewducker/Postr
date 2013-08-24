@@ -11,13 +11,14 @@ import com.postr.DataTypes.Outputs.BaseOutput;
 
 public class UserData {
 	
-	String persona; 
+	HttpSession session;
 	
-	public String getPersona() {
-		return persona;
-	}
-
 	public void setSession(HttpSession session){
+		this.session = session;
+		SetUp();
+	}
+	
+	private void SetUp(){
 		Long userID = (long)session.getAttribute("UserID");
 		persona = (String)session.getAttribute("Persona");
 		
@@ -30,6 +31,7 @@ public class UserData {
 				inputs.add((BaseInput) baseSaveable);
 			}
 		}
+
 	}
 	
 	private Vector<BaseInput> inputs = new Vector<BaseInput>();
@@ -43,4 +45,12 @@ public class UserData {
 	public List<BaseOutput> getOutputs(){
 		return outputs;
 	}
+	
+	String persona; 
+	
+	public String getPersona() {
+		return persona;
+	}
+
+
 }

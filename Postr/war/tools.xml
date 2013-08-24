@@ -25,7 +25,10 @@
     <data type="number" key="version" value="2.0"/>
     <data key="foo">this is foo</data>
     <data key="bar">this is bar.</data>
-	<toolbox scope="request">
+    <toolbox scope="application">
+    	<tool key="staticdata" class="com.postr.StaticData"/>
+    </toolbox>
+	<toolbox scope="session">
 	 	<property name="create-session" value="true" type="boolean"/>
 		<tool key="userdata" class="com.postr.UserData"/>
 	</toolbox>

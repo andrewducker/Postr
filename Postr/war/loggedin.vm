@@ -81,7 +81,7 @@
 			<input type="submit" id="AddNewInput" value="Add">
 		</fieldset>
 
-#include("outputs\Dreamwidth.include.html")
+#parse("outputs\Dreamwidth.include.vm")
 #include("outputs\Livejournal.include.html")
 #include("inputs\Delicious.include.html")
 #include("inputs\Pinboard.include.html")

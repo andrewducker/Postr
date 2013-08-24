@@ -20,7 +20,6 @@ public class BaseSaveable {
 	public long getParent(){
 		return parent.getId();
 	}
-
 	
 	@Index
 	Key<User> parent;
