@@ -7,9 +7,11 @@
 		<script src="http://login.persona.org/include.js"></script>
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
 		<link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.0/themes/base/jquery-ui.css">
-		<link rel="stylesheet" href="styles.css">
+		<link rel="stylesheet" href ="styles.css">
 		<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js"></script>
+		<script src="laconic.js"></script>
 		<script src="wizards.js"></script>
+		<script src="timezones.js"></script>
 		<script src="persona.js.vm"></script>
 		<script type="text/javascript">
 			outputs = new Object();
@@ -37,6 +39,10 @@
 
 			function addNewInput(data){
 				addNewComboItem("#existingInputs",data.userName+"@"+data.siteName,data);
+			}
+			
+			function j(id){
+				return $('#'+id);
 			}
 		</script>
 	</head>
@@ -81,13 +87,17 @@
 			<input type="submit" id="AddNewInput" value="Add">
 		</fieldset>
 
-#parse("outputs\Dreamwidth.include.vm")
-#include("outputs\Livejournal.include.html")
+<script src="outputs/Livejournal.js"></script>
+
 #include("inputs\Delicious.include.html")
 #include("inputs\Pinboard.include.html")
-		
+
+
+
 		<script type="text/javascript">
 			$(function(){
+				var dreamwidth = new Livejournal("Dreamwidth","dreamwidth","dw");
+				var dreamwidth = new Livejournal("Livejournal","livejournal","lj");
 				$( "#AddNewOutput" ).click(function() {
 					var selectedValue = $("#output option:selected").text();
 					outputs[selectedValue].Add().done(function(data){

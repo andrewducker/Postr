@@ -11,16 +11,16 @@
 			var Delicious = function Delicious(){
 				var siteName = "Delicious";
 				var siteID = "delicious";
-				var usernameID = "#delUsername";
-				var credentialsWizard = "#delCredentials"
-				var identityID = "#delIdentity"; 
-				var verifyID = "#delCredentialsVerify";
+				var usernameID = "delUsername";
+				var credentialsWizard = "delCredentials"
+				var identityID = "delIdentity"; 
+				var verifyID = "delCredentialsVerify";
 				
 				var that = this;
 				
 				var saveCredentials = function(){
-					if($(identityID).text() != ""){
-						var params = {method:"SaveData", userName:$(usernameID).val()};
+					if(j(identityID).text() != ""){
+						var params = {method:"SaveData", userName:j(usernameID).val()};
 						var posting = $.post(siteID,{params:JSON.stringify(params)});
 						wizards.registerCallForWizardDisplay(posting).done(function(data){
 							data.siteName = siteName;
@@ -34,24 +34,24 @@
 				}
 			
 				var addInput = function(){
-					$(identityID).text("");
-					$(usernameID).val("");
-					var buttons = $(credentialsWizard ).dialog( "option", "buttons", [{text:"ok", click: function(){saveCredentials()}}]);
+					j(identityID).text("");
+					j(usernameID).val("");
+					var buttons = j(credentialsWizard ).dialog( "option", "buttons", [{text:"ok", click: function(){saveCredentials()}}]);
 					that.currentDeferral = $.Deferred();
 					wizards.showPage(credentialsWizard);
 					return that.currentDeferral;
 				}
 				
-				$(usernameID).change(function(){
-					$(identityID).text("");
+				j(usernameID).change(function(){
+					j(identityID).text("");
 				})
 				
-				$(verifyID).click(function(){
-					var params = {method:"VerifyUserExists", userName:$(usernameID).val()};
+				j(verifyID).click(function(){
+					var params = {method:"VerifyUserExists", userName:j(usernameID).val()};
 					var posting = $.post(siteID,{params:JSON.stringify(params)});
 					posting.done(function(data){
 						var parsedData = $.parseJSON(data);
-						$(identityID).text("Verified");
+						j(identityID).text("Verified");
 						wizards.setProperty(credentialsWizard,"height","auto");
 					});
 					wizards.registerCallForWizardOnError(posting);
@@ -60,7 +60,7 @@
 			};
 		
 			$(function() {
-				wizards.register("#delCredentials");
+				wizards.register("delCredentials");
 				var delicious = new Delicious();
 			});
 		</script>
