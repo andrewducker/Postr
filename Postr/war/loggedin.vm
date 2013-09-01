@@ -88,8 +88,8 @@
 		</fieldset>
 
 <script src="outputs/Livejournal.js"></script>
+<script src="inputs/Delicious.js"></script>
 
-#include("inputs\Delicious.include.html")
 #include("inputs\Pinboard.include.html")
 
 
@@ -98,6 +98,7 @@
 			$(function(){
 				var dreamwidth = new Livejournal("Dreamwidth","dreamwidth","dw");
 				var dreamwidth = new Livejournal("Livejournal","livejournal","lj");
+				var delicious = new Delicious();
 				$( "#AddNewOutput" ).click(function() {
 					var selectedValue = $("#output option:selected").text();
 					outputs[selectedValue].Add().done(function(data){
