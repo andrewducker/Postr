@@ -88,17 +88,14 @@
 		</fieldset>
 
 <script src="outputs/Livejournal.js"></script>
-<script src="inputs/Delicious.js"></script>
-
-#include("inputs\Pinboard.include.html")
-
-
+<script src="inputs/StandardInput.js"></script>
 
 		<script type="text/javascript">
 			$(function(){
 				var dreamwidth = new Livejournal("Dreamwidth","dreamwidth","dw");
 				var dreamwidth = new Livejournal("Livejournal","livejournal","lj");
-				var delicious = new Delicious();
+				var delicious = new StandardInput("Delicious","delicious");
+				var pinboard = new StandardInput("Pinboard","pinboard");
 				$( "#AddNewOutput" ).click(function() {
 					var selectedValue = $("#output option:selected").text();
 					outputs[selectedValue].Add().done(function(data){

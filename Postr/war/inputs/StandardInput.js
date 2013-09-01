@@ -1,10 +1,10 @@
-function Delicious(){
-	var siteName = "Delicious";
-	var siteID = "delicious";
-	var usernameID = "delUsername";
-	var credentialsWizard = "delCredentials"
-		var identityID = "delIdentity"; 
-	var verifyID = "delCredentialsVerify";
+function StandardInput(Name, url){
+	var siteName = Name;
+	var siteID = url;
+	var usernameID = url+"Username";
+	var credentialsWizard = url+"Credentials"
+		var identityID = url+"Identity"; 
+	var verifyID = url+"CredentialsVerify";
 
 	var that = this;
 
@@ -26,17 +26,17 @@ function Delicious(){
 	var formCreated = false;
 
 	var addForm = function(){
-		$.el.div({id:'delCredentials',title:'Delicious Details'},
+		$.el.div({id:credentialsWizard,title:siteName+' Details'},
 				$.el.form(
-						$.el.label({for:'delUsername'},'User Name:'),
-						$.el.input({type:'text',id:'delUsername'}),
+						$.el.label({for:usernameID},'User Name:'),
+						$.el.input({type:'text',id:usernameID}),
 						$.el.br(),
-						$.el.button({type:'button',id:'delCredentialsVerify'},'Verify'),
+						$.el.button({type:'button',id:verifyID},'Verify'),
 						$.el.br(),
-						$.el.div({id:'delIdentity'})
+						$.el.div({id:identityID})
 				)
 		).appendTo(document.body);
-		wizards.register("delCredentials");	
+		wizards.register(credentialsWizard);	
 
 		j(usernameID).change(function(){
 			j(identityID).text("");
@@ -68,5 +68,4 @@ function Delicious(){
 	}
 
 	AddInput(siteName, addInput);
-
-}
+};
