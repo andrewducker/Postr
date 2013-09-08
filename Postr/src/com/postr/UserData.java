@@ -1,11 +1,8 @@
 package com.postr;
 
-import java.util.List;
-import java.util.Vector;
-
+import java.util.Collection;
 import javax.servlet.http.HttpSession;
 
-import com.postr.DataTypes.*;
 import com.postr.DataTypes.Inputs.BaseInput;
 import com.postr.DataTypes.Outputs.BaseOutput;
 
@@ -20,36 +17,23 @@ public class UserData {
 	
 	private void SetUp(){
 		Long userID = (long)session.getAttribute("UserID");
-		persona = (String)session.getAttribute("Persona");
-		
-		List<BaseSaveable> saveables = DAO.LoadThings(BaseSaveable.class, userID);
-		for (BaseSaveable baseSaveable : saveables) {
-			if (baseSaveable instanceof BaseOutput) {
-				outputs.add((BaseOutput) baseSaveable);
-			}
-			if (baseSaveable instanceof BaseInput) {
-				inputs.add((BaseInput) baseSaveable);
-			}
-		}
+		String persona = (String)session.getAttribute("Persona");
 
+		userData = new com.postr.DataTypes.UserData(persona, userID);
 	}
 	
-	private Vector<BaseInput> inputs = new Vector<BaseInput>();
+	private com.postr.DataTypes.UserData userData;
 	
-	public List<BaseInput> getInputs(){
-		return inputs;
+	public Collection<BaseInput> getInputs(){
+		return userData.inputs;
 	}
 
-	private Vector<BaseOutput> outputs = new Vector<BaseOutput>();
-	
-	public List<BaseOutput> getOutputs(){
-		return outputs;
+	public Collection<BaseOutput> getOutputs(){
+		return userData.outputs;
 	}
-	
-	String persona; 
 	
 	public String getPersona() {
-		return persona;
+		return userData.persona;
 	}
 
 

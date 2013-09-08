@@ -13,6 +13,9 @@
 		<script src="wizards.js"></script>
 		<script src="timezones.js"></script>
 		<script src="persona.js.vm"></script>
+		<script src="outputs/Livejournal.js"></script>
+		<script src="inputs/StandardInput.js"></script>
+		
 		<script type="text/javascript">
 			outputs = new Object();
 			inputs = new Object();
@@ -86,9 +89,6 @@
 			<label for="AddNewInput">New Input?</label>
 			<input type="submit" id="AddNewInput" value="Add">
 		</fieldset>
-
-<script src="outputs/Livejournal.js"></script>
-<script src="inputs/StandardInput.js"></script>
 
 		<script type="text/javascript">
 			$(function(){
