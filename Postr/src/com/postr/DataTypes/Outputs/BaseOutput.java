@@ -32,7 +32,7 @@ public abstract class BaseOutput extends BaseSaveable {
 		return password;
 	}
 	
-	public abstract String getSiteName();
+	protected abstract String getSiteName();
 	
 	//User for JSon
 	@SuppressWarnings("unused")

@@ -36,4 +36,9 @@ public class DWPost extends LJPost {
 		setResult(translator.MakePost(dwData, getContents(), getSubject(), getTags()));
 	}
 
+	@Override
+	protected String getSiteName() {
+		return "Dreamwidth";
+	}
+
 }

@@ -1,6 +1,7 @@
-function Livejournal(displayName, url, prefix){
+function Livejournal(displayName, url){
 	var siteName = displayName;
 	var siteID = url;
+	var prefix = url;
 	var usernameID = prefix+"Username";
 	var passwordID = prefix+"Password";
 	var timezoneID = prefix+"TimeZone";
@@ -45,7 +46,7 @@ function Livejournal(displayName, url, prefix){
 	}
 	
 	var makePost = function(){
-		var params = {method:"MakePost", contents:j(textID).val(), subject:j(subjectID).val(),tags:j(tagsID).val(), output:that.currentOutput.id};
+		var params = {method:"MakePost", contents:j(textID).val(), subject:j(subjectID).val(),tags:j(tagsID).val(), output:that.currentOutput};
 		var posting = $.post(siteID,{params:JSON.stringify(params)});
 		wizards.registerCallForWizardDisplay(posting).done(function(data){
 			that.currentDeferral.resolve();
@@ -53,7 +54,7 @@ function Livejournal(displayName, url, prefix){
 
 	}
 	
-	var addPosting = function(existingData){
+	var addPosting = function(outputId){
 		if (!postingWizardCreated) {
 			createPostingWizard();
 		}
@@ -62,7 +63,21 @@ function Livejournal(displayName, url, prefix){
 		j(tagsID).val("");
 		var buttons = j(postingWizard).dialog( "option", "buttons", [{text:"ok", click: function(){makePost()}}]);
 		that.currentDeferral = $.Deferred();
-		that.currentOutput = existingData;
+		that.currentOutput = outputId;
+		wizards.showPage(postingWizard);
+		return that.currentDeferral;
+	}
+	
+	var displayExistingPost = function(existingPost){
+		if (!postingWizardCreated) {
+			createPostingWizard();
+		}
+		j(subjectID).val(existingPost.subject);
+		j(textID).val(existingPost.contents);
+		j(tagsID).val(existingPost.tags.join());
+		var buttons = j(postingWizard).dialog( "option", "buttons", [{text:"ok", click: function(){makePost()}}]);
+		that.currentDeferral = $.Deferred();
+		that.currentOutput = existingPost.output;
 		wizards.showPage(postingWizard);
 		return that.currentDeferral;
 	}
@@ -166,5 +181,5 @@ function Livejournal(displayName, url, prefix){
 		return that.currentDeferral;
 	}
 	
-	AddOutput(siteName, addOutput,updateOutput,addPosting);
+	AddOutput(siteName, addOutput,updateOutput,addPosting, displayExistingPost);
 };

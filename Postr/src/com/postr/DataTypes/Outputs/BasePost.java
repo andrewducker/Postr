@@ -8,15 +8,17 @@ import com.postr.DataTypes.BaseSaveable;
 public abstract class BasePost extends BaseSaveable {
 		abstract public void MakePost();
 		
-		protected BasePost(){}
+		protected BasePost(){this.siteName = getSiteName();}
 		
 		protected BasePost(long output) {
 			this.output = output;
+			this.siteName = getSiteName();
 		}
 		
 		public BasePost(BasePost originalPost) {
 			super(originalPost);
 			this.output = originalPost.output;
+			this.siteName = getSiteName();
 		}
 
 		public long getOutput() {
@@ -39,4 +41,8 @@ public abstract class BasePost extends BaseSaveable {
 		
 		private Result result;
 		
+		//User for JSon
+		@SuppressWarnings("unused")
+		private String siteName;
+		protected abstract String getSiteName();		
 }

@@ -20,9 +20,9 @@
 		<script type="text/javascript">
 			outputs = new Object();
 			inputs = new Object();
-			function AddOutput(outputName, AddOutput, UpdateOutput, PostFromOutput) {
+			function AddOutput(outputName, AddOutput, UpdateOutput, PostFromOutput, DisplayPost) {
 				$("#output").append(new Option(outputName));
-				outputs[outputName] = {Add:AddOutput,Update:UpdateOutput,Post:PostFromOutput};
+				outputs[outputName] = {Add:AddOutput,Update:UpdateOutput,Post:PostFromOutput, DisplayPost:DisplayPost};
 			}
 			
 			function AddInput(inputName, AddInput) {
@@ -45,6 +45,11 @@
 				addNewComboItem("#existingInputs",data.userName+"@"+data.siteName,data);
 			}
 			
+			function addNewPost(post){
+				addNewComboItem("#existingPosts",post.subject + " > " + post.outputDescription +" ("+post.result.message+")",post);
+			}
+
+			
 			function j(id){
 				return $('#'+id);
 			}
@@ -59,14 +64,25 @@
 		<div class=loggedIn>You are signed in as <span id="emailAddress"></span> <a class="persona-button orange" onclick= "navigator.id.logout()"><span>Sign out</span> </a>
 		
 		<fieldset>
+			<legend>Inputs</legend>
+			<label for="existingInputs">Existing</label>
+			<select id="existingInputs">
+			</select>
+			<input type="submit" id="RemoveInputs" value="Remove">
+			<BR>
+			<select id="input" name="input">
+			</select>
+			<label for="AddNewInput">New Input?</label>
+			<input type="submit" id="AddNewInput" value="Add">
+		</fieldset>
+
+		<fieldset>
 			<legend>Outputs</legend>
+			<label for="existingOutputs">Existing</label>
 			<select id="existingOutputs">
 			</select>
-			<label for="PostFromOutput">Existing</label>
 			<input type="submit" id="PostFromOutput" value="Post">
-			<label for="UpdateOutputs">Existing</label>
 			<input type="submit" id="UpdateOutputs" value="Update">
-			<label for="RemoveOutputs">Existing</label>
 			<input type="submit" id="RemoveOutputs" value="Remove">
 			<BR>
 			<select id="output" name="output">
@@ -76,23 +92,20 @@
 		</fieldset>
 		
 		<fieldset>
-			<legend>Inputs</legend>
-			<select id="existingInputs">
+			<legend>Posts</legend>
+			<select id="existingPosts">
 			</select>
-			<label for="RemoveIntputs">Existing</label>
-			<input type="submit" id="RemoveInputs" value="Remove">
 			<BR>
-			<select id="input" name="input">
-			</select>
-			<label for="AddNewInput">New Input?</label>
-			<input type="submit" id="AddNewInput" value="Add">
+			<label for="DisplayPost">Display Post</label>
+			<input type="submit" id="DisplayPost" value="Display">
 		</fieldset>
 		</div>
 
+
 		<script type="text/javascript">
 			$(function(){
-				var dreamwidth = new Livejournal("Dreamwidth","dreamwidth","dw");
-				var dreamwidth = new Livejournal("Livejournal","livejournal","lj");
+				var dreamwidth = new Livejournal("Dreamwidth","dreamwidth");
+				var dreamwidth = new Livejournal("Livejournal","livejournal");
 				var delicious = new StandardInput("Delicious","delicious");
 				var pinboard = new StandardInput("Pinboard","pinboard");
 				$( "#AddNewOutput" ).click(function() {
@@ -138,7 +151,12 @@
 						DisableIfComboEmpty("#existingInputs","#RemoveInputs")
 					});
 				});
-				
+				$( "#DisplayPost" ).click(function() {
+					var selectedPost = $("#existingPosts option:selected");
+					var selectedData = selectedPost.data();
+					outputs[selectedData.siteName].DisplayPost(selectedData)
+				});
+
 				InitialiseData();
 			});
 			
@@ -147,7 +165,7 @@
 			}
 			
 			function InitialiseData(){
-				var posting = jQuery.post("userdata");
+				var posting = $.post("userdata");
 				wizards.registerCallForWizardOnError(posting);
 				posting.done(function(data){
 					if(data.length > 0){
@@ -164,10 +182,21 @@
 				$('.loggedOut').hide();
 				$('.loggedIn').show();
 				var userData = $.parseJSON(data);
-				jQuery.each(userData.inputs, function(index,value){
+				$.each(userData.inputs, function(index,value){
 				addNewInput(value);});
-				jQuery.each(userData.outputs, function(index,value){
+				$.each(userData.outputs, function(index,value){
 				addNewOutput(value);});
+				$.each(userData.posts, function(index,post){
+					var attachedOutput = $.grep(userData.outputs,function(output){return output.id === post.output;});
+					
+					if(attachedOutput.length > 0){
+						post.outputDescription = attachedOutput[0].userName+"@"+attachedOutput[0].siteName;
+					}else{
+						 post.outputDescription = data.siteName;
+					}
+
+					addNewPost(post);});
+
 				DisableIfComboEmpty("#existingOutputs","#RemoveOutputs")
 				DisableIfComboEmpty("#existingOutputs","#UpdateOutputs")
 				DisableIfComboEmpty("#existingInputs","#RemoveInputs")
@@ -192,7 +221,7 @@
 			
 			function RemoveData(id){
 				var params = {method:"RemoveData", id:parseInt(id)};
-				var deferral = jQuery.post("datamanagement",{params:JSON.stringify(params)});
+				var deferral = $.post("datamanagement",{params:JSON.stringify(params)});
 				wizards.registerCallForWizardDisplay(deferral);
 				return deferral;
 			}

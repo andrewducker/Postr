@@ -58,4 +58,9 @@ public class LJPost extends BasePost {
 		setResult(translator.MakePost(ljData, contents, subject, tags));
 	}
 
+	@Override
+	protected String getSiteName() {
+		return "Livejournal";
+	}
+
 }
