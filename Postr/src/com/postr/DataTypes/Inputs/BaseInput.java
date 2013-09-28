@@ -7,12 +7,17 @@ import com.postr.DataTypes.BaseSaveable;
 public abstract class BaseInput extends BaseSaveable {
 	protected String userName;
 	
-	protected BaseInput(){}
+	protected BaseInput(){this.siteName = getSiteName();}
 
 	public BaseInput(String userName) {
 		super();
 		this.userName = userName;
+		this.siteName = getSiteName();
 	}
+	
+	//Needed for JSon
+	@SuppressWarnings("unused")
+	private String siteName;
 
 	public abstract String getSiteName();
 	

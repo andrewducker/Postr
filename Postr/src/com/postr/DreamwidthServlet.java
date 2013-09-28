@@ -1,6 +1,6 @@
 package com.postr;
 
-import java.util.TimeZone;
+import org.joda.time.DateTimeZone;
 
 import com.postr.DataTypes.Json;
 import com.postr.DataTypes.Outputs.DWData;
@@ -26,24 +26,23 @@ public class DreamwidthServlet extends BaseOutputServlet {
 		String timeZone = parameters.getString("timeZone");
 		DWData dwData = new DWData(
 				userName, password,
-				TimeZone.getTimeZone(timeZone));
+				DateTimeZone.forID(timeZone));
 		
 		Key<DWData> result = DAO.SaveThing(dwData,GetUserID());
 		Json toReturn =Json.SuccessResult("Saved!"); 
-		toReturn.setData("key", result.getId());
+		toReturn.setData("id", result.getId());
 		return toReturn;
 	}
 
 	@Override
-	protected Json MakePost(Json parameters) throws Exception {
+	protected DWPost CreatePost(Json parameters, long userID) {
 		String contents = parameters.getString("contents");
 		String subject = parameters.getString("subject");
 		String tags = parameters.getString("tags");
 		long output = parameters.getLong("output");
-		
 		DWPost post = new DWPost(subject, contents, tags, output);
-		
-		return post.MakePost();
+		post.setParent(userID);
+		return post;
 	}
 	
 	@Override
@@ -58,7 +57,7 @@ public class DreamwidthServlet extends BaseOutputServlet {
 		Key<DWPost> result = DAO.SaveThing(post, GetUserID());
 		
 		Json toReturn = Json.SuccessResult("Saved!");
-		toReturn.setData("key", result.getId());
+		toReturn.setData("id", result.getId());
 		return toReturn;
 	}
 	
@@ -67,7 +66,7 @@ public class DreamwidthServlet extends BaseOutputServlet {
 		String contents = parameters.getString("contents");
 		String subject = parameters.getString("subject");
 		String tags = parameters.getString("tags");
-		Long key = parameters.getLong("key");
+		Long key = parameters.getLong("id");
 		
 		DWPost post = DAO.LoadThing(DWPost.class, key, GetUserID());
 		
@@ -80,12 +79,12 @@ public class DreamwidthServlet extends BaseOutputServlet {
 
 	@Override
 	protected Json UpdateData(Json parameters) throws Exception {
-		Long key = parameters.getLong("key");
+		Long key = parameters.getLong("id");
 		String password = parameters.getString("password");
 		String timeZone = parameters.getString("timeZone");
 		DWData existingDWData = DAO.LoadThing(DWData.class, key, GetUserID());
 		
-		DWData newDWData = new DWData(existingDWData,password,TimeZone.getTimeZone(timeZone));
+		DWData newDWData = new DWData(existingDWData,password,DateTimeZone.forID(timeZone));
 		
 		DAO.SaveThing(newDWData,GetUserID());
 		return Json.SuccessResult("Saved!"); 

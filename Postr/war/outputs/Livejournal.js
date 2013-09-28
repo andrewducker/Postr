@@ -32,7 +32,7 @@ function Livejournal(displayName, url, prefix){
 
 	var updateCredentials = function(){
 		if(j(identityID).text() != ""){
-			var params = {method:"UpdateData", password:j(passwordID).val(), timeZone:j(timezoneID).val(), key:that.currentOutput.key};
+			var params = {method:"UpdateData", password:j(passwordID).val(), timeZone:j(timezoneID).val(), id:that.currentOutput.id};
 			var posting = $.post(siteID,{params:JSON.stringify(params)});
 			wizards.registerCallForWizardDisplay(posting).done(function(data){
 				that.currentOutput.timeZone = params.timeZone;
@@ -45,7 +45,7 @@ function Livejournal(displayName, url, prefix){
 	}
 	
 	var makePost = function(){
-		var params = {method:"MakePost", contents:j(textID).val(), subject:j(subjectID).val(),tags:j(tagsID).val(), output:that.currentOutput.key};
+		var params = {method:"MakePost", contents:j(textID).val(), subject:j(subjectID).val(),tags:j(tagsID).val(), output:that.currentOutput.id};
 		var posting = $.post(siteID,{params:JSON.stringify(params)});
 		wizards.registerCallForWizardDisplay(posting).done(function(data){
 			that.currentDeferral.resolve();

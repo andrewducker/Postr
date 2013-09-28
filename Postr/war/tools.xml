@@ -28,8 +28,4 @@
     <toolbox scope="application">
     	<tool key="staticdata" class="com.postr.StaticData"/>
     </toolbox>
-	<toolbox scope="session">
-	 	<property name="create-session" value="true" type="boolean"/>
-		<tool key="userdata" class="com.postr.UserData"/>
-	</toolbox>
 </tools>

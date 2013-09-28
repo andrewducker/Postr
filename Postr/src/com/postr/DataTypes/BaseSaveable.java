@@ -22,7 +22,7 @@ public class BaseSaveable {
 	}
 	
 	@Index
-	Key<User> parent;
+	transient Key<User> parent;
 	
 	protected BaseSaveable(){}
 

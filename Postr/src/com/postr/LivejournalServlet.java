@@ -1,6 +1,6 @@
 package com.postr;
 
-import java.util.TimeZone;
+import org.joda.time.DateTimeZone;
 
 import com.googlecode.objectify.Key;
 import com.postr.DataTypes.Json;
@@ -26,24 +26,23 @@ public class LivejournalServlet extends BaseOutputServlet {
 		String timeZone = parameters.getString("timeZone");
 		LJData ljData = new LJData(
 				userName, password,
-				TimeZone.getTimeZone(timeZone));
+				DateTimeZone.forID(timeZone));
 		
 		Key<LJData> result = DAO.SaveThing(ljData,GetUserID());
 		Json toReturn = Json.SuccessResult("Saved!");
-		toReturn.setData("key", result.getId());
+		toReturn.setData("id", result.getId());
 		return toReturn;
 	}
 
 	@Override
-	protected Json MakePost(Json parameters) throws Exception {
+	protected LJPost CreatePost(Json parameters, long userID) {
 		String contents = parameters.getString("contents");
 		String subject = parameters.getString("subject");
 		String tags = parameters.getString("tags");
 		long output = parameters.getLong("output");
-		
 		LJPost post = new LJPost(subject, contents, tags, output);
-		
-		return post.MakePost();
+		post.setParent(userID);
+		return post;
 	}
 	
 	@Override
@@ -58,7 +57,7 @@ public class LivejournalServlet extends BaseOutputServlet {
 		Key<LJPost> result = DAO.SaveThing(post, GetUserID());
 		
 		Json toReturn = Json.SuccessResult("Saved!");
-		toReturn.setData("key", result.getId());
+		toReturn.setData("id", result.getId());
 		return toReturn;
 	}
 	
@@ -67,7 +66,7 @@ public class LivejournalServlet extends BaseOutputServlet {
 		String contents = parameters.getString("contents");
 		String subject = parameters.getString("subject");
 		String tags = parameters.getString("tags");
-		Long key = parameters.getLong("key");
+		Long key = parameters.getLong("id");
 		
 		LJPost post = DAO.LoadThing(LJPost.class, key, GetUserID());
 		
@@ -85,11 +84,11 @@ public class LivejournalServlet extends BaseOutputServlet {
 		String timeZone = parameters.getString("timeZone");
 		LJData existingLJData = DAO.LoadThing(LJData.class, key, GetUserID());
 		
-		LJData newDWData = new LJData(existingLJData,password,TimeZone.getTimeZone(timeZone));
+		LJData newDWData = new LJData(existingLJData,password,DateTimeZone.forID(timeZone));
 		
 		Key<LJData> result = DAO.SaveThing(newDWData,GetUserID());
 		Json toReturn =Json.SuccessResult("Saved!"); 
-		toReturn.setData("key", result.getId());
+		toReturn.setData("id", result.getId());
 		return toReturn;
 	}
 }

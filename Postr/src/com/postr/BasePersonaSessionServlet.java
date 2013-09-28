@@ -17,20 +17,41 @@ public abstract class BasePersonaSessionServlet extends HttpServlet {
 			throws ServletException, IOException {
 			session = req.getSession();
 			try {
-				handlePost(req, resp);
+				handleRequest(req, resp);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 	}
 	
-	abstract void handlePost(HttpServletRequest req, HttpServletResponse resp)
+	
+	
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException {
+		session = req.getSession();
+		try {
+			handleRequest(req, resp);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+
+
+	abstract void handleRequest(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException, Exception;
 	
 	protected String GetPersona()
 	{
 		return (String) session.getAttribute("Persona");
 	}
+	
+	protected boolean LoggedIn(){
+		return session.getAttribute("UserID") != null;
+	}
+	
 	
 	protected Long GetUserID()
 	{

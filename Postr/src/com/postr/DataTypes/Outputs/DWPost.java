@@ -1,9 +1,12 @@
 package com.postr.DataTypes.Outputs;
 
+import com.googlecode.objectify.annotation.EntitySubclass;
 import com.postr.DAO;
-import com.postr.DataTypes.Json;
+import com.postr.MessageLogger;
+import com.postr.Result;
 import com.postr.Translators.DWTranslator;
 
+@EntitySubclass(index=true)
 public class DWPost extends LJPost {
 
 	public DWPost(String subject, String contents, String tags, long output){
@@ -19,13 +22,18 @@ public class DWPost extends LJPost {
 	
 	
 	@Override
-	
-	public Json MakePost() throws Exception {
-		DWData dwData = DAO.LoadThing(DWData.class, getOutput(), getParent());
+	public void MakePost() {
+		DWData dwData;
+		try {
+			dwData = DAO.LoadThing(DWData.class, getOutput(), getParent());
+		} catch (Exception e) {
+			MessageLogger.Severe(this,e.getMessage());
+			setResult(Result.Failure("Failed to load Output data"));
+			return;
+		}
 		
 		DWTranslator translator = new DWTranslator();
-		return translator.MakePost(dwData, getContents(), getSubject(), getTags());
-		
+		setResult(translator.MakePost(dwData, getContents(), getSubject(), getTags()));
 	}
 
 }

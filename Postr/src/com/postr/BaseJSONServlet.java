@@ -11,7 +11,7 @@ import com.postr.DataTypes.Json;
 public abstract class BaseJSONServlet extends BasePersonaSessionServlet {
 	
 	@Override
-	protected void handlePost(HttpServletRequest req, HttpServletResponse resp)
+	protected void handleRequest(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		try {
 			resp.setContentType("text/plain");

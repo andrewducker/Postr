@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 
 @SuppressWarnings("serial")
 public class PersonaLogoutServlet extends BasePersonaSessionServlet {
-	protected void handlePost(HttpServletRequest req, HttpServletResponse resp)
+	protected void handleRequest(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
     	try {
 			SetPersona(null);

@@ -1,17 +1,18 @@
 package com.postr.DataTypes.Outputs;
 
+import com.googlecode.objectify.annotation.EntitySubclass;
+import com.postr.Result;
 import com.postr.DataTypes.BaseSaveable;
-import com.postr.DataTypes.Json;
 
+@EntitySubclass(index=true)
 public abstract class BasePost extends BaseSaveable {
-		abstract public Json MakePost() throws Exception;
+		abstract public void MakePost();
 		
 		protected BasePost(){}
 		
 		protected BasePost(long output) {
 			this.output = output;
 		}
-
 		
 		public BasePost(BasePost originalPost) {
 			super(originalPost);
@@ -26,5 +27,16 @@ public abstract class BasePost extends BaseSaveable {
 			this.output = output;
 		}
 
+		public Result getResult() {
+			return result;
+		}
+
+		public void setResult(Result result) {
+			this.result = result;
+		}
+
 		private long output;
+		
+		private Result result;
+		
 }

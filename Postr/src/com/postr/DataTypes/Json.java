@@ -21,8 +21,30 @@ public class Json  {
 			data.put(key,object);
 		}
 		
+		public Boolean isFailure(){
+			return data.get(ERROR_MESSAGE) != null;
+		}
+		
+		public String getErrorMessage(){
+			return getString(ERROR_MESSAGE);
+		}
+		
+		public String getResult(){
+			return getString(RESULT);
+		}
+		
 		public String getString(String key){
 			return (String) data.get(key);
+		}
+		
+		public static Json Result(com.postr.Result originalResult){
+			Json result = new Json();
+			if (originalResult.isFailure()) {
+				result.data.put(ERROR_MESSAGE, originalResult.getMessage());	
+			}else {
+				result.data.put(RESULT, originalResult.getMessage());
+			}
+			return result;
 		}
 		
 		public static Json SuccessResult(String message){

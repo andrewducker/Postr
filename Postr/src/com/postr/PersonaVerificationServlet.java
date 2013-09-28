@@ -12,12 +12,13 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
 import com.google.gson.internal.StringMap;
+import com.postr.DataTypes.UserData;
 
 @SuppressWarnings("serial")
 public class PersonaVerificationServlet extends BasePersonaSessionServlet {
 
 	@Override
-	protected void handlePost(HttpServletRequest req, HttpServletResponse resp)
+	protected void handleRequest(HttpServletRequest req, HttpServletResponse resp)
 			throws Exception {
 		resp.setContentType("text/plain");
 
@@ -50,12 +51,15 @@ public class PersonaVerificationServlet extends BasePersonaSessionServlet {
         	@SuppressWarnings("unchecked")
 			StringMap<Object> response = (StringMap<Object>)new Gson().fromJson(sb.toString(), Object.class);
         	if (response.containsKey("status") && response.get("status").equals("okay")) {
-        		SetPersona((String) response.get("email"));
+        		String persona =(String) response.get("email"); 
+        		SetPersona(persona);
+        		UserData userData = new UserData(GetPersona(),GetUserID());
+        		result = userData.AsJson();
 			}
         	else{
         		SetPersona(null);
+        		result = "Fail";
         	}
-        	result = "Success!";
         } else {
         	SetPersona(null);
         	result = "Fail";

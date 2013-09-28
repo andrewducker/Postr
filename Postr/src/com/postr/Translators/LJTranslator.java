@@ -3,14 +3,17 @@ package com.postr.Translators;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.NoSuchAlgorithmException;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.client.XmlRpcClient;
 import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
+import org.joda.time.DateTime;
+import org.joda.time.chrono.GregorianChronology;
 
+import com.postr.MessageLogger;
+import com.postr.Result;
 import com.postr.DataTypes.Json;
 import com.postr.DataTypes.PasswordEncryptor;
 import com.postr.DataTypes.Outputs.LJData;
@@ -47,10 +50,26 @@ public class LJTranslator {
 		
 		
 		@SuppressWarnings("unchecked")
-		public Json MakePost(LJData ljData, String contents, String header, String[] tags)  throws Exception{
-		    XmlRpcClient client = getClient();
+		public Result MakePost(LJData ljData, String contents, String header, String[] tags){
+		    XmlRpcClient client;
+			try {
+				client = getClient();
+			} catch (MalformedURLException e1) {
+				MessageLogger.Severe(this,e1.getMessage());
+				return Result.Failure("Malformed URL");
+			}
 		    
-		    HashMap<String, Object> postParams = getInitialisedCallParams(client,ljData.getUserName(),ljData.getPassword());
+		    if (ljData.getUserName().equalsIgnoreCase("test")) {
+				return Result.Success("Test data, successfully not saved");
+			}
+		    
+		    HashMap<String, Object> postParams;
+			try {
+				postParams = getInitialisedCallParams(client,ljData.getUserName(),ljData.getPassword());
+			} catch (Exception e1) {
+				MessageLogger.Severe(this,e1.getMessage());
+				return Result.Failure("Error connecting to server.");
+			}
 		    
 		    postParams.put("event", contents);
 		    postParams.put("subject", header) ;
@@ -58,12 +77,12 @@ public class LJTranslator {
 			    postParams.put("security","private");
 //			}
 
-		    Calendar calendar = Calendar.getInstance(ljData.getTimeZone());
-		    postParams.put("year",calendar.get(Calendar.YEAR));
-		    postParams.put("mon",calendar.get(Calendar.MONTH)+1);
-		    postParams.put("day",calendar.get(Calendar.DAY_OF_MONTH));
-		    postParams.put("hour",calendar.get(Calendar.HOUR_OF_DAY));
-		    postParams.put("min",calendar.get(Calendar.MINUTE));
+		    DateTime calendar = new DateTime(GregorianChronology.getInstance(ljData.getTimeZone()));
+		    postParams.put("year",calendar.getYear());
+		    postParams.put("mon",calendar.getMonthOfYear());
+		    postParams.put("day",calendar.getDayOfMonth());
+		    postParams.put("hour",calendar.getHourOfDay());
+		    postParams.put("min",calendar.getMinuteOfHour());
 		    
 		    HashMap<String,Object> options = new HashMap<String,Object>();
 		    String tagsToUse = "";
@@ -84,16 +103,17 @@ public class LJTranslator {
 		    	postResult =  (Map<String, String>) client.execute("LJ.XMLRPC.postevent", params);
 		    } catch (XmlRpcException e){
 		    	if (e.getMessage().equals("Invalid password")){
-		    		return Json.ErrorResult("Invalid Password");
+		    		return Result.Failure("Invalid Password");
 		    	} else{
-		    		throw e;
+					MessageLogger.Severe(this,e.getMessage());
+		    		return Result.Failure("Error communicating with server: " + e.getMessage());
 		    	}
 		    }
 		    
 		    if (postResult.get("success")=="FAIL"){
-		    	return Json.ErrorResult(postResult.get("errmsg"));
+		    	return Result.Failure(postResult.get("errmsg"));
 		    }
-		    return Json.SuccessResult("<A href=" + postResult.get("url")+ ">Link posted</A>");
+		    return Result.Success("<A href=" + postResult.get("url")+ ">Link posted</A>");
 		}
 
 		@SuppressWarnings("unchecked")

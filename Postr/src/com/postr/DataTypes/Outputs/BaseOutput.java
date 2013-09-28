@@ -6,21 +6,23 @@ import com.postr.DataTypes.BaseSaveable;
 @EntitySubclass(index=true)
 public abstract class BaseOutput extends BaseSaveable {
 
-	protected BaseOutput(){}
+	protected BaseOutput(){this.siteName = getSiteName();}
 	
 	protected BaseOutput(String userName, String password) throws Exception{
 		this.userName = userName;
 		this.password = password;
+		siteName = getSiteName();
 	}
 	
 	public BaseOutput(BaseOutput existingData, String password) {
 		super(existingData);
 		this.userName = existingData.userName;
 		this.password = password;
+		siteName = getSiteName();
 	}
 
 	protected String userName;
-	private String password;
+	private transient String password;
 
 	
 	public String getUserName() {
@@ -31,5 +33,9 @@ public abstract class BaseOutput extends BaseSaveable {
 	}
 	
 	public abstract String getSiteName();
+	
+	//User for JSon
+	@SuppressWarnings("unused")
+	private String siteName;
 	
 }

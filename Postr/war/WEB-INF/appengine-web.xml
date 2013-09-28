@@ -8,11 +8,6 @@
     Allows App Engine to send multiple requests to one instance in parallel:
   -->
   <threadsafe>true</threadsafe>
-	<static-files>
-        <exclude path="/**.vm" />
-        <exclude path="/**.html" />
-        <exclude path="/**.js.vm" />
-    </static-files>
 
   <!-- Configure java.util.logging -->
   <system-properties>

@@ -1,9 +1,12 @@
 package com.postr.DataTypes.Outputs;
 
+import com.googlecode.objectify.annotation.EntitySubclass;
 import com.postr.DAO;
-import com.postr.DataTypes.Json;
+import com.postr.MessageLogger;
+import com.postr.Result;
 import com.postr.Translators.LJTranslator;
 
+@EntitySubclass(index=true)
 public class LJPost extends BasePost {
 
 	private String subject;
@@ -41,12 +44,18 @@ public class LJPost extends BasePost {
 
 
 	@Override
-	public Json MakePost() throws Exception {
-		LJData ljData = DAO.LoadThing(LJData.class, getOutput(), getParent());
+	public void MakePost() {
+		LJData ljData;
+		try {
+			ljData = DAO.LoadThing(LJData.class, getOutput(), getParent());
+		} catch (Exception e) {
+			MessageLogger.Severe(this,e.getMessage());
+			setResult(Result.Failure("Failed to load Output data"));
+			return;
+		}
 		
 		LJTranslator translator = new LJTranslator();
-		return translator.MakePost(ljData, contents, subject, tags);
-		
+		setResult(translator.MakePost(ljData, contents, subject, tags));
 	}
 
 }

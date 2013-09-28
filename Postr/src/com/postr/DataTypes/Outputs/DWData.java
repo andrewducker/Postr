@@ -1,13 +1,13 @@
 package com.postr.DataTypes.Outputs;
 
-import java.util.TimeZone;
+import org.joda.time.DateTimeZone;
 
 import com.googlecode.objectify.annotation.EntitySubclass;
 
 @EntitySubclass(index=true)
 public class DWData extends LJData {
 
-	public DWData(String userName, String password, TimeZone timeZone) throws Exception {
+	public DWData(String userName, String password, DateTimeZone timeZone) throws Exception {
 		super(userName, password, timeZone);
 	}
 
@@ -19,8 +19,8 @@ public class DWData extends LJData {
 	@SuppressWarnings("unused")
 	private DWData(){}
 
-	public DWData(DWData existingDWData, String password, TimeZone timeZone) throws Exception {
+	public DWData(DWData existingDWData, String password, DateTimeZone timeZone) throws Exception {
 		super(existingDWData,password,timeZone);
 	}
-
+	
 }

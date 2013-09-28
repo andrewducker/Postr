@@ -9,12 +9,20 @@ import javax.servlet.http.HttpServletResponse;
 @SuppressWarnings("serial")
 public class UserDataServlet extends BasePersonaSessionServlet {
 
+	
 	@Override
-	void handlePost(HttpServletRequest req, HttpServletResponse resp)
+	void handleRequest(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException, Exception {
 		resp.setContentType("text/plain");
 		
+		if (LoggedIn()) {
+			Long userID = GetUserID();
+			String persona = GetPersona();
 
+			com.postr.DataTypes.UserData userData = new com.postr.DataTypes.UserData(persona, userID);
+			
+			resp.getWriter().write(userData.AsJson());
+		}
 	}
 
 }
