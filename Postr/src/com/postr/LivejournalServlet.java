@@ -40,26 +40,23 @@ public class LivejournalServlet extends BaseOutputServlet {
 		String subject = parameters.getString("subject");
 		String tags = parameters.getString("tags");
 		long output = parameters.getLong("output");
-		LJPost post = new LJPost(subject, contents, tags, output);
+		LivejournalVisibilityTypes visibility =  LivejournalVisibilityTypes.valueOf(parameters.getString("visibility"));
+		LJPost post = new LJPost(subject, contents, tags,visibility, output);
 		post.setParent(userID);
 		return post;
 	}
 	
 	@Override
 	protected Json SavePost(Json parameters) throws Exception {
-		String contents = parameters.getString("contents");
-		String subject = parameters.getString("subject");
-		String tags = parameters.getString("tags");
-		long output = parameters.getLong("output");
-		
-		LJPost post = new LJPost(subject, contents, tags, output);
-		
+		LJPost post = CreatePost(parameters,GetUserID());
+	
 		Key<LJPost> result = DAO.SaveThing(post, GetUserID());
 		
 		Json toReturn = Json.SuccessResult("Saved!");
 		toReturn.setData("id", result.getId());
 		return toReturn;
 	}
+
 	
 	@Override
 	protected Json UpdatePost(Json parameters) throws Exception {

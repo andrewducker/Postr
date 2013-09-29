@@ -2,6 +2,7 @@ package com.postr.DataTypes.Outputs;
 
 import com.googlecode.objectify.annotation.EntitySubclass;
 import com.postr.DAO;
+import com.postr.LivejournalVisibilityTypes;
 import com.postr.MessageLogger;
 import com.postr.Result;
 import com.postr.Translators.DWTranslator;
@@ -9,8 +10,8 @@ import com.postr.Translators.DWTranslator;
 @EntitySubclass(index=true)
 public class DWPost extends LJPost {
 
-	public DWPost(String subject, String contents, String tags, long output){
-		super(subject,contents,tags,output);
+	public DWPost(String subject, String contents, String tags, LivejournalVisibilityTypes visibility, long output){
+		super(subject,contents,tags,visibility,output);
 	}
 	
 	public DWPost(DWPost originalPost, String subject, String contents, String tags){
@@ -33,7 +34,7 @@ public class DWPost extends LJPost {
 		}
 		
 		DWTranslator translator = new DWTranslator();
-		setResult(translator.MakePost(dwData, getContents(), getSubject(), getTags()));
+		setResult(translator.MakePost(dwData, getContents(), getSubject(), getTags(), getVisibility()));
 	}
 
 	@Override

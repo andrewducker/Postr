@@ -2,6 +2,7 @@ package com.postr.DataTypes.Outputs;
 
 import com.googlecode.objectify.annotation.EntitySubclass;
 import com.postr.DAO;
+import com.postr.LivejournalVisibilityTypes;
 import com.postr.MessageLogger;
 import com.postr.Result;
 import com.postr.Translators.LJTranslator;
@@ -12,6 +13,7 @@ public class LJPost extends BasePost {
 	private String subject;
 	private String contents;
 	private String[] tags;
+	private LivejournalVisibilityTypes visibility;
 	
 	protected String getSubject() {
 		return subject;
@@ -25,11 +27,16 @@ public class LJPost extends BasePost {
 		return tags;
 	}
 
-	public LJPost(String subject, String contents, String tags, long output){
+	public LJPost(String subject, String contents, String tags, LivejournalVisibilityTypes visibility, long output){
 		super(output);
 		this.subject = subject;
 		this.contents = contents;
 		this.tags = tags.split(",");
+		this.visibility = visibility;
+	}
+
+	protected LivejournalVisibilityTypes getVisibility() {
+		return visibility;
 	}
 
 	protected LJPost(){}
@@ -50,12 +57,12 @@ public class LJPost extends BasePost {
 			ljData = DAO.LoadThing(LJData.class, getOutput(), getParent());
 		} catch (Exception e) {
 			MessageLogger.Severe(this,e.getMessage());
-			setResult(Result.Failure("Failed to load Output data"));
+			setResult(Result.Failure("Failed to load Output."));
 			return;
 		}
 		
 		LJTranslator translator = new LJTranslator();
-		setResult(translator.MakePost(ljData, contents, subject, tags));
+		setResult(translator.MakePost(ljData, contents, subject, tags,visibility));
 	}
 
 	@Override

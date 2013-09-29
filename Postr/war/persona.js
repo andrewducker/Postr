@@ -7,7 +7,7 @@ persona.initialise = function(currentUser, onLoggedIn){
 					type: 'POST',	        
 					url: '/personaverification', 
 					data: {assertion: assertion},
-					success: function(res, status, xhr) { onLoggedIn(res) },	        
+					success: function(res, status, xhr) { onLoggedIn(res); },	        
 					error: function(xhr, status, err) {	          
 						navigator.id.logout();	          
 						alert("Login failure: " + err);	        
@@ -18,7 +18,7 @@ persona.initialise = function(currentUser, onLoggedIn){
 				jQuery.ajax({  	
 					type: 'POST',        
 					url: '/personalogout',
-					success: function(res,status,xhr) {location.reload()},
+					success: function(res,status,xhr) {location.reload();},
 					error: function(xhr, status, err) {
 						alert("Failed to log you out: "+err);
 						location.reload();
@@ -27,5 +27,5 @@ persona.initialise = function(currentUser, onLoggedIn){
 			}
 		}
 	);	
-}
+};
 

@@ -12,6 +12,7 @@ import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
 import org.joda.time.DateTime;
 import org.joda.time.chrono.GregorianChronology;
 
+import com.postr.LivejournalVisibilityTypes;
 import com.postr.MessageLogger;
 import com.postr.Result;
 import com.postr.DataTypes.Json;
@@ -50,7 +51,7 @@ public class LJTranslator {
 		
 		
 		@SuppressWarnings("unchecked")
-		public Result MakePost(LJData ljData, String contents, String header, String[] tags){
+		public Result MakePost(LJData ljData, String contents, String header, String[] tags, LivejournalVisibilityTypes visibility){
 		    XmlRpcClient client;
 			try {
 				client = getClient();
@@ -72,11 +73,19 @@ public class LJTranslator {
 			}
 		    
 		    postParams.put("event", contents);
-		    postParams.put("subject", header) ;
-//		    if (ljData.getPostPrivately()) {
+		    postParams.put("subject", header);
+		    
+		    switch (visibility) {
+			case FriendsOnly:
+				postParams.put("security","usemask");
+				postParams.put("usemask", 1);
+			case Private:
 			    postParams.put("security","private");
-//			}
-
+			case Public:
+			default:
+				break;
+			}
+		    
 		    DateTime calendar = new DateTime(GregorianChronology.getInstance(ljData.getTimeZone()));
 		    postParams.put("year",calendar.getYear());
 		    postParams.put("mon",calendar.getMonthOfYear());

@@ -40,19 +40,15 @@ public class DreamwidthServlet extends BaseOutputServlet {
 		String subject = parameters.getString("subject");
 		String tags = parameters.getString("tags");
 		long output = parameters.getLong("output");
-		DWPost post = new DWPost(subject, contents, tags, output);
+		LivejournalVisibilityTypes visibility =  LivejournalVisibilityTypes.valueOf(parameters.getString("visibility"));
+		DWPost post = new DWPost(subject, contents, tags,visibility, output);
 		post.setParent(userID);
 		return post;
 	}
 	
 	@Override
 	protected Json SavePost(Json parameters) throws Exception {
-		String contents = parameters.getString("contents");
-		String subject = parameters.getString("subject");
-		String tags = parameters.getString("tags");
-		long output = parameters.getLong("output");
-		
-		DWPost post = new DWPost(subject, contents, tags, output);
+		DWPost post = CreatePost(parameters, GetUserID());
 		
 		Key<DWPost> result = DAO.SaveThing(post, GetUserID());
 		

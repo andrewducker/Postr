@@ -112,49 +112,49 @@
 					var selectedValue = $("#output option:selected").text();
 					outputs[selectedValue].Add().done(function(data){
 						addNewOutput(data);
-						DisableIfComboEmpty("#existingOutputs","#RemoveOutputs")
-						DisableIfComboEmpty("#existingOutputs","#UpdateOutputs")
-						DisableIfComboEmpty("#existingOutputs","#PostFromOutput")
+						DisableIfComboEmpty("#existingOutputs","#RemoveOutputs");
+						DisableIfComboEmpty("#existingOutputs","#UpdateOutputs");
+						DisableIfComboEmpty("#existingOutputs","#PostFromOutput");
 					});
 				});
 				$( "#PostFromOutput" ).click(function() {
 					var selectedOption = $("#existingOutputs option:selected");
 					var selectedData = selectedOption.data();
-					outputs[selectedData.siteName].Post(selectedData)
+					outputs[selectedData.siteName].Post(selectedData);
 				});
 				$( "#UpdateOutputs" ).click(function() {
 					var selectedOption = $("#existingOutputs option:selected");
 					var selectedData = selectedOption.data();
-					outputs[selectedData.siteName].Update(selectedData)
+					outputs[selectedData.siteName].Update(selectedData);
 				});
 				$( "#RemoveOutputs" ).click(function() {
 					var selectedData = $("#existingOutputs option:selected").data();
 					RemoveData(selectedData.id).done(function(){
 						$("#existingOutputs option:selected").remove();
-						DisableIfComboEmpty("#existingOutputs","#RemoveOutputs")
-						DisableIfComboEmpty("#existingOutputs","#UpdateOutputs")
-						DisableIfComboEmpty("#existingOutputs","#PostFromOutput")
+						DisableIfComboEmpty("#existingOutputs","#RemoveOutputs");
+						DisableIfComboEmpty("#existingOutputs","#UpdateOutputs");
+						DisableIfComboEmpty("#existingOutputs","#PostFromOutput");
 					});
 				});
 				$( "#AddNewInput" ).click(function() {
 					var selectedValue = $("#input option:selected").text();
 					inputs[selectedValue].Add().done(function(data){
 						addNewInput(data);
-						DisableIfComboEmpty("#existingInputs","#RemoveInputs")
-						DisableIfComboEmpty("#existingOutputs","#PostFromOutput")
+						DisableIfComboEmpty("#existingInputs","#RemoveInputs");
+						DisableIfComboEmpty("#existingOutputs","#PostFromOutput");
 					});
 				});
 				$( "#RemoveInputs" ).click(function() {
 					var selectedData = $("#existingInputs option:selected").data();
 					RemoveData(selectedData.id).done(function(){
 						$("#existingInputs option:selected").remove();
-						DisableIfComboEmpty("#existingInputs","#RemoveInputs")
+						DisableIfComboEmpty("#existingInputs","#RemoveInputs");
 					});
 				});
 				$( "#DisplayPost" ).click(function() {
 					var selectedPost = $("#existingPosts option:selected");
 					var selectedData = selectedPost.data();
-					outputs[selectedData.siteName].DisplayPost(selectedData)
+					outputs[selectedData.siteName].DisplayPost(selectedData);
 				});
 
 				InitialiseData();
@@ -197,10 +197,10 @@
 
 					addNewPost(post);});
 
-				DisableIfComboEmpty("#existingOutputs","#RemoveOutputs")
-				DisableIfComboEmpty("#existingOutputs","#UpdateOutputs")
-				DisableIfComboEmpty("#existingInputs","#RemoveInputs")
-				DisableIfComboEmpty("#existingOutputs","#PostFromOutput")
+				DisableIfComboEmpty("#existingOutputs","#RemoveOutputs");
+				DisableIfComboEmpty("#existingOutputs","#UpdateOutputs");
+				DisableIfComboEmpty("#existingInputs","#RemoveInputs");
+				DisableIfComboEmpty("#existingOutputs","#PostFromOutput");
 				j('emailAddress').html(userData.persona);
 				return userData.persona;
 			}

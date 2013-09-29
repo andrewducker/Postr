@@ -2,8 +2,8 @@ function StandardInput(Name, url){
 	var siteName = Name;
 	var siteID = url;
 	var usernameID = url+"Username";
-	var credentialsWizard = url+"Credentials"
-		var identityID = url+"Identity"; 
+	var credentialsWizard = url+"Credentials";
+	var identityID = url+"Identity"; 
 	var verifyID = url+"CredentialsVerify";
 
 	var that = this;
@@ -21,14 +21,14 @@ function StandardInput(Name, url){
 		else{
 			wizards.showError("Identity not validated");
 		}
-	}
+	};
 
 	var formCreated = false;
 
 	var addForm = function(){
 		$.el.div({id:credentialsWizard,title:siteName+' Details'},
 				$.el.form(
-						$.el.label({for:usernameID},'User Name:'),
+						$.el.label({"for":usernameID},'User Name:'),
 						$.el.input({type:'text',id:usernameID}),
 						$.el.br(),
 						$.el.button({type:'button',id:verifyID},'Verify'),
@@ -37,17 +37,17 @@ function StandardInput(Name, url){
 				)
 		).appendTo(document.body);
 		wizards.register(credentialsWizard);	
-
+		
 		j(usernameID).change(function(){
 			j(identityID).text("");
-		})
+		});
 
 		j(verifyID).click(function(){
 			var params = {method:"VerifyUserExists", userName:j(usernameID).val()};
 			var posting = $.post(siteID,{params:JSON.stringify(params)});
 			posting.done(function(data){
 				var parsedData = $.parseJSON(data);
-				j(identityID).text("Verified");
+				j(identityID).text(parsedData.result);
 				wizards.setProperty(credentialsWizard,"height","auto");
 			});
 			wizards.registerCallForWizardOnError(posting);
@@ -61,11 +61,11 @@ function StandardInput(Name, url){
 		}
 		j(identityID).text("");
 		j(usernameID).val("");
-		var buttons = j(credentialsWizard ).dialog( "option", "buttons", [{text:"ok", click: function(){saveCredentials()}}]);
+		j(credentialsWizard ).dialog( "option", "buttons", [{text:"ok", click: function(){saveCredentials();}}]);
 		that.currentDeferral = $.Deferred();
 		wizards.showPage(credentialsWizard);
 		return that.currentDeferral;
-	}
+	};
 
 	AddInput(siteName, addInput);
 };

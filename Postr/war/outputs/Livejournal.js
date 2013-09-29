@@ -5,7 +5,7 @@ function Livejournal(displayName, url){
 	var usernameID = prefix+"Username";
 	var passwordID = prefix+"Password";
 	var timezoneID = prefix+"TimeZone";
-	var credentialsWizard = prefix+"Credentials"
+	var credentialsWizard = prefix+"Credentials";
 	var identityID = prefix+"Identity"; 
 	var verifyID = prefix+"CredentialsVerify";
 	var postingWizard = prefix+"PostMaker";
@@ -14,6 +14,8 @@ function Livejournal(displayName, url){
 	var tagsID = prefix+"Tags";
 	
 	var that = this;
+
+	var postingWizardCreated = false;
 	
 	var saveCredentials = function(){
 		if(j(identityID).text() != ""){
@@ -29,7 +31,7 @@ function Livejournal(displayName, url){
 		else{
 			wizards.showError("Identity not validated");
 		}
-	}
+	};
 
 	var updateCredentials = function(){
 		if(j(identityID).text() != ""){
@@ -43,7 +45,7 @@ function Livejournal(displayName, url){
 		else{
 			wizards.showError("Identity not validated");
 		}
-	}
+	};
 	
 	var makePost = function(){
 		var params = {method:"MakePost", contents:j(textID).val(), subject:j(subjectID).val(),tags:j(tagsID).val(), output:that.currentOutput};
@@ -51,8 +53,7 @@ function Livejournal(displayName, url){
 		wizards.registerCallForWizardDisplay(posting).done(function(data){
 			that.currentDeferral.resolve();
 		});
-
-	}
+	};
 	
 	var addPosting = function(outputId){
 		if (!postingWizardCreated) {
@@ -61,12 +62,12 @@ function Livejournal(displayName, url){
 		j(subjectID).val("");
 		j(textID).val("");
 		j(tagsID).val("");
-		var buttons = j(postingWizard).dialog( "option", "buttons", [{text:"ok", click: function(){makePost()}}]);
+		j(postingWizard).dialog( "option", "buttons", [{text:"ok", click: function(){makePost();}}]);
 		that.currentDeferral = $.Deferred();
 		that.currentOutput = outputId;
 		wizards.showPage(postingWizard);
 		return that.currentDeferral;
-	}
+	};
 	
 	var displayExistingPost = function(existingPost){
 		if (!postingWizardCreated) {
@@ -75,32 +76,32 @@ function Livejournal(displayName, url){
 		j(subjectID).val(existingPost.subject);
 		j(textID).val(existingPost.contents);
 		j(tagsID).val(existingPost.tags.join());
-		var buttons = j(postingWizard).dialog( "option", "buttons", [{text:"ok", click: function(){makePost()}}]);
+		j(postingWizard).dialog( "option", "buttons", [{text:"ok", click: function(){makePost();}}]);
 		that.currentDeferral = $.Deferred();
 		that.currentOutput = existingPost.output;
 		wizards.showPage(postingWizard);
 		return that.currentDeferral;
-	}
+	};
 	
-	var postingWizardCreated = false;
 	
 	var createPostingWizard = function(){
 		$.el.div({id:postingWizard, title:siteName+' Posting'},
 				$.el.form(
-						$.el.label({for:subjectID},'Subject Line:'),
+						$.el.label({"for":subjectID},'Subject Line:'),
 						$.el.input({type:'text', id:subjectID}),
 						$.el.br(),
-						$.el.label({for:textID},'Text:'),
+						$.el.label({"for":textID},'Text:'),
 						$.el.textarea({rows:5,id:textID}),
 						$.el.br(),
-						$.el.label({for:tagsID},'Tags:'),
+						$.el.
+						$.el.label({"for":tagsID},'Tags:'),
 						$.el.input({type:'text',id:tagsID})
 				)
 		)
 		.appendTo(document.body);
 		
 		wizards.register(postingWizard);
-	}
+	};
 	
 	var outputWizardCreated = false;
 	
@@ -111,17 +112,17 @@ function Livejournal(displayName, url){
 		});
 		$.el.div({id:credentialsWizard, title:siteName+' Details'},
 				$.el.form(
-					$.el.label({for:usernameID},'User Name:'),
+					$.el.label({"for":usernameID},'User Name:'),
 					$.el.input({type:'text',id:usernameID}),
 					$.el.br(),
-					$.el.label({for:passwordID},'Password:'),
+					$.el.label({"for":passwordID},'Password:'),
 					$.el.input({type:'password', id:passwordID}),
 					$.el.br(),
 					$.el.button({type:'button', id:verifyID},'Verify'),
 					$.el.br(),
 					$.el.div({id:identityID}),
 					$.el.br(),
-					$.el.label({for:timezoneID},'Time Zone:'),
+					$.el.label({"for":timezoneID},'Time Zone:'),
 					timezoneElement
 				)
 			)
@@ -130,11 +131,11 @@ function Livejournal(displayName, url){
 		
 		j(usernameID).change(function(){
 			j(identityID).text("");
-		})
+		});
 
 		j(passwordID).change(function(){
 			j(identityID).text("");
-		})
+		});
 
 		j(verifyID).click(function(){
 			var params = {method:"VerifyPassword", userName:j(usernameID).val(), password:j(passwordID).val()};
@@ -147,8 +148,7 @@ function Livejournal(displayName, url){
 			wizards.registerCallForWizardOnError(posting);
 		});
 		outputWizardCreated = true;
-		
-	}
+	};
 	
 	var addOutput = function(){
 		if (!outputWizardCreated) {
@@ -159,11 +159,11 @@ function Livejournal(displayName, url){
 		j(passwordID).val("");
 		j(usernameID).val("");
 		j(usernameID).removeProp('disabled');
-		var buttons = j(credentialsWizard ).dialog( "option", "buttons", [{text:"ok", click: function(){saveCredentials()}}]);
+		j(credentialsWizard ).dialog( "option", "buttons", [{text:"ok", click: function(){saveCredentials();}}]);
 		that.currentDeferral = $.Deferred();
 		wizards.showPage(credentialsWizard);
 		return that.currentDeferral;
-	}
+	};
 
 	var updateOutput = function(existingData){
 		if (!outputWizardCreated) {
@@ -174,12 +174,12 @@ function Livejournal(displayName, url){
 		j(usernameID).val(existingData.userName);
 		j(timezoneID).val(existingData.timeZone);
 		j(usernameID).prop('disabled','disabled');
-		var buttons = j( credentialsWizard ).dialog( "option", "buttons", [{text:"ok", click: function(){updateCredentials()}}]);
+		j( credentialsWizard ).dialog( "option", "buttons", [{text:"ok", click: function(){updateCredentials();}}]);
 		that.currentOutput = existingData;
 		that.currentDeferral = $.Deferred();
 		wizards.showPage(credentialsWizard);
 		return that.currentDeferral;
-	}
+	};
 	
 	AddOutput(siteName, addOutput,updateOutput,addPosting, displayExistingPost);
 };
