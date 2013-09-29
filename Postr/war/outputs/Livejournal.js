@@ -12,6 +12,7 @@ function Livejournal(displayName, url){
 	var subjectID = prefix+"SubjectLine";
 	var textID = prefix+"Text";
 	var tagsID = prefix+"Tags";
+	var visibilityID = prefix+"Visibility";
 	
 	var that = this;
 
@@ -48,7 +49,7 @@ function Livejournal(displayName, url){
 	};
 	
 	var makePost = function(){
-		var params = {method:"MakePost", contents:j(textID).val(), subject:j(subjectID).val(),tags:j(tagsID).val(), output:that.currentOutput};
+		var params = {method:"MakePost", contents:j(textID).val(), subject:j(subjectID).val(),tags:j(tagsID).val(),visibility:j(visibilityID).val(), output:that.currentOutput};
 		var posting = $.post(siteID,{params:JSON.stringify(params)});
 		wizards.registerCallForWizardDisplay(posting).done(function(data){
 			that.currentDeferral.resolve();
@@ -62,6 +63,7 @@ function Livejournal(displayName, url){
 		j(subjectID).val("");
 		j(textID).val("");
 		j(tagsID).val("");
+		j(visibilityID).val("");
 		j(postingWizard).dialog( "option", "buttons", [{text:"ok", click: function(){makePost();}}]);
 		that.currentDeferral = $.Deferred();
 		that.currentOutput = outputId;
@@ -76,6 +78,7 @@ function Livejournal(displayName, url){
 		j(subjectID).val(existingPost.subject);
 		j(textID).val(existingPost.contents);
 		j(tagsID).val(existingPost.tags.join());
+		j(visibilityID).val(existingPost.visibility);
 		j(postingWizard).dialog( "option", "buttons", [{text:"ok", click: function(){makePost();}}]);
 		that.currentDeferral = $.Deferred();
 		that.currentOutput = existingPost.output;
@@ -85,6 +88,11 @@ function Livejournal(displayName, url){
 	
 	
 	var createPostingWizard = function(){
+		var timezoneElement = $.el.select({id:timezoneID});
+		timeZones.forEach(function(timeZone){
+			$.el.option(timeZone).appendTo(timezoneElement);
+		});
+
 		$.el.div({id:postingWizard, title:siteName+' Posting'},
 				$.el.form(
 						$.el.label({"for":subjectID},'Subject Line:'),
@@ -93,7 +101,13 @@ function Livejournal(displayName, url){
 						$.el.label({"for":textID},'Text:'),
 						$.el.textarea({rows:5,id:textID}),
 						$.el.br(),
-						$.el.
+						$.el.label({"for":visibilityID},'Visibility:'),
+						$.el.select({id:visibilityID},
+							$.el.option("Public"),
+							$.el.option("FriendsOnly"),
+							$.el.option("Private")
+						),
+						$.el.br(),
 						$.el.label({"for":tagsID},'Tags:'),
 						$.el.input({type:'text',id:tagsID})
 				)
@@ -101,6 +115,7 @@ function Livejournal(displayName, url){
 		.appendTo(document.body);
 		
 		wizards.register(postingWizard);
+		postingWizardCreated = true;
 	};
 	
 	var outputWizardCreated = false;

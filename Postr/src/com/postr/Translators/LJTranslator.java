@@ -78,9 +78,11 @@ public class LJTranslator {
 		    switch (visibility) {
 			case FriendsOnly:
 				postParams.put("security","usemask");
-				postParams.put("usemask", 1);
+				postParams.put("allowmask", 1);
+				break;
 			case Private:
 			    postParams.put("security","private");
+			    break;
 			case Public:
 			default:
 				break;

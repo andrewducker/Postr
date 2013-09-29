@@ -120,7 +120,7 @@
 				$( "#PostFromOutput" ).click(function() {
 					var selectedOption = $("#existingOutputs option:selected");
 					var selectedData = selectedOption.data();
-					outputs[selectedData.siteName].Post(selectedData);
+					outputs[selectedData.siteName].Post(selectedData.id);
 				});
 				$( "#UpdateOutputs" ).click(function() {
 					var selectedOption = $("#existingOutputs option:selected");
