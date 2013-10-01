@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
 import com.google.gson.internal.StringMap;
+import com.postr.DataTypes.Json;
 import com.postr.DataTypes.UserData;
 
 @SuppressWarnings("serial")
@@ -30,7 +31,7 @@ public class PersonaVerificationServlet extends BasePersonaSessionServlet {
         connection.setRequestMethod("POST");
 
         OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
-        writer.write("assertion="+assertion+"&audience=http://localhost:8888");
+        writer.write("assertion="+assertion+"&audience="+req.getServerName());
         writer.close();
 
         String result;
@@ -58,11 +59,11 @@ public class PersonaVerificationServlet extends BasePersonaSessionServlet {
 			}
         	else{
         		SetPersona(null);
-        		result = "Fail";
+        		result = Json.ErrorResult("User not validated").toString();
         	}
         } else {
         	SetPersona(null);
-        	result = "Fail";
+        	result = Json.ErrorResult("Could not connect to validation server").toString();
         }
 
 		resp.getWriter().print(result);	
