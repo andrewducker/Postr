@@ -49,13 +49,14 @@ function Livejournal(displayName, url){
 	};
 	
 	var makePost = function(){
-		var params = {method:"MakePost", contents:j(textID).val(), subject:j(subjectID).val(),tags:j(tagsID).val(),visibility:j(visibilityID).val(), output:that.currentOutput};
+		var params = {method:"MakePost", contents:j(textID).val(), subject:j(subjectID).val(),tags:j(tagsID).val(),visibility:j(visibilityID).val(), output:that.currentOutput.id};
 		var posting = $.post(siteID,{params:JSON.stringify(params)});
 		wizards.registerCallForWizardDisplay(posting).done(function(data){
 				
 			var result = new Object();
 				result.message = data.result;
-			
+
+				data.outputObject = that.currentOutput;
 				data.result = result;
 				data.siteName = siteName;
 				data.contents = params.contents;
@@ -67,7 +68,7 @@ function Livejournal(displayName, url){
 			});
 	};
 	
-	var addPosting = function(outputId){
+	var addPosting = function(output){
 		if (!postingWizardCreated) {
 			createPostingWizard();
 		}
@@ -77,7 +78,7 @@ function Livejournal(displayName, url){
 		j(visibilityID).val("");
 		j(postingWizard).dialog( "option", "buttons", [{text:"ok", click: function(){makePost();}}]);
 		that.currentDeferral = $.Deferred();
-		that.currentOutput = outputId;
+		that.currentOutput = output;
 		wizards.showPage(postingWizard);
 		return that.currentDeferral;
 	};
@@ -92,7 +93,7 @@ function Livejournal(displayName, url){
 		j(visibilityID).val(existingPost.visibility);
 		j(postingWizard).dialog( "option", "buttons", [{text:"ok", click: function(){makePost();}}]);
 		that.currentDeferral = $.Deferred();
-		that.currentOutput = existingPost.output;
+		that.currentOutput = existingPost.outputObject;
 		wizards.showPage(postingWizard);
 		return that.currentDeferral;
 	};
