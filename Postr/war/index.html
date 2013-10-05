@@ -46,7 +46,6 @@
 				addNewComboItem("#existingPosts",post.subject + " > " + post.outputDescription +" ("+post.result.message+")",post);
 			}
 
-			
 			function j(id){
 				return $('#'+id);
 			}
@@ -91,6 +90,7 @@
 				DisableIfComboEmpty("#existingOutputs","#UpdateOutputs");
 				DisableIfComboEmpty("#existingInputs","#RemoveInputs");
 				DisableIfComboEmpty("#existingOutputs","#PostFromOutput");
+				DisableIfComboEmpty("#existingPosts","#DisplayPost");
 				j('emailAddress').html(userData.persona);
 				return userData.persona;
 			}
@@ -181,7 +181,11 @@
 				$( "#PostFromOutput" ).click(function() {
 					var selectedOption = $("#existingOutputs option:selected");
 					var selectedData = selectedOption.data();
-					outputs[selectedData.siteName].Post(selectedData.id);
+					outputs[selectedData.siteName].Post(selectedData.id).done(function(data){
+						data.outputDescription = selectedData.userName+"@"+selectedData.siteName;
+						addNewPost(data);
+						DisableIfComboEmpty("#existingPosts","#DisplayPost");
+						});
 				});
 				$( "#UpdateOutputs" ).click(function() {
 					var selectedOption = $("#existingOutputs option:selected");

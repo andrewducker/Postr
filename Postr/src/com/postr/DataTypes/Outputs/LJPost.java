@@ -12,7 +12,7 @@ public class LJPost extends BasePost {
 
 	private String subject;
 	private String contents;
-	private String[] tags;
+	private String tags;
 	private LivejournalVisibilityTypes visibility;
 	
 	protected String getSubject() {
@@ -23,7 +23,7 @@ public class LJPost extends BasePost {
 		return contents;
 	}
 
-	protected String[] getTags() {
+	protected String getTags() {
 		return tags;
 	}
 
@@ -31,7 +31,7 @@ public class LJPost extends BasePost {
 		super(output);
 		this.subject = subject;
 		this.contents = contents;
-		this.tags = tags.split(",");
+		this.tags = tags;
 		this.visibility = visibility;
 	}
 
@@ -46,7 +46,7 @@ public class LJPost extends BasePost {
 		super(originalPost);
 		this.subject = subject;
 		this.contents = contents;
-		this.tags = tags.split(",");
+		this.tags = tags;
 	}
 
 
@@ -62,7 +62,7 @@ public class LJPost extends BasePost {
 		}
 		
 		LJTranslator translator = new LJTranslator();
-		setResult(translator.MakePost(ljData, contents, subject, tags,visibility));
+		setResult(translator.MakePost(ljData, contents, subject, tags.split(","),visibility));
 	}
 
 	@Override

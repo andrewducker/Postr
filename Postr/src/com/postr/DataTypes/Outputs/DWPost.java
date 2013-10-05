@@ -34,7 +34,7 @@ public class DWPost extends LJPost {
 		}
 		
 		DWTranslator translator = new DWTranslator();
-		setResult(translator.MakePost(dwData, getContents(), getSubject(), getTags(), getVisibility()));
+		setResult(translator.MakePost(dwData, getContents(), getSubject(), getTags().split(","), getVisibility()));
 	}
 
 	@Override
