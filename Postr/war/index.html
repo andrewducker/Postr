@@ -49,7 +49,20 @@
 				}else{
 					outputDescription = "No associate Output found.";
 				}
-				addNewComboItem("#existingPosts",post.subject + " > " + outputDescription +" ("+post.result.message+")",post);
+				var toAppendTemp = $.el.tr(
+						$.el.td(post.subject),
+						$.el.td(outputDescription),
+						$.el.td(post.result.message),
+						$.el.td(
+								$.el.input({
+									type:'button',
+									value:'display',
+									onclick:function(){
+										outputs[post.siteName].DisplayPost(post).done(function(data){
+											addNewPost(data);
+											});
+										}})
+								)).appendTo(j("existingPostsTable").get(0));
 			}
 
 			function j(id){
@@ -130,12 +143,12 @@
 			<label for="existingInputs">Existing</label>
 			<select id="existingInputs">
 			</select>
-			<input type="submit" id="RemoveInputs" value="Remove">
+			<input type="button" id="RemoveInputs" value="Remove">
 			<BR>
 			<select id="input" name="input">
 			</select>
 			<label for="AddNewInput">New Input?</label>
-			<input type="submit" id="AddNewInput" value="Add">
+			<input type="button" id="AddNewInput" value="Add">
 		</fieldset>
 
 		<fieldset>
@@ -143,23 +156,19 @@
 			<label for="existingOutputs">Existing</label>
 			<select id="existingOutputs">
 			</select>
-			<input type="submit" id="PostFromOutput" value="Post">
-			<input type="submit" id="UpdateOutputs" value="Update">
-			<input type="submit" id="RemoveOutputs" value="Remove">
+			<input type="button" id="PostFromOutput" value="Post">
+			<input type="button" id="UpdateOutputs" value="Update">
+			<input type="button" id="RemoveOutputs" value="Remove">
 			<BR>
 			<select id="output" name="output">
 			</select>
 			<label for="AddNewOutput">New Output?</label>
-			<input type="submit" id="AddNewOutput" value="Add">
+			<input type="button" id="AddNewOutput" value="Add">
 		</fieldset>
 		
 		<fieldset>
 			<legend>Posts</legend>
-			<select id="existingPosts">
-			</select>
-			<BR>
-			<label for="DisplayPost">Display Post</label>
-			<input type="submit" id="DisplayPost" value="Display">
+			<table id="existingPostsTable" border=1><tr><th>Subject</th><th>Destination</th><th>Result</th></tr></table>
 		</fieldset>
 		</div>
 
@@ -219,14 +228,6 @@
 						DisableIfComboEmpty("#existingInputs","#RemoveInputs");
 					});
 				});
-				$( "#DisplayPost" ).click(function() {
-					var selectedPost = $("#existingPosts option:selected");
-					var selectedData = selectedPost.data();
-					outputs[selectedData.siteName].DisplayPost(selectedData).done(function(data){
-						addNewPost(data);
-						});;
-				});
-
 			});
 			
 			function RemoveData(id){
