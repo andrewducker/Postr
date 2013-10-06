@@ -10,27 +10,15 @@ import com.postr.Translators.LJTranslator;
 @EntitySubclass(index=true)
 public class LJPost extends BasePost {
 
-	private String subject;
-	private String contents;
 	private String tags;
 	private LivejournalVisibilityTypes visibility;
 	
-	protected String getSubject() {
-		return subject;
-	}
-
-	protected String getContents() {
-		return contents;
-	}
-
 	protected String getTags() {
 		return tags;
 	}
 
 	public LJPost(String subject, String contents, String tags, LivejournalVisibilityTypes visibility, long output){
-		super(output);
-		this.subject = subject;
-		this.contents = contents;
+		super(output, subject, contents);
 		this.tags = tags;
 		this.visibility = visibility;
 	}
@@ -40,15 +28,6 @@ public class LJPost extends BasePost {
 	}
 
 	protected LJPost(){}
-	
-	public LJPost(LJPost originalPost, String subject, String contents,
-			String tags) {
-		super(originalPost);
-		this.subject = subject;
-		this.contents = contents;
-		this.tags = tags;
-	}
-
 
 	@Override
 	public void MakePost() {
@@ -62,12 +41,6 @@ public class LJPost extends BasePost {
 		}
 		
 		LJTranslator translator = new LJTranslator();
-		setResult(translator.MakePost(ljData, contents, subject, tags.split(","),visibility));
+		setResult(translator.MakePost(ljData, getContents(), getSubject(), tags.split(","),visibility));
 	}
-
-	@Override
-	protected String getSiteName() {
-		return "Livejournal";
-	}
-
 }

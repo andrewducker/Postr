@@ -1,5 +1,8 @@
 package com.postr.DataTypes.Outputs;
 
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+
 import com.googlecode.objectify.annotation.EntitySubclass;
 import com.postr.Result;
 import com.postr.DataTypes.BaseSaveable;
@@ -8,17 +11,29 @@ import com.postr.DataTypes.BaseSaveable;
 public abstract class BasePost extends BaseSaveable {
 		abstract public void MakePost();
 		
-		protected BasePost(){this.siteName = getSiteName();}
+		protected BasePost(){}
 		
-		protected BasePost(long output) {
+		protected BasePost(long output, String subject, String contents) {
 			this.output = output;
-			this.siteName = getSiteName();
+			this.subject = subject;
+			this.contents = contents;
 		}
 		
 		public BasePost(BasePost originalPost) {
 			super(originalPost);
+			this.subject = originalPost.subject;
+			this.contents = originalPost.contents;
 			this.output = originalPost.output;
-			this.siteName = getSiteName();
+		}
+		private String subject;
+		private String contents;
+
+		protected String getSubject() {
+			return subject;
+		}
+
+		protected String getContents() {
+			return contents;
 		}
 
 		public long getOutput() {
@@ -36,13 +51,18 @@ public abstract class BasePost extends BaseSaveable {
 		public void setResult(Result result) {
 			this.result = result;
 		}
+		
+		public void setPostingTime(){
+			postingTime = DateTime.now(DateTimeZone.UTC);
+		}
+		
+		public DateTime getPostingTime(){
+			return postingTime;
+		}
 
 		private long output;
 		
 		private Result result;
 		
-		//User for JSon
-		@SuppressWarnings("unused")
-		private String siteName;
-		protected abstract String getSiteName();		
+		private DateTime postingTime;
 }

@@ -24,8 +24,6 @@ public abstract class BaseOutputServlet extends BaseJSONServlet {
 			return MakePost(parameters);
 		case SavePost:
 			return SavePost(parameters);
-		case UpdatePost:
-			return UpdatePost(parameters);
 		default:
 			throw new Exception("No such method found: "+method);
 		}
@@ -35,8 +33,11 @@ public abstract class BaseOutputServlet extends BaseJSONServlet {
 	private Json MakePost(Json parameters){
 		BasePost post = CreatePost(parameters, GetUserID());
 		post.MakePost();
+		post.setPostingTime();
 		DAO.SaveThing(post, GetUserID());
-		return Json.Result(post.getResult());
+		Json result = Json.Result(post.getResult());
+		result.setData("postingTime", post.getPostingTime().toString("yyyy-MM-dd - HH:mm:ss"));
+		return result;
 	}
 	
 	protected abstract Json UpdateData	(Json parameters) throws Exception;
@@ -48,6 +49,4 @@ public abstract class BaseOutputServlet extends BaseJSONServlet {
 	protected abstract BasePost CreatePost(Json parameters, long userID);
 
 	protected abstract Json SavePost(Json parameters) throws Exception;
-
-	protected abstract Json UpdatePost(Json parameters) throws Exception;
 }

@@ -19,56 +19,57 @@ import com.postr.DataTypes.UserData;
 public class PersonaVerificationServlet extends BasePersonaSessionServlet {
 
 	@Override
-	protected void handleRequest(HttpServletRequest req, HttpServletResponse resp)
-			throws Exception {
+	protected void handleRequest(HttpServletRequest req,
+			HttpServletResponse resp) throws Exception {
 		resp.setContentType("text/plain");
 
 		String assertion = req.getParameter("assertion");
-		
+
 		URL url = new URL("https://verifier.login.persona.org/verify");
 		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        connection.setDoOutput(true);
-        connection.setRequestMethod("POST");
+		connection.setDoOutput(true);
+		connection.setRequestMethod("POST");
 
-        OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
-        writer.write("assertion="+assertion+"&audience="+req.getServerName());
-        writer.close();
+		OutputStreamWriter writer = new OutputStreamWriter(
+				connection.getOutputStream());
+		writer.write("assertion=" + assertion + "&audience="
+				+ req.getServerName());
+		writer.close();
 
-        String result;
-        
-        if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-        	ByteArrayInputStream  json =  (ByteArrayInputStream)connection.getContent();
-        	BufferedReader br
-        	= new BufferedReader(
-        		new InputStreamReader(json));
- 
-    	StringBuilder sb = new StringBuilder();
- 
-    	String line;
-    	while ((line = br.readLine()) != null) {
-    		sb.append(line);
-    		}
-    		
-        	@SuppressWarnings("unchecked")
-			StringMap<Object> response = (StringMap<Object>)new Gson().fromJson(sb.toString(), Object.class);
-        	if (response.containsKey("status") && response.get("status").equals("okay")) {
-        		String persona =(String) response.get("email"); 
-        		SetPersona(persona);
-        		UserData userData = new UserData(GetPersona(),GetUserID());
-        		result = userData.AsJson();
+		String result;
+
+		if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+			ByteArrayInputStream json = (ByteArrayInputStream) connection
+					.getContent();
+			BufferedReader br = new BufferedReader(new InputStreamReader(json));
+
+			StringBuilder sb = new StringBuilder();
+
+			String line;
+			while ((line = br.readLine()) != null) {
+				sb.append(line);
 			}
-        	else{
-        		SetPersona(null);
-        		result = Json.ErrorResult("User not validated").toString();
-        	}
-        } else {
-        	SetPersona(null);
-        	result = Json.ErrorResult("Could not connect to validation server").toString();
-        }
 
-		resp.getWriter().print(result);	
+			@SuppressWarnings("unchecked")
+			StringMap<Object> response = (StringMap<Object>) new Gson()
+					.fromJson(sb.toString(), Object.class);
+			if (response.containsKey("status")
+					&& response.get("status").equals("okay")) {
+				String persona = (String) response.get("email");
+				SetPersona(persona);
+				UserData userData = new UserData(GetPersona(), GetUserID());
+				result = Json.Convert(userData);
+			} else {
+				SetPersona(null);
+				result = Json.ErrorResult("User not validated").toString();
+			}
+		} else {
+			SetPersona(null);
+			result = Json.ErrorResult("Could not connect to validation server")
+					.toString();
+		}
+
+		resp.getWriter().print(result);
 	}
 
 }
-
-

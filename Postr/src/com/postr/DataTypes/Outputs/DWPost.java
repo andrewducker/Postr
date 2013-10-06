@@ -14,10 +14,6 @@ public class DWPost extends LJPost {
 		super(subject,contents,tags,visibility,output);
 	}
 	
-	public DWPost(DWPost originalPost, String subject, String contents, String tags){
-		super(originalPost, subject,contents,tags);
-	}
-	
 	@SuppressWarnings("unused")
 	private DWPost(){}
 	
@@ -35,11 +31,6 @@ public class DWPost extends LJPost {
 		
 		DWTranslator translator = new DWTranslator();
 		setResult(translator.MakePost(dwData, getContents(), getSubject(), getTags().split(","), getVisibility()));
-	}
-
-	@Override
-	protected String getSiteName() {
-		return "Dreamwidth";
 	}
 
 }

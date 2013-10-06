@@ -58,22 +58,6 @@ public class DreamwidthServlet extends BaseOutputServlet {
 	}
 	
 	@Override
-	protected Json UpdatePost(Json parameters) throws Exception {
-		String contents = parameters.getString("contents");
-		String subject = parameters.getString("subject");
-		String tags = parameters.getString("tags");
-		Long key = parameters.getLong("id");
-		
-		DWPost post = DAO.LoadThing(DWPost.class, key, GetUserID());
-		
-		DWPost newPost = new DWPost(post, subject, contents, tags);
-		
-		DAO.SaveThing(newPost, GetUserID());
-		
-		return Json.SuccessResult("Saved!");
-	}
-
-	@Override
 	protected Json UpdateData(Json parameters) throws Exception {
 		Long key = parameters.getLong("id");
 		String password = parameters.getString("password");

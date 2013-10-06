@@ -6,6 +6,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.postr.DataTypes.Json;
+
 @SuppressWarnings("serial")
 public class UserDataServlet extends BasePersonaSessionServlet {
 
@@ -21,7 +23,7 @@ public class UserDataServlet extends BasePersonaSessionServlet {
 
 			com.postr.DataTypes.UserData userData = new com.postr.DataTypes.UserData(persona, userID);
 			
-			resp.getWriter().write(userData.AsJson());
+			resp.getWriter().write(Json.Convert(userData));
 		}
 	}
 
