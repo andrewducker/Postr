@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <appengine-web-app xmlns="http://appengine.google.com/ns/1.0">
   <application>dailylinkposter</application>
-  <version>alpha-2013-10-04</version>
+  <version>alpha-2013-10-06</version>
   <sessions-enabled>true</sessions-enabled>
   <async-session-persistence enabled="true" />
   <!--
