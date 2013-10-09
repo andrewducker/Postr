@@ -99,28 +99,24 @@ function Livejournal(displayName, url){
 	};
 
 	var createPostingWizard = function(){
-		var timezoneElement = $.el.select({id:timezoneID});
-		timeZones.forEach(function(timeZone){
-			$.el.option(timeZone).appendTo(timezoneElement);
-		});
-
 		$.el.div({id:postingWizard, title:siteName+' Posting'},
 				$.el.form(
-						$.el.label({"for":subjectID},'Subject Line:'),
-						$.el.input({type:'text', id:subjectID}),
-						$.el.br(),
-						$.el.label({"for":textID},'Text:'),
-						$.el.textarea({rows:5,id:textID}),
-						$.el.br(),
-						$.el.label({"for":visibilityID},'Visibility:'),
-						$.el.select({id:visibilityID},
-								$.el.option("Public"),
-								$.el.option("FriendsOnly"),
-								$.el.option("Private")
-						),
-						$.el.br(),
-						$.el.label({"for":tagsID},'Tags:'),
-						$.el.input({type:'text',id:tagsID})
+						$.el.div(
+								$.el.label({"for":subjectID},'Subject Line:'),
+								$.el.input({type:'text', id:subjectID})),
+						$.el.div(
+								$.el.label({"for":textID},'Text:'),
+								$.el.textarea({rows:5,id:textID})),
+						$.el.div(
+								$.el.label({"for":visibilityID},'Visibility:'),
+								$.el.select({id:visibilityID},
+										$.el.option("Public"),
+										$.el.option("FriendsOnly"),
+										$.el.option("Private")
+								)),
+						$.el.div(
+								$.el.label({"for":tagsID},'Tags:'),
+								$.el.input({type:'text',id:tagsID}))
 				)
 		)
 		.appendTo(document.body);
@@ -138,18 +134,22 @@ function Livejournal(displayName, url){
 		});
 		$.el.div({id:credentialsWizard, title:siteName+' Details'},
 				$.el.form(
-						$.el.label({"for":usernameID},'User Name:'),
-						$.el.input({type:'text',id:usernameID}),
-						$.el.br(),
-						$.el.label({"for":passwordID},'Password:'),
-						$.el.input({type:'password', id:passwordID}),
-						$.el.br(),
-						$.el.button({type:'button', id:verifyID},'Verify'),
-						$.el.br(),
+						$.el.div(
+							$.el.label({"for":usernameID},'User Name:'),
+							$.el.input({type:'text',id:usernameID})
+						),
+						$.el.div(
+							$.el.label({"for":passwordID},'Password:'),
+							$.el.input({type:'password', id:passwordID})
+						),
+						$.el.div(
+								$.el.button({type:'button', id:verifyID},'Verify')
+						),
 						$.el.div({id:identityID}),
-						$.el.br(),
+						$.el.div(
 						$.el.label({"for":timezoneID},'Time Zone:'),
 						timezoneElement
+						)
 				)
 		)
 		.appendTo(document.body);
