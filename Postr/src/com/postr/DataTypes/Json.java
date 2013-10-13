@@ -1,7 +1,6 @@
 package com.postr.DataTypes;
 
 import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -16,7 +15,6 @@ public class Json  {
 
 	static	{
 		builder = new GsonBuilder();
-		builder.registerTypeAdapter(DateTimeZone.class, new DateTimeZoneJsonAdapter());
 		builder.registerTypeAdapter(DateTime.class, new DateTimeJsonAdapter());
 	}
 	

@@ -1,5 +1,8 @@
 
 package com.postr;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+
 import com.postr.DataTypes.Json;
 import com.postr.DataTypes.Outputs.BasePost;
 
@@ -33,10 +36,10 @@ public abstract class BaseOutputServlet extends BaseJSONServlet {
 	private Json MakePost(Json parameters){
 		BasePost post = CreatePost(parameters, GetUserID());
 		post.MakePost();
-		post.setPostingTime();
+		post.postingTime = DateTime.now(DateTimeZone.UTC);
 		DAO.SaveThing(post, GetUserID());
 		Json result = Json.Result(post.result);
-		result.setData("postingTime", post.getPostingTime().toString("yyyy-MM-dd - HH:mm:ss"));
+		result.setData("postingTime", post.postingTime.getMillis());
 		return result;
 	}
 	

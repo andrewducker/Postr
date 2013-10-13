@@ -50,7 +50,7 @@
 					outputDescription = "No associate Output found.";
 				}
 				var toAppendTemp = $.el.tr(
-						$.el.td(post.postingTime),
+						$.el.td(new Date(post.postingTime).toLocaleString()),
 						$.el.td(post.subject),
 						$.el.td(outputDescription),
 						$.el.td(post.result.message),
@@ -95,6 +95,7 @@
 				addNewInput(value);});
 				$.each(userData.outputs, function(index,value){
 				addNewOutput(value);});
+				userData.posts.sort(function(a,b){return a.postingTime-b.postingTime});
 				$.each(userData.posts, function(index,post){
 					var attachedOutput = $.grep(userData.outputs,function(output){return output.id === post.output;});
 					

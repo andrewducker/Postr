@@ -7,7 +7,6 @@ import com.postr.DAO;
 import com.postr.DataTypes.Inputs.BaseInput;
 import com.postr.DataTypes.Outputs.BaseOutput;
 import com.postr.DataTypes.Outputs.BasePost;
-import com.postr.DataTypes.Outputs.BasePostComparator;
 
 
 public class UserData {
@@ -28,8 +27,6 @@ public class UserData {
 				posts.add((BasePost) baseSaveable);
 			}
 		}
-		
-		java.util.Collections.sort(posts, new BasePostComparator());
 	}
 	
 	public String persona;
