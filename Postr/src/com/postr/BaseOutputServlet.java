@@ -35,7 +35,7 @@ public abstract class BaseOutputServlet extends BaseJSONServlet {
 		post.MakePost();
 		post.setPostingTime();
 		DAO.SaveThing(post, GetUserID());
-		Json result = Json.Result(post.getResult());
+		Json result = Json.Result(post.result);
 		result.setData("postingTime", post.getPostingTime().toString("yyyy-MM-dd - HH:mm:ss"));
 		return result;
 	}

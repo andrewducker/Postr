@@ -10,6 +10,7 @@ import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.client.XmlRpcClient;
 import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.joda.time.chrono.GregorianChronology;
 
 import com.postr.LivejournalVisibilityTypes;
@@ -60,13 +61,13 @@ public class LJTranslator {
 				return Result.Failure("Malformed URL");
 			}
 		    
-		    if (ljData.getUserName().equalsIgnoreCase("test")) {
+		    if (ljData.userName.equalsIgnoreCase("test")) {
 				return Result.Success("Test data, successfully not saved");
 			}
 		    
 		    HashMap<String, Object> postParams;
 			try {
-				postParams = getInitialisedCallParams(client,ljData.getUserName(),ljData.getPassword());
+				postParams = getInitialisedCallParams(client,ljData.userName,ljData.password);
 			} catch (Exception e1) {
 				MessageLogger.Severe(this,e1.getMessage());
 				return Result.Failure("Error connecting to server.");
@@ -88,7 +89,7 @@ public class LJTranslator {
 				break;
 			}
 		    
-		    DateTime calendar = new DateTime(GregorianChronology.getInstance(ljData.getTimeZone()));
+		    DateTime calendar = new DateTime(GregorianChronology.getInstance(DateTimeZone.forID(ljData.timeZone)));
 		    postParams.put("year",calendar.getYear());
 		    postParams.put("mon",calendar.getMonthOfYear());
 		    postParams.put("day",calendar.getDayOfMonth());

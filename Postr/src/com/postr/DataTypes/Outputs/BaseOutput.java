@@ -6,32 +6,11 @@ import com.postr.DataTypes.BaseSaveable;
 @EntitySubclass(index=true)
 public abstract class BaseOutput extends BaseSaveable {
 
-	protected BaseOutput(){this.siteName = getSiteName();}
+	public BaseOutput(){this.siteName = getSiteName();}
 	
-	protected BaseOutput(String userName, String password) throws Exception{
-		this.userName = userName;
-		this.password = password;
-		siteName = getSiteName();
-	}
-	
-	public BaseOutput(BaseOutput existingData, String password) {
-		super(existingData);
-		this.userName = existingData.userName;
-		this.password = password;
-		siteName = getSiteName();
-	}
+	public String userName;
+	public String password;
 
-	protected String userName;
-	private transient String password;
-
-	
-	public String getUserName() {
-		return userName;
-	}
-	public String getPassword() {
-		return password;
-	}
-	
 	protected abstract String getSiteName();
 	
 	//User for JSon

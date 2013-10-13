@@ -1,6 +1,5 @@
 package com.postr.Translators;
 
-
 public class DWTranslator extends LJTranslator {
 
 	public DWTranslator()

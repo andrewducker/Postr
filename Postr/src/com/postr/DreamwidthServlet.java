@@ -1,7 +1,5 @@
 package com.postr;
 
-import org.joda.time.DateTimeZone;
-
 import com.postr.DataTypes.Json;
 import com.postr.DataTypes.Outputs.DWData;
 import com.postr.DataTypes.Outputs.DWPost;
@@ -13,20 +11,15 @@ public class DreamwidthServlet extends BaseOutputServlet {
 
 	@Override
 	protected Json VerifyPassword(Json parameters) throws Exception {
-		String userName = parameters.getString("userName");
-		String password = parameters.getString("password");
+		DWData data = parameters.FromJson(DWData.class);
 		DWTranslator writer = new DWTranslator();
-		return writer.Login(userName, password);
+		return writer.Login(data.userName, data.password);
 	}	
 
 	@Override
 	protected Json SaveData(Json parameters) throws Exception {
-		String userName = parameters.getString("userName");
-		String password = parameters.getString("password");
-		String timeZone = parameters.getString("timeZone");
-		DWData dwData = new DWData(
-				userName, password,
-				DateTimeZone.forID(timeZone));
+		DWData dwData = parameters.FromJson(DWData.class);
+		dwData.EncryptPassword();
 		
 		Key<DWData> result = DAO.SaveThing(dwData,GetUserID());
 		Json toReturn =Json.SuccessResult("Saved!"); 
@@ -36,12 +29,7 @@ public class DreamwidthServlet extends BaseOutputServlet {
 
 	@Override
 	protected DWPost CreatePost(Json parameters, long userID) {
-		String contents = parameters.getString("contents");
-		String subject = parameters.getString("subject");
-		String tags = parameters.getString("tags");
-		long output = parameters.getLong("output");
-		LivejournalVisibilityTypes visibility =  LivejournalVisibilityTypes.valueOf(parameters.getString("visibility"));
-		DWPost post = new DWPost(subject, contents, tags,visibility, output);
+		DWPost post = parameters.FromJson(DWPost.class);
 		post.setParent(userID);
 		return post;
 	}
@@ -60,13 +48,13 @@ public class DreamwidthServlet extends BaseOutputServlet {
 	@Override
 	protected Json UpdateData(Json parameters) throws Exception {
 		Long key = parameters.getLong("id");
-		String password = parameters.getString("password");
-		String timeZone = parameters.getString("timeZone");
 		DWData existingDWData = DAO.LoadThing(DWData.class, key, GetUserID());
+		DWData newData = parameters.FromJson(DWData.class);
+		existingDWData.password = newData.password;
+		existingDWData.EncryptPassword();
+		existingDWData.timeZone = newData.timeZone;
 		
-		DWData newDWData = new DWData(existingDWData,password,DateTimeZone.forID(timeZone));
-		
-		DAO.SaveThing(newDWData,GetUserID());
+		DAO.SaveThing(existingDWData,GetUserID());
 		return Json.SuccessResult("Saved!"); 
 	}
 }

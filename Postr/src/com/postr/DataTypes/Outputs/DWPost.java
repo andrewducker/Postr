@@ -2,7 +2,6 @@ package com.postr.DataTypes.Outputs;
 
 import com.googlecode.objectify.annotation.EntitySubclass;
 import com.postr.DAO;
-import com.postr.LivejournalVisibilityTypes;
 import com.postr.MessageLogger;
 import com.postr.Result;
 import com.postr.Translators.DWTranslator;
@@ -10,27 +9,19 @@ import com.postr.Translators.DWTranslator;
 @EntitySubclass(index=true)
 public class DWPost extends LJPost {
 
-	public DWPost(String subject, String contents, String tags, LivejournalVisibilityTypes visibility, long output){
-		super(subject,contents,tags,visibility,output);
-	}
-	
-	@SuppressWarnings("unused")
-	private DWPost(){}
-	
-	
 	@Override
 	public void MakePost() {
 		DWData dwData;
 		try {
-			dwData = DAO.LoadThing(DWData.class, getOutput(), getParent());
+			dwData = DAO.LoadThing(DWData.class, output, getParent());
 		} catch (Exception e) {
 			MessageLogger.Severe(this,e.getMessage());
-			setResult(Result.Failure("Failed to load Output data"));
+			result = Result.Failure("Failed to load Output data");
 			return;
 		}
 		
 		DWTranslator translator = new DWTranslator();
-		setResult(translator.MakePost(dwData, getContents(), getSubject(), getTags().split(","), getVisibility()));
+		result = translator.MakePost(dwData, contents, subject, tags.split(","), visibility);
 	}
 
 }

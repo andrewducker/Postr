@@ -11,8 +11,9 @@ public class DateTimeZoneJsonAdapter extends TypeAdapter<DateTimeZone> {
 
 	@Override
 	public DateTimeZone read(JsonReader arg0) throws IOException {
-		// TODO Auto-generated method stub
-		return null;
+		String arg = arg0.nextString();
+		DateTimeZone d = DateTimeZone.forID(arg);
+		return d;
 	}
 
 	@Override

@@ -14,7 +14,7 @@ public class DateTimeJsonAdapter extends TypeAdapter<DateTime>{
 	@Override
 	public DateTime read(JsonReader arg0) throws IOException {
 		// TODO Auto-generated method stub
-		return null;
+		return DateTime.parse(arg0.nextString());
 	}
 
 	@Override

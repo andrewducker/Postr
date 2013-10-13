@@ -13,8 +13,8 @@ public class BaseSaveable {
 		return id;
 	}
 
-	public void setParent(long userID) {
-		this.parent = Key.create(User.class, userID);
+	public void setParent(long parentID) {
+		this.parent = Key.create(User.class, parentID);
 	}
 	
 	public long getParent(){

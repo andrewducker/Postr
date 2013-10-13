@@ -17,7 +17,9 @@ public class UserData {
 		List<BaseSaveable> saveables = DAO.LoadThings(BaseSaveable.class, userID);
 		for (BaseSaveable baseSaveable : saveables) {
 			if (baseSaveable instanceof BaseOutput) {
-				outputs.add((BaseOutput) baseSaveable);
+				BaseOutput output =(BaseOutput) baseSaveable;
+				output.password = null;
+				outputs.add(output);
 			}
 			if (baseSaveable instanceof BaseInput) {
 				inputs.add((BaseInput) baseSaveable);

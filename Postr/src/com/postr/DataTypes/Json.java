@@ -23,15 +23,25 @@ public class Json  {
 	public static String Convert(Object toConvert){
 		return builder.create().toJson(toConvert);
 	}
+	
+	public <T> T FromJson(Class<T> clazz){
+		return builder.create().fromJson(originalJson, clazz);
+	}
 
 	private Json(){}
 
 	@SuppressWarnings("unchecked")
 	public Json(String data){
 		this.data = (StringMap<Object>)new Gson().fromJson(data, Object.class);
+		this.originalJson = data;
+	}
+
+	protected String getOriginalJson() {
+		return originalJson;
 	}
 
 	private StringMap<Object> data = new StringMap<Object>();
+	private String originalJson;
 
 	public void setData(String key, Object object) {
 		data.put(key,object);

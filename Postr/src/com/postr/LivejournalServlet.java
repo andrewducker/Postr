@@ -1,7 +1,5 @@
 package com.postr;
 
-import org.joda.time.DateTimeZone;
-
 import com.googlecode.objectify.Key;
 import com.postr.DataTypes.Json;
 import com.postr.DataTypes.Outputs.LJData;
@@ -13,20 +11,15 @@ public class LivejournalServlet extends BaseOutputServlet {
 
 	@Override
 	protected Json VerifyPassword(Json parameters) throws Exception {
-		String userName = parameters.getString("userName");
-		String password = parameters.getString("password");
+		LJData data = parameters.FromJson(LJData.class);
 		LJTranslator writer = new LJTranslator();
-		return writer.Login(userName, password);
+		return writer.Login(data.userName, data.password);
 	}
 
 	@Override
 	protected Json SaveData(Json parameters) throws Exception {
-		String userName = parameters.getString("userName");
-		String password = parameters.getString("password");
-		String timeZone = parameters.getString("timeZone");
-		LJData ljData = new LJData(
-				userName, password,
-				DateTimeZone.forID(timeZone));
+		LJData ljData = parameters.FromJson(LJData.class);
+		ljData.EncryptPassword();
 		
 		Key<LJData> result = DAO.SaveThing(ljData,GetUserID());
 		Json toReturn = Json.SuccessResult("Saved!");
@@ -36,12 +29,7 @@ public class LivejournalServlet extends BaseOutputServlet {
 
 	@Override
 	protected LJPost CreatePost(Json parameters, long userID) {
-		String contents = parameters.getString("contents");
-		String subject = parameters.getString("subject");
-		String tags = parameters.getString("tags");
-		long output = parameters.getLong("output");
-		LivejournalVisibilityTypes visibility =  LivejournalVisibilityTypes.valueOf(parameters.getString("visibility"));
-		LJPost post = new LJPost(subject, contents, tags,visibility, output);
+		LJPost post = parameters.FromJson(LJPost.class);
 		post.setParent(userID);
 		return post;
 	}
@@ -61,13 +49,15 @@ public class LivejournalServlet extends BaseOutputServlet {
 	@Override
 	protected Json UpdateData(Json parameters) throws Exception {
 		Long key = parameters.getLong("key");
-		String password = parameters.getString("password");
-		String timeZone = parameters.getString("timeZone");
 		LJData existingLJData = DAO.LoadThing(LJData.class, key, GetUserID());
 		
-		LJData newDWData = new LJData(existingLJData,password,DateTimeZone.forID(timeZone));
+		LJData newData = parameters.FromJson(LJData.class);
 		
-		Key<LJData> result = DAO.SaveThing(newDWData,GetUserID());
+		existingLJData.password = newData.password;
+		existingLJData.EncryptPassword();
+		existingLJData.timeZone = newData.timeZone;
+		
+		Key<LJData> result = DAO.SaveThing(existingLJData,GetUserID());
 		Json toReturn =Json.SuccessResult("Saved!"); 
 		toReturn.setData("id", result.getId());
 		return toReturn;

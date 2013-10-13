@@ -8,8 +8,13 @@ public class PasswordEncryptor {
 	static String Encrypt(String password) throws Exception{
 		return MD5Hex(password);
 	}
-	public static String MD5Hex(String s) throws NoSuchAlgorithmException{
-        MessageDigest md5 = MessageDigest.getInstance("MD5");
+	public static String MD5Hex(String s){
+        MessageDigest md5 = null;
+		try {
+			md5 = MessageDigest.getInstance("MD5");
+		} catch (NoSuchAlgorithmException e) {
+			// will absolutely never happen.
+		}
         byte[] digest = md5.digest(s.getBytes());
         return toHex(digest);
 	}

@@ -11,46 +11,9 @@ import com.postr.DataTypes.BaseSaveable;
 public abstract class BasePost extends BaseSaveable {
 		abstract public void MakePost();
 		
-		protected BasePost(){}
-		
-		protected BasePost(long output, String subject, String contents) {
-			this.output = output;
-			this.subject = subject;
-			this.contents = contents;
-		}
-		
-		public BasePost(BasePost originalPost) {
-			super(originalPost);
-			this.subject = originalPost.subject;
-			this.contents = originalPost.contents;
-			this.output = originalPost.output;
-		}
-		private String subject;
-		private String contents;
+		public String subject;
+		public String contents;
 
-		protected String getSubject() {
-			return subject;
-		}
-
-		protected String getContents() {
-			return contents;
-		}
-
-		public long getOutput() {
-			return output;
-		}
-
-		public void setOutput(long output) {
-			this.output = output;
-		}
-
-		public Result getResult() {
-			return result;
-		}
-
-		public void setResult(Result result) {
-			this.result = result;
-		}
 		
 		public void setPostingTime(){
 			postingTime = DateTime.now(DateTimeZone.UTC);
@@ -60,9 +23,9 @@ public abstract class BasePost extends BaseSaveable {
 			return postingTime;
 		}
 
-		private long output;
+		public long output;
 		
-		private Result result;
+		public Result result;
 		
 		private DateTime postingTime;
 }
