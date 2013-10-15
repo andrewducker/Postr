@@ -3,8 +3,8 @@ package com.postr;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class URLUtils {
-	public static Boolean DoesURLExist(String urlAddress){
+class URLUtils {
+	static Boolean DoesURLExist(String urlAddress){
 		try{
 			URL url = new URL(urlAddress);
 			HttpURLConnection connection = (HttpURLConnection)url.openConnection();

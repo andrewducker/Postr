@@ -29,12 +29,12 @@ public class UserData {
 		}
 	}
 	
-	public String persona;
+	@SuppressWarnings("unused")
+	private String persona; // NO_UCD (JSON)
 	
-
-	public List<BaseInput> inputs = new Vector<BaseInput>();
+	private List<BaseInput> inputs = new Vector<BaseInput>();
 	
-	public List<BaseOutput> outputs = new Vector<BaseOutput>();
+	private List<BaseOutput> outputs = new Vector<BaseOutput>();
 	
-	public List<BasePost> posts = new Vector<BasePost>();
+	private List<BasePost> posts = new Vector<BasePost>();
 }

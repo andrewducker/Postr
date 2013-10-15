@@ -61,12 +61,11 @@ public class PersonaVerificationServlet extends BasePersonaSessionServlet {
 				result = Json.Convert(userData);
 			} else {
 				SetPersona(null);
-				result = Json.ErrorResult("User not validated").toString();
+				result = Json.Convert(Result.Failure("User not validated"));
 			}
 		} else {
 			SetPersona(null);
-			result = Json.ErrorResult("Could not connect to validation server")
-					.toString();
+			result = Json.Convert(Result.Failure("Could not connect to validation server"));
 		}
 
 		resp.getWriter().print(result);

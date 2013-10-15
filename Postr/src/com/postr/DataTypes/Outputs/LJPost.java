@@ -10,8 +10,8 @@ import com.postr.Translators.LJTranslator;
 @EntitySubclass(index=true)
 public class LJPost extends BasePost {
 
-	public String tags;
-	public LivejournalVisibilityTypes visibility;
+	String tags;
+	LivejournalVisibilityTypes visibility;
 	
 	@Override
 	public void MakePost() {

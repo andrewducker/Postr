@@ -8,23 +8,24 @@ public class Result {
 	@SuppressWarnings("unused")
 	private Result(){}
 	
-	protected Result(boolean failure, String message){
+	private Result(boolean failure, String message){
 		this.failure = failure;
 		this.message = message;
 	}
 	
-	private boolean failure;
-	
-	private String message;
-	
-	public boolean isFailure() {
-		return failure;
+	protected Result(String message, long id){
+		this.id = id;
+		this.message = message;
 	}
-
-	public String getMessage() {
-		return message;
-	}
-
+	
+	public long id; // NO_UCD (JSON)
+	
+	boolean failure;
+	
+	String message;
+	
+	long postingTime; // NO_UCD (JSONú)
+	
 	public static Result Success(String message){
 		return new Result(false,message);
 	}

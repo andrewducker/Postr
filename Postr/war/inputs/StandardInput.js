@@ -47,7 +47,7 @@ function StandardInput(Name, url){
 			var posting = $.post(siteID,{params:JSON.stringify(params)});
 			posting.done(function(data){
 				var parsedData = $.parseJSON(data);
-				j(identityID).text(parsedData.result);
+				j(identityID).text(parsedData.message);
 				wizards.setProperty(credentialsWizard,"height","auto");
 			});
 			wizards.registerCallForWizardOnError(posting);

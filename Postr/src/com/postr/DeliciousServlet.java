@@ -1,6 +1,7 @@
 package com.postr;
 
 import com.googlecode.objectify.Key;
+import com.postr.DataTypes.Input;
 import com.postr.DataTypes.Json;
 import com.postr.DataTypes.Inputs.DeliciousData;
 
@@ -8,28 +9,27 @@ import com.postr.DataTypes.Inputs.DeliciousData;
 public class DeliciousServlet extends BaseInputServlet {
 
 	@Override
-	protected Json UpdateData(Json parameters) throws Exception {
-		Json toReturn =Json.ErrorResult("There is nothing updateable about a Delicious Input"); 
-		return toReturn;
+	protected Result UpdateData(String parameters) throws Exception {
+		return Result.Failure("There is nothing updateable about a Delicious Input"); 
 	}
 
 	@Override
-	protected Json VerifyUserExists(Json parameters) throws Exception {
-		if (URLUtils.DoesURLExist("http://feeds.delicious.com/v2/rss/"+parameters.getString("userName"))) {
-			return Json.SuccessResult("User verified.");
+	protected Result VerifyUserExists(String parameters) throws Exception {
+		Input input = Json.FromJson(parameters, Input.class);
+		if (URLUtils.DoesURLExist("http://feeds.delicious.com/v2/rss/"+input.userName)) {
+			return Result.Success("User verified.");
 		}
-		return Json.ErrorResult("Failed to find user.");
+		return Result.Failure("Failed to find user.");
 	}
 
 	@Override
-	protected Json SaveData(Json parameters) throws Exception {
-		String userName = parameters.getString("userName");
+	protected Result SaveData(String parameters) throws Exception {
+		Input input = Json.FromJson(parameters, Input.class);
+		String userName = input.userName;
 		DeliciousData deliciousData = new DeliciousData(userName);
 		
 		Key<DeliciousData> result = DAO.SaveThing(deliciousData,GetUserID());
-		Json toReturn = Json.SuccessResult("Saved!");
-		toReturn.setData("id", result.getId());
-		return toReturn;
+		return new Result("Saved!",result.getId());
 	}
 
 }

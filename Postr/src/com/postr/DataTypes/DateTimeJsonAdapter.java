@@ -8,7 +8,7 @@ import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 
-public class DateTimeJsonAdapter extends TypeAdapter<DateTime>{
+class DateTimeJsonAdapter extends TypeAdapter<DateTime>{
 
 	@Override
 	public DateTime read(JsonReader arg0) throws IOException {

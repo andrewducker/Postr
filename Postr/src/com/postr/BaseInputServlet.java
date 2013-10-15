@@ -3,13 +3,13 @@ package com.postr;
 import com.postr.DataTypes.Json;
 
 @SuppressWarnings("serial")
-public abstract class BaseInputServlet extends BaseJSONServlet {
+abstract class BaseInputServlet extends BaseJSONServlet {
 
 	@Override
-	protected Json ProcessRequest(Json parameters) throws Exception {
-		String method = parameters.getString("method");
+	protected Result ProcessRequest(String parameters) throws Exception {
+		Request request = Json.FromJson(parameters, Request.class);
 
-		MethodTypes methodType = MethodTypes.valueOf(method);
+		MethodTypes methodType = MethodTypes.valueOf(request.method);
 		switch (methodType) {
 		case SaveData:
 			return SaveData(parameters);
@@ -18,13 +18,13 @@ public abstract class BaseInputServlet extends BaseJSONServlet {
 		case UpdateData:
 			return UpdateData(parameters);
 		default:
-			throw new Exception("No such method found: "+method);
+			throw new Exception("No such method found: "+request.method);
 		}
 	}
 	
-	protected abstract Json UpdateData	(Json parameters) throws Exception;
+	protected abstract Result UpdateData(String parameters) throws Exception;
 
-	protected abstract Json VerifyUserExists(Json parameters) throws Exception;
+	protected abstract Result VerifyUserExists(String parameters) throws Exception;
 	
-	protected abstract Json SaveData(Json parameters) throws Exception;
+	protected abstract Result SaveData(String parameters) throws Exception;
 }

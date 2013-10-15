@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.postr.DataTypes.Json;
 
 @SuppressWarnings("serial")
-public abstract class BaseJSONServlet extends BasePersonaSessionServlet {
+abstract class BaseJSONServlet extends BasePersonaSessionServlet {
 	
 	@Override
 	protected void handleRequest(HttpServletRequest req, HttpServletResponse resp)
@@ -16,9 +16,8 @@ public abstract class BaseJSONServlet extends BasePersonaSessionServlet {
 		try {
 			resp.setContentType("text/plain");
 			String params = req.getParameter("params");
-			Json parameters = new Json(params);
 			
-			Json result = ProcessRequest(parameters);
+			Result result = ProcessRequest(params);
 			
 			processResult(resp, result);
 		} catch (Exception e) {
@@ -28,18 +27,16 @@ public abstract class BaseJSONServlet extends BasePersonaSessionServlet {
 		}
 	}
 	
-	private void processResult(HttpServletResponse resp, Json result)
+	private void processResult(HttpServletResponse resp, Result result)
 			throws IOException, Exception {
-		String res = result.ToJson();
-		if (result.getString(Json.RESULT) != null) {
-			resp.getWriter().print(res);	
-		}
-		else
-		{
+		if (result.failure) {
 			resp.setStatus(500);
-			resp.getWriter().print(result.getString(Json.ERROR_MESSAGE));
+			resp.getWriter().print(result.message);
+		}else
+		{
+			resp.getWriter().print(Json.Convert(result));	
 		}
 	}
 	
-	protected abstract Json ProcessRequest(Json parameters) throws Exception;
+	protected abstract Result ProcessRequest(String parameters) throws Exception;
 }

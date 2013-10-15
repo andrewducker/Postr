@@ -25,15 +25,10 @@ static {
 	ObjectifyService.register(LJPost.class);
 }
 
-public static <T extends BaseSaveable> Key<T> SaveThing(T thing, Long userID){
+static <T extends BaseSaveable> Key<T> SaveThing(T thing, Long userID){
 	thing.setParent(userID);
 	return ofy().save().entity(thing).now();
 }
-
-public static Key<User> SaveUser(User user){
-	return ofy().save().entity(user).now();
-}
- 
 
 public static <T extends BaseSaveable> T LoadThing(Class<T> clazz, Long id, Long userID) throws Exception{
 	T retrieved = ofy().load().type(clazz).id(id).get();
@@ -47,25 +42,21 @@ public static <T extends BaseSaveable> List<T> LoadThings(Class<T> clazz, Long u
 	return ofy().load().type(clazz).filter("parent", userKey(userID)).list();
 }
 
-public static <T extends BaseSaveable> void RemoveThing(Class<T> clazz, Long id){
-	ofy().delete().type(clazz).id(id);
-}
-
 private static Key<User> userKey(long userID){
 	return Key.create(User.class,userID);
 }
 
-public static  void RemoveThing(Long id){
+static  void RemoveThing(Long id){
 	ofy().delete().type(BaseSaveable.class).id(id);
 }
 
-public static long GetUserID(String persona) throws Exception {
+static long GetUserID(String persona) throws Exception {
 	List<Key<UserEmail>> email = ofy().load().type(UserEmail.class).filter("email",persona).keys().list();
 	if (email.size() == 0) {
 		User user = new User();
 		long parent = ofy().save().entity(user).now().getId();
 		UserEmail emailToSave = new UserEmail();
-		emailToSave.setEmail(persona);
+		emailToSave.email = persona;
 		emailToSave.setParent(parent);
 		ofy().save().entity(emailToSave).now();
 		return parent;

@@ -8,7 +8,7 @@ import com.googlecode.objectify.annotation.Index;
 @Entity
 public class BaseSaveable {
 	//Must be Long, not long, otherwise not auto-generated.
-	@Id Long id;
+	private @Id Long id;
 	public long getId() {
 		return id;
 	}
@@ -21,12 +21,10 @@ public class BaseSaveable {
 		return parent.getId();
 	}
 	
-	@Index
+	private @Index
 	transient Key<User> parent;
 	
 	protected BaseSaveable(){}
 
-	protected BaseSaveable(BaseSaveable existingData) {
-		this.id = existingData.id;
-	}
+	
 }

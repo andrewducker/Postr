@@ -7,13 +7,13 @@ import com.postr.DataTypes.Json;
 import com.postr.DataTypes.Outputs.BasePost;
 
 @SuppressWarnings("serial")
-public abstract class BaseOutputServlet extends BaseJSONServlet {
+abstract class BaseOutputServlet extends BaseJSONServlet {
 
 
 	@Override
-	protected Json ProcessRequest(Json parameters) throws Exception
+	protected Result ProcessRequest(String parameters) throws Exception
 	{
-		String method = parameters.getString("method");
+		String method = Json.FromJson(parameters, Request.class).method;
 
 		MethodTypes methodType = MethodTypes.valueOf(method);
 		switch (methodType) {
@@ -33,23 +33,22 @@ public abstract class BaseOutputServlet extends BaseJSONServlet {
 
 	}
 	
-	private Json MakePost(Json parameters){
+	private Result MakePost(String parameters){
 		BasePost post = CreatePost(parameters, GetUserID());
 		post.MakePost();
 		post.postingTime = DateTime.now(DateTimeZone.UTC);
 		DAO.SaveThing(post, GetUserID());
-		Json result = Json.Result(post.result);
-		result.setData("postingTime", post.postingTime.getMillis());
-		return result;
+		post.result.postingTime = post.postingTime.getMillis();
+		return post.result;
 	}
 	
-	protected abstract Json UpdateData	(Json parameters) throws Exception;
+	protected abstract Result UpdateData	(String parameters) throws Exception;
 
-	protected abstract Json VerifyPassword(Json parameters) throws Exception;
+	protected abstract Result VerifyPassword(String parameters) throws Exception;
 	
-	protected abstract Json SaveData(Json parameters) throws Exception;
+	protected abstract Result SaveData(String parameters) throws Exception;
 	
-	protected abstract BasePost CreatePost(Json parameters, long userID);
+	protected abstract BasePost CreatePost(String parameters, long userID);
 
-	protected abstract Json SavePost(Json parameters) throws Exception;
+	protected abstract Result SavePost(String parameters) throws Exception;
 }

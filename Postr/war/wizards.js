@@ -50,7 +50,7 @@ wizards.registerCallForWizardDisplay = function(posting, textToUpdate, wizardPag
 	var deferral = $.Deferred();
 	posting.done(function(data){
 		var parsedData = $.parseJSON(data);
-		j(textToUpdate).text(parsedData.result);
+		j(textToUpdate).text(parsedData.message);
 		wizards.showPage(wizardPageToShow);
 		deferral.resolve(parsedData);
 	});

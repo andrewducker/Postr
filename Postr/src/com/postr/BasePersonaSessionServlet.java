@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 @SuppressWarnings("serial")
-public abstract class BasePersonaSessionServlet extends HttpServlet {
+abstract class BasePersonaSessionServlet extends HttpServlet {
 	private HttpSession session;
 
 	@Override

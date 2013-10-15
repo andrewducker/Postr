@@ -16,7 +16,6 @@ import org.joda.time.chrono.GregorianChronology;
 import com.postr.LivejournalVisibilityTypes;
 import com.postr.MessageLogger;
 import com.postr.Result;
-import com.postr.DataTypes.Json;
 import com.postr.DataTypes.PasswordEncryptor;
 import com.postr.DataTypes.Outputs.LJData;
 
@@ -26,10 +25,10 @@ public class LJTranslator {
 		protected String serverURL = "http://www.livejournal.com/interface/xmlrpc";
 		
 		@SuppressWarnings("unchecked")
-		public Json Login(String userName, String password) throws Exception
+		public Result Login(String userName, String password) throws Exception
 		{
 			if (userName.equals("test") && password.equals("test")) {
-				return  Json.SuccessResult("Logged in as Test User");	
+				return  Result.Success("Logged in as Test User");	
 			}
 		    
 		    XmlRpcClient client = getClient();
@@ -40,13 +39,13 @@ public class LJTranslator {
 		    try{
 		    	postResult =  (Map<String, String>) client.execute("LJ.XMLRPC.login", params);
 		    } catch (XmlRpcException e){
-		    	return Json.ErrorResult(e.getMessage());
+		    	return Result.Failure(e.getMessage());
 		    }
 		    
 		    if (postResult.get("success")=="FAIL"){
-		    	return Json.ErrorResult(postResult.get("errmsg"));
+		    	return Result.Failure(postResult.get("errmsg"));
 		    }
-		    return Json.SuccessResult("Logged in as " + postResult.get("fullname"));
+		    return Result.Success("Logged in as " + postResult.get("fullname"));
 		}
 
 		
@@ -156,7 +155,7 @@ public class LJTranslator {
 			return client;
 		}
 		
-		public String EncryptPassword(String password) throws Exception{
+		private String EncryptPassword(String password) throws Exception{
 			return PasswordEncryptor.MD5Hex(password);
 		}
 }

@@ -5,11 +5,11 @@ import com.postr.DataTypes.BaseSaveable;
 
 @EntitySubclass(index=true)
 public abstract class BaseInput extends BaseSaveable {
-	protected String userName;
+	private String userName;
 	
 	protected BaseInput(){this.siteName = getSiteName();}
 
-	public BaseInput(String userName) {
+	BaseInput(String userName) {
 		super();
 		this.userName = userName;
 		this.siteName = getSiteName();

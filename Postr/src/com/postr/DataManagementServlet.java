@@ -6,22 +6,23 @@ import com.postr.DataTypes.Json;
 public class DataManagementServlet extends BaseJSONServlet {
 
 	@Override
-	protected Json ProcessRequest(Json parameters) throws Exception {
-		String method = parameters.getString("method");
+	protected Result ProcessRequest(String parameters) throws Exception {
+		
+		Request request = Json.FromJson(parameters, Request.class);
 
-		MethodTypes methodType = MethodTypes.valueOf(method);
+		MethodTypes methodType = MethodTypes.valueOf(request.method);
 		switch (methodType) {
 		case RemoveData:
-			return RemoveData(parameters);
+			return RemoveData(request);
 		default:
-			throw new Exception("No such method found: "+method);
+			throw new Exception("No such method found: "+request.method);
 		}
 	}
 
-	private Json RemoveData(Json parameters) {
-		Long key = parameters.getLong("id");
+	private Result RemoveData(Request parameters) {
+		Long key = parameters.id;
 		DAO.RemoveThing(key);
-		return Json.SuccessResult("Removed!");
+		return Result.Success("Removed!");
 	}
 
 }

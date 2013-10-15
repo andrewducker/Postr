@@ -10,56 +10,49 @@ import com.postr.Translators.LJTranslator;
 public class LivejournalServlet extends BaseOutputServlet {
 
 	@Override
-	protected Json VerifyPassword(Json parameters) throws Exception {
-		LJData data = parameters.FromJson(LJData.class);
+	protected Result VerifyPassword(String parameters) throws Exception {
+		LJData data = Json.FromJson(parameters,LJData.class);
 		LJTranslator writer = new LJTranslator();
 		return writer.Login(data.userName, data.password);
 	}
 
 	@Override
-	protected Json SaveData(Json parameters) throws Exception {
-		LJData ljData = parameters.FromJson(LJData.class);
+	protected Result SaveData(String parameters) throws Exception {
+		LJData ljData = Json.FromJson(parameters,LJData.class);
 		ljData.EncryptPassword();
 		
 		Key<LJData> result = DAO.SaveThing(ljData,GetUserID());
-		Json toReturn = Json.SuccessResult("Saved!");
-		toReturn.setData("id", result.getId());
-		return toReturn;
+		return new Result("Saved!",result.getId());
 	}
 
 	@Override
-	protected LJPost CreatePost(Json parameters, long userID) {
-		LJPost post = parameters.FromJson(LJPost.class);
+	protected LJPost CreatePost(String parameters, long userID) {
+		LJPost post = Json.FromJson(parameters,LJPost.class);
 		post.setParent(userID);
 		return post;
 	}
 	
 	@Override
-	protected Json SavePost(Json parameters) throws Exception {
+	protected Result SavePost(String parameters) throws Exception {
 		LJPost post = CreatePost(parameters,GetUserID());
 	
 		Key<LJPost> result = DAO.SaveThing(post, GetUserID());
 		
-		Json toReturn = Json.SuccessResult("Saved!");
-		toReturn.setData("id", result.getId());
-		return toReturn;
+		return new Result("Saved!",result.getId());
 	}
 
 	
 	@Override
-	protected Json UpdateData(Json parameters) throws Exception {
-		Long key = parameters.getLong("key");
-		LJData existingLJData = DAO.LoadThing(LJData.class, key, GetUserID());
+	protected Result UpdateData(String parameters) throws Exception {
+		LJData newData = Json.FromJson(parameters,LJData.class);
+		LJData existingLJData = DAO.LoadThing(LJData.class, newData.getId(), GetUserID());
 		
-		LJData newData = parameters.FromJson(LJData.class);
 		
 		existingLJData.password = newData.password;
 		existingLJData.EncryptPassword();
 		existingLJData.timeZone = newData.timeZone;
 		
 		Key<LJData> result = DAO.SaveThing(existingLJData,GetUserID());
-		Json toReturn =Json.SuccessResult("Saved!"); 
-		toReturn.setData("id", result.getId());
-		return toReturn;
+		return new Result("Saved!",result.getId());
 	}
 }

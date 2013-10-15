@@ -10,51 +10,46 @@ import com.googlecode.objectify.Key;
 public class DreamwidthServlet extends BaseOutputServlet {
 
 	@Override
-	protected Json VerifyPassword(Json parameters) throws Exception {
-		DWData data = parameters.FromJson(DWData.class);
+	protected Result VerifyPassword(String parameters) throws Exception {
+		DWData data = Json.FromJson(parameters,DWData.class);
 		DWTranslator writer = new DWTranslator();
 		return writer.Login(data.userName, data.password);
 	}	
 
 	@Override
-	protected Json SaveData(Json parameters) throws Exception {
-		DWData dwData = parameters.FromJson(DWData.class);
+	protected Result SaveData(String parameters) throws Exception {
+		DWData dwData = Json.FromJson(parameters,DWData.class);
 		dwData.EncryptPassword();
 		
 		Key<DWData> result = DAO.SaveThing(dwData,GetUserID());
-		Json toReturn =Json.SuccessResult("Saved!"); 
-		toReturn.setData("id", result.getId());
-		return toReturn;
+		return new Result("Saved!",result.getId());
 	}
 
 	@Override
-	protected DWPost CreatePost(Json parameters, long userID) {
-		DWPost post = parameters.FromJson(DWPost.class);
+	protected DWPost CreatePost(String parameters, long userID) {
+		DWPost post = Json.FromJson(parameters,DWPost.class);
 		post.setParent(userID);
 		return post;
 	}
 	
 	@Override
-	protected Json SavePost(Json parameters) throws Exception {
+	protected Result SavePost(String parameters) throws Exception {
 		DWPost post = CreatePost(parameters, GetUserID());
 		
 		Key<DWPost> result = DAO.SaveThing(post, GetUserID());
 		
-		Json toReturn = Json.SuccessResult("Saved!");
-		toReturn.setData("id", result.getId());
-		return toReturn;
+		return new Result("Saved!",result.getId());
 	}
 	
 	@Override
-	protected Json UpdateData(Json parameters) throws Exception {
-		Long key = parameters.getLong("id");
-		DWData existingDWData = DAO.LoadThing(DWData.class, key, GetUserID());
-		DWData newData = parameters.FromJson(DWData.class);
+	protected Result UpdateData(String parameters) throws Exception {
+		DWData newData = Json.FromJson(parameters,DWData.class);
+		DWData existingDWData = DAO.LoadThing(DWData.class, newData.getId(), GetUserID());
 		existingDWData.password = newData.password;
 		existingDWData.EncryptPassword();
 		existingDWData.timeZone = newData.timeZone;
 		
 		DAO.SaveThing(existingDWData,GetUserID());
-		return Json.SuccessResult("Saved!"); 
+		return Result.Success("Saved"); 
 	}
 }

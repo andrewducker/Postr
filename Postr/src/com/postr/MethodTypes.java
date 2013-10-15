@@ -1,6 +1,6 @@
 package com.postr;
 
-public enum MethodTypes {
+enum MethodTypes {
 	VerifyPassword,
 	VerifyUserExists,
 	SaveData,

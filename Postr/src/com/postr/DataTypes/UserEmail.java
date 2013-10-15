@@ -5,12 +5,5 @@ import com.googlecode.objectify.annotation.Index;
 
 @EntitySubclass(index=true)
 public class UserEmail extends BaseSaveable {
-	@Index String email;
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
+	public @Index String email; // NO_UCD (Data)
 }

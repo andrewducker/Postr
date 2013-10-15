@@ -10,9 +10,9 @@ import com.postr.DataTypes.BaseSaveable;
 public abstract class BasePost extends BaseSaveable {
 		abstract public void MakePost();
 		
-		public String subject;
-		public String contents;
-		public long output;
+		String subject;
+		String contents;
+		long output;
 		public Result result;
 		public DateTime postingTime;
 }

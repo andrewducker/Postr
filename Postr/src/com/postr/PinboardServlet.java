@@ -1,6 +1,7 @@
 package com.postr;
 
 import com.googlecode.objectify.Key;
+import com.postr.DataTypes.Input;
 import com.postr.DataTypes.Json;
 import com.postr.DataTypes.Inputs.PinboardData;
 
@@ -8,28 +9,26 @@ import com.postr.DataTypes.Inputs.PinboardData;
 public class PinboardServlet extends BaseInputServlet {
 
 	@Override
-	protected Json UpdateData(Json parameters) throws Exception {
-		Json toReturn =Json.ErrorResult("There is nothing updateable about a Pinboard Input"); 
-		return toReturn;
+	protected Result UpdateData(String parameters) throws Exception {
+		return Result.Failure("There is nothing updateable about a Pinboard Input"); 
 	}
 
 	@Override
-	protected Json VerifyUserExists(Json parameters) throws Exception {
-		if (URLUtils.DoesURLExist("https://pinboard.in/u:"+parameters.getString("userName"))) {
-			return Json.SuccessResult("User verified.");
+	protected Result VerifyUserExists(String parameters) throws Exception {
+		Input input = Json.FromJson(parameters, Input.class);
+		if (URLUtils.DoesURLExist("https://pinboard.in/u:"+input.userName)) {
+			return Result.Success("User verified.");
 		}
-		return Json.ErrorResult("Failed to find user.");
+		return Result.Failure("Failed to find user.");
 	}
 
 	@Override
-	protected Json SaveData(Json parameters) throws Exception {
-		String userName = parameters.getString("userName");
-		PinboardData pinboardData = new PinboardData(userName);
+	protected Result SaveData(String parameters) throws Exception {
+		Input input = Json.FromJson(parameters, Input.class);
+		PinboardData pinboardData = new PinboardData(input.userName);
 		
 		Key<PinboardData> result = DAO.SaveThing(pinboardData,GetUserID());
-		Json toReturn = Json.SuccessResult("Saved!");
-		toReturn.setData("id", result.getId());
-		return toReturn;
+		return new Result("Saved!",result.getId());
 	}
 
 }
