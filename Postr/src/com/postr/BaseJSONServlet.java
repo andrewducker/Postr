@@ -17,7 +17,7 @@ abstract class BaseJSONServlet extends BasePersonaSessionServlet {
 			resp.setContentType("text/plain");
 			String params = req.getParameter("params");
 			
-			Result result = ProcessRequest(params);
+			Result result = ProcessRequest(new Json(params));
 			
 			processResult(resp, result);
 		} catch (Exception e) {
@@ -34,9 +34,9 @@ abstract class BaseJSONServlet extends BasePersonaSessionServlet {
 			resp.getWriter().print(result.message);
 		}else
 		{
-			resp.getWriter().print(Json.Convert(result));	
+			resp.getWriter().print(new Json(result).getJson());	
 		}
 	}
 	
-	protected abstract Result ProcessRequest(String parameters) throws Exception;
+	protected abstract Result ProcessRequest(Json parameters) throws Exception;
 }

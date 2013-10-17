@@ -23,7 +23,7 @@ public class UserDataServlet extends BasePersonaSessionServlet {
 
 			com.postr.DataTypes.UserData userData = new com.postr.DataTypes.UserData(persona, userID);
 			
-			resp.getWriter().write(Json.Convert(userData));
+			resp.getWriter().write(new Json(userData).getJson());
 		}
 	}
 

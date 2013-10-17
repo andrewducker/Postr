@@ -36,7 +36,7 @@ public class PersonaVerificationServlet extends BasePersonaSessionServlet {
 				+ req.getServerName());
 		writer.close();
 
-		String result;
+		Json result;
 
 		if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
 			ByteArrayInputStream json = (ByteArrayInputStream) connection
@@ -58,17 +58,17 @@ public class PersonaVerificationServlet extends BasePersonaSessionServlet {
 				String persona = (String) response.get("email");
 				SetPersona(persona);
 				UserData userData = new UserData(GetPersona(), GetUserID());
-				result = Json.Convert(userData);
+				result = new Json(userData);
 			} else {
 				SetPersona(null);
-				result = Json.Convert(Result.Failure("User not validated"));
+				result = new Json(Result.Failure("User not validated"));
 			}
 		} else {
 			SetPersona(null);
-			result = Json.Convert(Result.Failure("Could not connect to validation server"));
+			result = new Json(Result.Failure("Could not connect to validation server"));
 		}
 
-		resp.getWriter().print(result);
+		resp.getWriter().print(result.getJson());
 	}
 
 }

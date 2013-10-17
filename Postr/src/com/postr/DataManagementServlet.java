@@ -6,9 +6,9 @@ import com.postr.DataTypes.Json;
 public class DataManagementServlet extends BaseJSONServlet {
 
 	@Override
-	protected Result ProcessRequest(String parameters) throws Exception {
+	protected Result ProcessRequest(Json parameters) throws Exception {
 		
-		Request request = Json.FromJson(parameters, Request.class);
+		Request request = parameters.FromJson(Request.class);
 
 		MethodTypes methodType = MethodTypes.valueOf(request.method);
 		switch (methodType) {

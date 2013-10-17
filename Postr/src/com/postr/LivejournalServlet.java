@@ -10,15 +10,15 @@ import com.postr.Translators.LJTranslator;
 public class LivejournalServlet extends BaseOutputServlet {
 
 	@Override
-	protected Result VerifyPassword(String parameters) throws Exception {
-		LJData data = Json.FromJson(parameters,LJData.class);
+	protected Result VerifyPassword(Json parameters) throws Exception {
+		LJData data = parameters.FromJson(LJData.class);
 		LJTranslator writer = new LJTranslator();
 		return writer.Login(data.userName, data.password);
 	}
 
 	@Override
-	protected Result SaveData(String parameters) throws Exception {
-		LJData ljData = Json.FromJson(parameters,LJData.class);
+	protected Result SaveData(Json parameters) throws Exception {
+		LJData ljData = parameters.FromJson(LJData.class);
 		ljData.EncryptPassword();
 		
 		Key<LJData> result = DAO.SaveThing(ljData,GetUserID());
@@ -26,14 +26,14 @@ public class LivejournalServlet extends BaseOutputServlet {
 	}
 
 	@Override
-	protected LJPost CreatePost(String parameters, long userID) {
-		LJPost post = Json.FromJson(parameters,LJPost.class);
+	protected LJPost CreatePost(Json parameters, long userID) {
+		LJPost post = parameters.FromJson(LJPost.class);
 		post.setParent(userID);
 		return post;
 	}
 	
 	@Override
-	protected Result SavePost(String parameters) throws Exception {
+	protected Result SavePost(Json parameters) throws Exception {
 		LJPost post = CreatePost(parameters,GetUserID());
 	
 		Key<LJPost> result = DAO.SaveThing(post, GetUserID());
@@ -43,8 +43,8 @@ public class LivejournalServlet extends BaseOutputServlet {
 
 	
 	@Override
-	protected Result UpdateData(String parameters) throws Exception {
-		LJData newData = Json.FromJson(parameters,LJData.class);
+	protected Result UpdateData(Json parameters) throws Exception {
+		LJData newData = parameters.FromJson(LJData.class);
 		LJData existingLJData = DAO.LoadThing(LJData.class, newData.getId(), GetUserID());
 		
 		

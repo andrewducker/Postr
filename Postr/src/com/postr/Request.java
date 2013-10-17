@@ -1,6 +1,6 @@
 package com.postr;
 
-public class Request {
-	public String method;
-	public Long id;
+class Request {
+	String method;
+	Long id;
 }

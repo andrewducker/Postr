@@ -6,8 +6,8 @@ import com.postr.DataTypes.Json;
 abstract class BaseInputServlet extends BaseJSONServlet {
 
 	@Override
-	protected Result ProcessRequest(String parameters) throws Exception {
-		Request request = Json.FromJson(parameters, Request.class);
+	protected Result ProcessRequest(Json parameters) throws Exception {
+		Request request = parameters.FromJson(Request.class);
 
 		MethodTypes methodType = MethodTypes.valueOf(request.method);
 		switch (methodType) {
@@ -22,9 +22,9 @@ abstract class BaseInputServlet extends BaseJSONServlet {
 		}
 	}
 	
-	protected abstract Result UpdateData(String parameters) throws Exception;
+	protected abstract Result UpdateData(Json parameters) throws Exception;
 
-	protected abstract Result VerifyUserExists(String parameters) throws Exception;
+	protected abstract Result VerifyUserExists(Json parameters) throws Exception;
 	
-	protected abstract Result SaveData(String parameters) throws Exception;
+	protected abstract Result SaveData(Json parameters) throws Exception;
 }

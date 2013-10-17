@@ -9,13 +9,13 @@ import com.postr.DataTypes.Inputs.DeliciousData;
 public class DeliciousServlet extends BaseInputServlet {
 
 	@Override
-	protected Result UpdateData(String parameters) throws Exception {
+	protected Result UpdateData(Json parameters) throws Exception {
 		return Result.Failure("There is nothing updateable about a Delicious Input"); 
 	}
 
 	@Override
-	protected Result VerifyUserExists(String parameters) throws Exception {
-		Input input = Json.FromJson(parameters, Input.class);
+	protected Result VerifyUserExists(Json parameters) throws Exception {
+		Input input = parameters.FromJson(Input.class);
 		if (URLUtils.DoesURLExist("http://feeds.delicious.com/v2/rss/"+input.userName)) {
 			return Result.Success("User verified.");
 		}
@@ -23,8 +23,8 @@ public class DeliciousServlet extends BaseInputServlet {
 	}
 
 	@Override
-	protected Result SaveData(String parameters) throws Exception {
-		Input input = Json.FromJson(parameters, Input.class);
+	protected Result SaveData(Json parameters) throws Exception {
+		Input input = parameters.FromJson(Input.class);
 		String userName = input.userName;
 		DeliciousData deliciousData = new DeliciousData(userName);
 		
