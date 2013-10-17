@@ -51,7 +51,7 @@ public class LJTranslator {
 		
 		
 		@SuppressWarnings("unchecked")
-		public Result MakePost(LJData ljData, String contents, String header, String[] tags, LivejournalVisibilityTypes visibility){
+		public Result MakePost(LJData ljData, String contents, String header, String[] tags, LivejournalVisibilityTypes visibility, Boolean autoFormat){
 		    XmlRpcClient client;
 			try {
 				client = getClient();
@@ -105,7 +105,7 @@ public class LJTranslator {
 				tagsToUse +=tag; 
 			}
 		    options.put("taglist", tagsToUse);
-		    options.put("opt_preformatted", true);
+		    options.put("opt_preformatted", !autoFormat);
 		    postParams.put("props",options);
 		    
 		    Object[] params = new Object[]{postParams};

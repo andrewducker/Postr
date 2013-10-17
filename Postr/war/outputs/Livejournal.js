@@ -13,6 +13,7 @@ function Livejournal(displayName, url){
 	var textID = prefix+"Text";
 	var tagsID = prefix+"Tags";
 	var visibilityID = prefix+"Visibility";
+	var autoFormatID = prefix+"AutoFormat";
 
 	var that = this;
 
@@ -49,12 +50,12 @@ function Livejournal(displayName, url){
 	};
 
 	var makePost = function(){
-		var params = {method:"MakePost", contents:j(textID).val(), subject:j(subjectID).val(),tags:j(tagsID).val(),visibility:j(visibilityID).val(), output:that.currentOutput.id};
+		var params = {method:"MakePost", contents:j(textID).val(), subject:j(subjectID).val(),tags:j(tagsID).val(),visibility:j(visibilityID).val(), output:that.currentOutput.id, autoFormat:j(autoFormatID).is(':checked')};
 		var posting = $.post(siteID,{params:JSON.stringify(params)});
 		wizards.registerCallForWizardDisplay(posting).done(function(data){
 
 			var result = new Object();
-			result.message = data.result;
+			result.message = data.message;
 
 			data.outputObject = that.currentOutput;
 			data.result = result;
@@ -64,6 +65,7 @@ function Livejournal(displayName, url){
 			data.tags = params.tags;
 			data.visibility = params.visibility;
 			data.output = params.output;
+			data.autoFormat = params.autoFormat;
 			that.currentDeferral.resolve(data);
 		});
 	};
@@ -76,6 +78,7 @@ function Livejournal(displayName, url){
 		j(textID).val("");
 		j(tagsID).val("");
 		j(visibilityID).val("");
+		j(autoFormatID).prop('checked', false);
 		j(postingWizard).dialog( "option", "buttons", [{text:"ok", click: function(){makePost();}}]);
 		that.currentDeferral = $.Deferred();
 		that.currentOutput = output;
@@ -91,6 +94,11 @@ function Livejournal(displayName, url){
 		j(textID).val(existingPost.contents);
 		j(tagsID).val(existingPost.tags);
 		j(visibilityID).val(existingPost.visibility);
+		if (existingPost.autoFormat) {
+			j(autoFormatID).prop('checked', true);
+		}else{
+			j(autoFormatID).prop('checked', false);
+		}
 		j(postingWizard).dialog( "option", "buttons", [{text:"ok", click: function(){makePost();}}]);
 		that.currentDeferral = $.Deferred();
 		that.currentOutput = existingPost.outputObject;
@@ -112,8 +120,10 @@ function Livejournal(displayName, url){
 								$.el.select({id:visibilityID},
 										$.el.option("Public"),
 										$.el.option("FriendsOnly"),
-										$.el.option("Private")
-								)),
+										$.el.option("Private"))),
+						$.el.div(
+								$.el.label({"for":autoFormatID},'Auto Format:'),
+								$.el.input({type:'checkbox', id:autoFormatID})),
 						$.el.div(
 								$.el.label({"for":tagsID},'Tags:'),
 								$.el.input({type:'text',id:tagsID}))

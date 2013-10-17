@@ -12,6 +12,8 @@ public class LJPost extends BasePost {
 
 	String tags;
 	LivejournalVisibilityTypes visibility;
+	Boolean autoFormat;
+
 	
 	@Override
 	public void MakePost() {
@@ -25,6 +27,6 @@ public class LJPost extends BasePost {
 		}
 		
 		LJTranslator translator = new LJTranslator();
-		result = translator.MakePost(ljData, contents, subject, tags.split(","),visibility);
+		result = translator.MakePost(ljData, contents, subject, tags.split(","),visibility, autoFormat);
 	}
 }

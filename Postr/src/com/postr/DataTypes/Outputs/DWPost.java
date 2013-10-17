@@ -21,7 +21,7 @@ public class DWPost extends LJPost {
 		}
 		
 		DWTranslator translator = new DWTranslator();
-		result = translator.MakePost(dwData, contents, subject, tags.split(","), visibility);
+		result = translator.MakePost(dwData, contents, subject, tags.split(","), visibility, autoFormat);
 	}
 
 }
