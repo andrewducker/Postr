@@ -27,6 +27,8 @@ abstract class BaseOutputServlet extends BaseJSONServlet {
 			return MakePost(parameters);
 		case SavePost:
 			return SavePost(parameters);
+		case SaveTemplate:
+			return SaveTemplate(parameters);
 		default:
 			throw new Exception("No such method found: "+method);
 		}
@@ -42,6 +44,9 @@ abstract class BaseOutputServlet extends BaseJSONServlet {
 		return post.result;
 	}
 	
+
+	protected abstract Result SaveTemplate(Json parameters);
+
 	protected abstract Result UpdateData	(Json parameters) throws Exception;
 
 	protected abstract Result VerifyPassword(Json parameters) throws Exception;

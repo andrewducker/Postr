@@ -1,20 +1,20 @@
 function Livejournal(displayName, url){
 	var siteName = displayName;
 	var siteID = url;
-	var prefix = url;
-	var usernameID = prefix+"Username";
-	var passwordID = prefix+"Password";
-	var timezoneID = prefix+"TimeZone";
-	var credentialsWizard = prefix+"Credentials";
-	var identityID = prefix+"Identity"; 
-	var verifyID = prefix+"CredentialsVerify";
-	var postingWizard = prefix+"PostMaker";
-	var subjectID = prefix+"SubjectLine";
-	var textID = prefix+"Text";
-	var tagsID = prefix+"Tags";
-	var visibilityID = prefix+"Visibility";
-	var autoFormatID = prefix+"AutoFormat";
-
+	var usernameID = url+"Username";
+	var passwordID = url+"Password";
+	var timezoneID = url+"TimeZone";
+	var credentialsWizard = url+"Credentials";
+	var identityID = url+"Identity"; 
+	var verifyID = url+"CredentialsVerify";
+	var postingWizard = url+"PostMaker";
+	var subjectID = url+"SubjectLine";
+	var textID = url+"Text";
+	var tagsID = url+"Tags";
+	var visibilityID = url+"Visibility";
+	var autoFormatID = url+"AutoFormat";
+	var allPostingSourcesID = url+"AllPostingSourcesID";
+	
 	var that = this;
 
 	var postingWizardCreated = false;
@@ -135,6 +135,41 @@ function Livejournal(displayName, url){
 		postingWizardCreated = true;
 	};
 
+	var templateWizardCreated = false;
+	
+	var createTemplateWizard = function(){
+		$.el.div({id:postingWizard, title:siteName+' Posting'},
+				$.el.form(
+						$.el.div(
+								$.el.label({"for":templateSubjectID},'Subject Line:'),
+								$.el.input({type:'text', id:templateSubjectID})),
+						$.el.div(
+								$.el.label({"for":textID},'Text:'),
+								$.el.textarea({rows:5,id:textID})),
+						$.el.div(
+								$.el.label({"for":visibilityID},'Visibility:'),
+								$.el.select({id:visibilityID},
+										$.el.option("Public"),
+										$.el.option("FriendsOnly"),
+										$.el.option("Private"))),
+						$.el.div(
+								$.el.label({"for":autoFormatID},'Auto Format:'),
+								$.el.input({type:'checkbox', id:autoFormatID})),
+						$.el.div(
+								$.el.label({"for":tagsID},'Tags:'),
+								$.el.input({type:'text',id:tagsID})),
+						$.el.div(
+								$.el.label({"for":allPostingSourcesID},'All Sources'),
+								$.el.select({id:allPostingSourcesID}))
+				)
+		)
+		.appendTo(document.body);
+
+		wizards.register(postingWizard);
+		templateWizardCreated = true;
+	};
+
+	
 	var outputWizardCreated = false;
 
 	var createOutputWizard = function(){
@@ -201,6 +236,21 @@ function Livejournal(displayName, url){
 		return that.currentDeferral;
 	};
 
+	var addTemplate = function(){
+		if (!templateWizardCreated) {
+			createTemplateWizard();
+		}
+		j(identityID).text("");
+		j(timezoneID).val("");
+		j(passwordID).val("");
+		j(usernameID).val("");
+		j(usernameID).removeProp('disabled');
+		j(credentialsWizard ).dialog( "option", "buttons", [{text:"ok", click: function(){saveCredentials();}}]);
+		that.currentDeferral = $.Deferred();
+		wizards.showPage(credentialsWizard);
+		return that.currentDeferral;
+	};
+	
 	var updateOutput = function(existingData){
 		if (!outputWizardCreated) {
 			createOutputWizard();
@@ -217,5 +267,5 @@ function Livejournal(displayName, url){
 		return that.currentDeferral;
 	};
 
-	AddOutput(siteName, addOutput,updateOutput,addPosting, displayExistingPost);
+	AddOutput(siteName, addOutput,updateOutput,addPosting, displayExistingPost,addTemplate);
 };

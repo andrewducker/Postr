@@ -8,5 +8,6 @@ enum MethodTypes {
 	UpdateData, 
 	MakePost,
 	SavePost, 
-	UpdatePost
+	UpdatePost,
+	SaveTemplate
 }

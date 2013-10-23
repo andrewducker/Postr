@@ -17,9 +17,9 @@
 		<script type="text/javascript">
 			outputs = new Object();
 			inputs = new Object();
-			function AddOutput(outputName, AddOutput, UpdateOutput, PostFromOutput, DisplayPost) {
+			function AddOutput(outputName, AddOutput, UpdateOutput, PostFromOutput, DisplayPost, AddTemplate, UpdateTemplate) {
 				$("#output").append(new Option(outputName));
-				outputs[outputName] = {Add:AddOutput,Update:UpdateOutput,Post:PostFromOutput, DisplayPost:DisplayPost};
+				outputs[outputName] = {Add:AddOutput,Update:UpdateOutput,Post:PostFromOutput, DisplayPost:DisplayPost, AddTemplate: AddTemplate, UpdateTemplate: UpdateTemplate};
 			}
 			
 			function AddInput(inputName, AddInput) {
@@ -36,6 +36,10 @@
 
 			function addNewOutput(data){
 				addNewComboItem("#existingOutputs",data.userName+"@"+data.siteName,data);
+			}
+			
+			function addNewTemplate(data){
+				addNewComboItem("#existingTemplates",data.userName+"@"+data.siteName,data);
 			}
 
 			function addNewInput(data){
@@ -145,7 +149,7 @@
 			<label for="existingInputs">Existing</label>
 			<select id="existingInputs">
 			</select>
-			<input type="button" id="RemoveInputs" value="Remove">
+			<input type="button" id="RemoveInput" value="Remove">
 			<BR>
 			<select id="input" name="input">
 			</select>
@@ -159,8 +163,9 @@
 			<select id="existingOutputs">
 			</select>
 			<input type="button" id="PostFromOutput" value="Post">
-			<input type="button" id="UpdateOutputs" value="Update">
-			<input type="button" id="RemoveOutputs" value="Remove">
+			<input type="button" id="UpdateOutput" value="Update">
+			<input type="button" id="RemoveOutput" value="Remove">
+			<input type="button" id="AddTemplate" value="Add Template">
 			<BR>
 			<select id="output" name="output">
 			</select>
@@ -168,6 +173,16 @@
 			<input type="button" id="AddNewOutput" value="Add">
 		</fieldset>
 		
+		<fieldset>
+			<legend>Templates</legend>
+			<label for="existingTemplates">Existing</label>
+			<select id="existingTemplates">
+			</select>
+			<input type="button" id="PostFromTemplate" value="Post">
+			<input type="button" id="UpdateTemplate" value="Update">
+			<input type="button" id="RemoveTemplate" value="Remove">
+		</fieldset>
+
 		<fieldset>
 			<legend>Posts</legend>
 			<table id="existingPostsTable" border=1><tr><th>Posted</th><th>Subject</th><th>Destination</th><th>Result</th></tr></table>
@@ -201,18 +216,37 @@
 						DisableIfComboEmpty("#existingPosts","#DisplayPost");
 						});
 				});
-				$( "#UpdateOutputs" ).click(function() {
+				$( "#AddTemplate" ).click(function() {
+					var selectedOption = $("#existingOutputs option:selected");
+					var selectedData = selectedOption.data();
+					outputs[selectedData.siteName].AddTemplate(selectedData).done(function(data){
+						addNewTemplate(data);
+						DisableIfComboEmpty("#existingTemplates","#PostFromTemplate");
+						DisableIfComboEmpty("#existingTemplates","#RemoveTemplate");
+						DisableIfComboEmpty("#existingTemplates","#UpdateTemplate");
+						});
+				});
+				$( "#UpdateOutput" ).click(function() {
 					var selectedOption = $("#existingOutputs option:selected");
 					var selectedData = selectedOption.data();
 					outputs[selectedData.siteName].Update(selectedData);
 				});
-				$( "#RemoveOutputs" ).click(function() {
+				$( "#RemoveOutput" ).click(function() {
 					var selectedData = $("#existingOutputs option:selected").data();
 					RemoveData(selectedData.id).done(function(){
 						$("#existingOutputs option:selected").remove();
 						DisableIfComboEmpty("#existingOutputs","#RemoveOutputs");
 						DisableIfComboEmpty("#existingOutputs","#UpdateOutputs");
 						DisableIfComboEmpty("#existingOutputs","#PostFromOutput");
+					});
+				});
+				$( "#RemoveTemplate" ).click(function() {
+					var selectedData = $("#existingTemplates option:selected").data();
+					RemoveData(selectedData.id).done(function(){
+						$("#existingTemplates option:selected").remove();
+						DisableIfComboEmpty("#existingTemplates","#PostFromTemplate");
+						DisableIfComboEmpty("#existingTemplates","#RemoveTemplate");
+						DisableIfComboEmpty("#existingTemplates","#UpdateTemplate");
 					});
 				});
 				$( "#AddNewInput" ).click(function() {
@@ -223,7 +257,7 @@
 						DisableIfComboEmpty("#existingOutputs","#PostFromOutput");
 					});
 				});
-				$( "#RemoveInputs" ).click(function() {
+				$( "#RemoveInput" ).click(function() {
 					var selectedData = $("#existingInputs option:selected").data();
 					RemoveData(selectedData.id).done(function(){
 						$("#existingInputs option:selected").remove();
