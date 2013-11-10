@@ -18,21 +18,21 @@ public class UserData {
 		for (BaseSaveable baseSaveable : saveables) {
 			if (baseSaveable instanceof ITemplate) {
 				templates.add((ITemplate) baseSaveable);
-				break;
+				continue;
 			}
 			if (baseSaveable instanceof BaseOutput) {
 				BaseOutput output =(BaseOutput) baseSaveable;
 				output.password = null;
 				outputs.add(output);
-				break;
+				continue;
 			}
 			if (baseSaveable instanceof BaseInput) {
 				inputs.add((BaseInput) baseSaveable);
-				break;
+				continue;
 			}
 			if (baseSaveable instanceof BasePost) {
 				posts.add((BasePost) baseSaveable);
-				break;
+				continue;
 			}
 		}
 	}

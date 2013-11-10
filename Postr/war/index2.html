@@ -1,0 +1,33 @@
+
+<!doctype html>
+<html lang="en" ng-app="postrApp">
+<head>
+<meta charset="utf-8">
+<title>My HTML File</title>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0/angular.min.js"></script>
+<script src="//login.persona.org/include.js"></script>
+<script src="persona.js"></script>
+<script src="controllers.js"></script>
+</head>
+<body ng-controller="UserDataCtrl">
+
+	<span ng-if="loggedOut"><a class="persona-button orange"
+		ng-click="login()"><span>Sign in</span></a></span>
+	<span ng-if="loggedIn">
+		<p>Logged in as {{data.persona}}</p> 
+		<a class="persona-button orange" ng-click="logout()"><span>Sign out</span></a>
+		<div>
+			<select ng-model="currentInput"
+				ng-options="input.userName+'@'+input.siteName for input in data.inputs"></select>
+			<button ng-click="showInput()">Details</button>
+		</div>
+
+		<div>
+			<select ng-model="currentOutput"
+				ng-options="output.userName+'@'+output.siteName for output in data.outputs"></select>
+			<button ng-click="showOutput()">Details</button>
+		</div>
+	</span>
+</body>
+</html>
