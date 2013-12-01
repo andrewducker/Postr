@@ -7,7 +7,7 @@ import com.postr.DataTypes.Json;
 import com.postr.DataTypes.Outputs.BasePost;
 
 @SuppressWarnings("serial")
-abstract class BaseOutputServlet extends BaseJSONServlet {
+abstract class BaseOutputServlet extends BasePersonaSessionServlet {
 
 
 	@Override

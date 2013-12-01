@@ -1,13 +1,13 @@
 "use strict";
 var postrApp = angular.module('postrApp', []);
 
-var populateData = function($scope, orderByFilter, data) {
-	$scope.data = data;
+var populateData = function($scope, orderByFilter, result) {
+	$scope.data = result.data;
 	$scope.data.inputs = orderByFilter($scope.data.inputs, 'userName');
 	$scope.data.outputs = orderByFilter($scope.data.outputs, 'userName');
 	$scope.currentInput = $scope.data.inputs[0];
 	$scope.currentOutput = $scope.data.outputs[0];
-	$scope.loggedIn = true;
+	$scope.loggedIn = true; 
 	$scope.loggedOut = false;
 };
 
@@ -16,11 +16,7 @@ var persona = {
 		navigator.id.watch({
 			loggedInUser : currentUser,
 			onlogin : function(assertion) {
-				var theAssertion = {assertion : assertion};
-				var transform = function(data){
-			        return data;
-			    };
-				http.post('/personaverification', "assertion="+assertion,{headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'},transformRequest: transform}).
+				http.post('/personaverification', {assertion:assertion}).
 				success(function(res, status, xhr) {onLoggedIn(res);}).
 				error(function(xhr, status, err) {
 					navigator.id.logout();

@@ -7,24 +7,20 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import com.google.gson.Gson;
 import com.google.gson.internal.StringMap;
 import com.postr.DataTypes.Json;
+import com.postr.DataTypes.PersonaAssertion;
 import com.postr.DataTypes.UserData;
 
 @SuppressWarnings("serial")
 public class PersonaVerificationServlet extends BasePersonaSessionServlet {
 
 	@Override
-	protected void handleRequest(HttpServletRequest req,
-			HttpServletResponse resp) throws Exception {
-		resp.setContentType("text/plain");
-
-		String assertion = req.getParameter("assertion");
-
+	protected Result ProcessRequest(Json parameters) throws Exception {
+		
+		PersonaAssertion personaAssertion = parameters.FromJson(PersonaAssertion.class);
+		
 		URL url = new URL("https://verifier.login.persona.org/verify");
 		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 		connection.setDoOutput(true);
@@ -32,11 +28,9 @@ public class PersonaVerificationServlet extends BasePersonaSessionServlet {
 
 		OutputStreamWriter writer = new OutputStreamWriter(
 				connection.getOutputStream());
-		writer.write("assertion=" + assertion + "&audience="
-				+ req.getServerName());
+		writer.write("assertion=" + personaAssertion.assertion + "&audience="
+				+ serverName);
 		writer.close();
-
-		Json result;
 
 		if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
 			ByteArrayInputStream json = (ByteArrayInputStream) connection
@@ -58,17 +52,15 @@ public class PersonaVerificationServlet extends BasePersonaSessionServlet {
 				String persona = (String) response.get("email");
 				SetPersona(persona);
 				UserData userData = new UserData(GetPersona(), GetUserID());
-				result = new Json(userData);
+				return new Result("Here's your data",userData);
 			} else {
 				SetPersona(null);
-				result = new Json(Result.Failure("User not validated"));
+				return Result.Failure("User not validated");
 			}
 		} else {
 			SetPersona(null);
-			result = new Json(Result.Failure("Could not connect to validation server"));
+			return Result.Failure("Could not connect to validation server");
 		}
-
-		resp.getWriter().print(result.getJson());
 	}
 
 }

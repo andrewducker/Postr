@@ -1,20 +1,12 @@
 package com.postr;
 
-import java.io.IOException;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import com.postr.DataTypes.Json;
 
 @SuppressWarnings("serial")
 public class PersonaLogoutServlet extends BasePersonaSessionServlet {
-	protected void handleRequest(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
-    	try {
+	@Override
+	protected Result ProcessRequest(Json parameters) throws Exception {
 			SetPersona(null);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} 
+			return Result.Success("Logged out");
 	}
 }

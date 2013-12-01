@@ -13,18 +13,18 @@ public class Result {
 		this.message = message;
 	}
 	
-	protected Result(String message, long id){
-		this.id = id;
+	protected Result(String message, Object data){
+		this.data = data;
 		this.message = message;
 	}
 	
-	public long id; // NO_UCD (JSON)
+	public Object data; // NO_UCD (JSON)
 	
 	boolean failure;
 	
 	String message;
 	
-	long postingTime; // NO_UCD (JSONú)
+	long postingTime; // NO_UCD (JSON)
 	
 	public static Result Success(String message){
 		return new Result(false,message);
