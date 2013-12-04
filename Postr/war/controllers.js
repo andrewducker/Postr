@@ -1,5 +1,5 @@
 "use strict";
-var postrApp = angular.module('postrApp', []);
+var postrApp = angular.module('postrApp', ['ui.bootstrap']);
 
 var populateData = function($scope, orderByFilter, result) {
 	$scope.data = result.data;
@@ -12,66 +12,87 @@ var populateData = function($scope, orderByFilter, result) {
 };
 
 var persona = {
-	initialise : function(http, currentUser, onLoggedIn) {
-		navigator.id.watch({
-			loggedInUser : currentUser,
-			onlogin : function(assertion) {
-				http.post('/personaverification', {assertion:assertion}).
-				success(function(res, status, xhr) {onLoggedIn(res);}).
-				error(function(xhr, status, err) {
-					navigator.id.logout();
-					alert("Login failure: " + err);
-				});
-			},
-			onlogout : function() {
-				http.post('/personalogout').success(function(res, status, xhr) {
-					location.reload();
-				}).error(function(xhr, status, err) {
-					alert("Failed to log you out: " + err);
-					location.reload();
-				});
-			}
-		});
-	},
-	login : function() {
-		navigator.id.request();
-	},
-	logout : function() {
-		navigator.id.logout();
-	}
+		initialise : function(http, currentUser, onLoggedIn) {
+			navigator.id.watch({
+				loggedInUser : currentUser,
+				onlogin : function(assertion) {
+					http.post('/personaverification', {assertion:assertion}).
+					success(function(res, status, xhr) {onLoggedIn(res);}).
+					error(function(xhr, status, err) {
+						navigator.id.logout();
+						alert("Login failure: " + err);
+					});
+				},
+				onlogout : function() {
+					http.post('/personalogout').success(function(res, status, xhr) {
+						location.reload();
+					}).error(function(xhr, status, err) {
+						alert("Failed to log you out: " + err);
+						location.reload();
+					});
+				}
+			});
+		},
+		login : function() {
+			navigator.id.request();
+		},
+		logout : function() {
+			navigator.id.logout();
+		}
 };
 
 postrApp.controller('UserDataCtrl',
-		function postCtrl($scope, $http, orderByFilter, persona) {
-			$http.get('userdata').success(function(data) {
-				if (data.inputs != null) {
-					populateData($scope, orderByFilter, data);
-					persona.initialise($http, data.persona);
-					$scope.loggedOut = false;
-					$scope.loggedIn = true;
-				} else {
-					persona.initialise($http, null, function(newData) {
-						populateData($scope, orderByFilter, newData);
-					});
-					$scope.loggedOut = true;
-					$scope.loggedIn = false;
-				}
+		function postCtrl($scope, $http, orderByFilter, persona, $modal) {
+	$http.get('userdata').success(function(result) {
+		if (result.data != null) {
+			populateData($scope, orderByFilter, result);
+			persona.initialise($http, result.data.persona);
+			$scope.loggedOut = false;
+			$scope.loggedIn = true;
+		} else {
+			persona.initialise($http, null, function(newData) {
+				populateData($scope, orderByFilter, newData);
 			});
-			$scope.showInput = function() {
-				alert($scope.currentInput.userName + "@"
-						+ $scope.currentInput.siteName);
-			};
-			$scope.showOutput = function() {
-				alert($scope.currentOutput.userName + "@"
-						+ $scope.currentOutput.siteName);
-			};
-			$scope.login = function() {
-				persona.login();
-			};
-			$scope.logout = function() {
-				persona.logout();
-			};
+			$scope.loggedOut = true;
+			$scope.loggedIn = false;
+		}
+	});
+	$scope.showInput = function() {
+		alert($scope.currentInput.userName + "@"
+				+ $scope.currentInput.siteName);
+	};
+	$scope.showOutput = function() {
+		$modal.open({
+			templateUrl: 'outputs/LJDetails.html',
+			controller: ModalInstanceCtrl,
+			resolve : {output : function(){return $scope.currentOutput;} }
 		});
+	};
+	$scope.login = function() {
+		persona.login();
+	};
+	$scope.logout = function() {
+		persona.logout();
+	};
+
+	$scope.open = function () {
+
+	};
+});
+
+
+var ModalInstanceCtrl = function ($scope, $modalInstance, output) {
+	$scope.output = output;
+	$scope.timeZones = timeZones;
+	
+	$scope.ok = function () {
+		$modalInstance.close($scope.selected.item);
+	};
+
+	$scope.cancel = function () {
+		$modalInstance.dismiss('cancel');
+	};
+};
 
 postrApp.factory('persona', function() {
 	return persona;
