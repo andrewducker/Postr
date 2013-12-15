@@ -63,9 +63,9 @@ postrApp.controller('UserDataCtrl',
 				alert($scope.currentInput.userName + "@"
 						+ $scope.currentInput.siteName);
 			};
-			$scope.showOutput = function() {
+			$scope.updateOutput = function() {
 				$modal.open({
-					templateUrl : 'outputs/LJDetails.html',
+					templateUrl : 'outputs/'+$scope.currentOutput.siteName+'/details.html',
 					controller : ModalInstanceCtrl,
 					resolve : {
 						output : function() {
@@ -74,7 +74,7 @@ postrApp.controller('UserDataCtrl',
 					}
 				}).result.then(function(result) {
 					result.method = "UpdateData";
-					$http.post('/dreamwidth', result).success(
+					$http.post('/'+result.siteName.toLowerCase(), result).success(
 							function(res, status, xhr) {
 								angular.copy(result, $scope.currentOutput);
 								alert("Successfully updated!");
