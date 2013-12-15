@@ -34,6 +34,9 @@ public class UserData {
 				posts.add((BasePost) baseSaveable);
 				continue;
 			}
+			possibleOutputs.add("Dreamwidth");
+			possibleOutputs.add("Livejournal");
+			
 		}
 	}
 	
@@ -47,5 +50,7 @@ public class UserData {
 	private List<BasePost> posts = new Vector<BasePost>();
 	
 	private List<ITemplate> templates = new Vector<ITemplate>();
+	
+	private List<String> possibleOutputs = new Vector<String>();
 	
 }

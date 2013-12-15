@@ -18,9 +18,9 @@
 </head>
 <body ng-controller="UserDataCtrl">
 
-	<span ng-if="loggedOut"><a class="persona-button orange"
+	<span ng-show="loggedOut"><a class="persona-button orange"
 		ng-click="login()"><span>Sign in</span></a></span>
-	<span ng-if="loggedIn">
+	<span ng-show="loggedIn">
 		<a class="persona-button orange" ng-click="logout()"><span>{{data.persona}} - sign out</span></a>
 		<div>
 			<select ng-model="currentInput"
@@ -31,9 +31,15 @@
 		<div>
 			<select ng-model="currentOutput"
 				ng-options="output.userName+'@'+output.siteName for output in data.outputs"></select>
-			<button ng-click="updateOutput()">Update</button>
+			<button ng-click="updateOutput()">Update</button> <button ng-click="removeOutput()">Remove</button>
 		</div>
-		    <button class="btn" ng-click="open()">Open me!</button>
+		
+		{{currentOutput}}
+		
+		<div>
+		<select ng-model="currentPossibleOutput"
+			ng-options="possibleOutput for possibleOutput in data.possibleOutputs"></select>
+		</div>    <button class="btn" ng-click="addOutput()">Add</button>
 	</span>
 </body>
 <script src="timezones.js"></script>

@@ -1,14 +1,15 @@
 "use strict";
 var postrApp = angular.module('postrApp', [ 'ui.bootstrap' ]);
 
-var populateData = function($scope, orderByFilter, result) {
-	$scope.data = result.data;
-	$scope.data.inputs = orderByFilter($scope.data.inputs, 'userName');
-	$scope.data.outputs = orderByFilter($scope.data.outputs, 'userName');
-	$scope.currentInput = $scope.data.inputs[0];
-	$scope.currentOutput = $scope.data.outputs[0];
-	$scope.loggedIn = true;
-	$scope.loggedOut = false;
+var populateData = function(scope, orderByFilter, result) {
+	scope.data = result.data;
+	scope.data.inputs = orderByFilter(scope.data.inputs, 'userName');
+	scope.data.outputs = orderByFilter(scope.data.outputs, 'userName');
+	scope.currentInput = scope.data.inputs[0];
+	scope.currentOutput = scope.data.outputs[0];
+	scope.currentPossibleOutput = scope.data.possibleOutputs[0];
+	scope.loggedIn = true;
+	scope.loggedOut = false;
 };
 
 var persona = {
@@ -18,18 +19,18 @@ var persona = {
 			onlogin : function(assertion) {
 				http.post('/personaverification', {
 					assertion : assertion
-				}).success(function(res, status, xhr) {
-					onLoggedIn(res);
-				}).error(function(xhr, status, err) {
+				}).then(function(response) {
+					onLoggedIn(response.data);
+				}, function(data) {
 					navigator.id.logout();
 					alert("Login failure: " + err);
 				});
 			},
 			onlogout : function() {
-				http.post('/personalogout').success(function(res, status, xhr) {
+				http.post('/personalogout').success(function() {
 					location.reload();
-				}).error(function(xhr, status, err) {
-					alert("Failed to log you out: " + err);
+				}).error(function(data) {
+					alert("Failed to log you out: " + data);
 					location.reload();
 				});
 			}
@@ -63,24 +64,57 @@ postrApp.controller('UserDataCtrl',
 				alert($scope.currentInput.userName + "@"
 						+ $scope.currentInput.siteName);
 			};
+			$scope.addOutput = function() {
+				$modal.open({
+					templateUrl : 'outputs/' + $scope.currentPossibleOutput
+							+ '/details.html',
+					controller : DetailPopupCtrl,
+					resolve : {
+						output : function() {
+							var newOutput = new Object();
+							newOutput.siteName = $scope.currentPossibleOutput
+									.toLowerCase();
+							return newOutput;
+						},
+						action : function() {
+							return "Add";
+						}
+					}
+				}).result.then(function(result) {
+					result.method = "SaveData";
+					$http.post('/' + result.siteName.toLowerCase(), result)
+							.success(function(res, status, xhr) {
+								$scope.data.outputs.push(result);
+								$scope.currentOutput = result;
+								alert("Successfully added!");
+							}).error(function(xhr, status, err) {
+								alert("Failed to save data: " + err);
+							});
+
+				});
+			};
 			$scope.updateOutput = function() {
 				$modal.open({
-					templateUrl : 'outputs/'+$scope.currentOutput.siteName+'/details.html',
-					controller : ModalInstanceCtrl,
+					templateUrl : 'outputs/' + $scope.currentOutput.siteName
+							+ '/details.html',
+					controller : DetailPopupCtrl,
 					resolve : {
 						output : function() {
 							return angular.copy($scope.currentOutput);
+						},
+						action : function() {
+							return "Update";
 						}
 					}
 				}).result.then(function(result) {
 					result.method = "UpdateData";
-					$http.post('/'+result.siteName.toLowerCase(), result).success(
-							function(res, status, xhr) {
+					$http.post('/' + result.siteName.toLowerCase(), result)
+							.success(function(res, status, xhr) {
 								angular.copy(result, $scope.currentOutput);
 								alert("Successfully updated!");
 							}).error(function(xhr, status, err) {
-						alert("Login failure: " + err);
-					});
+								alert("Failed to update data: " + err);
+							});
 
 				});
 			};
@@ -90,15 +124,12 @@ postrApp.controller('UserDataCtrl',
 			$scope.logout = function() {
 				persona.logout();
 			};
-
-			$scope.open = function() {
-
-			};
 		});
 
-var ModalInstanceCtrl = function($scope, $modalInstance, output) {
+var DetailPopupCtrl = function($scope, $modalInstance, output, action) {
 	$scope.output = output;
 	$scope.timeZones = timeZones;
+	$scope.action = action;
 
 	$scope.ok = function() {
 		$modalInstance.close($scope.output);
