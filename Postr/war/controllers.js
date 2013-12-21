@@ -12,119 +12,87 @@ var populateData = function(scope, orderByFilter, result) {
 	scope.loggedOut = false;
 };
 
-var persona = {
-	initialise : function(http, currentUser, onLoggedIn) {
-		navigator.id.watch({
-			loggedInUser : currentUser,
-			onlogin : function(assertion) {
-				http.post('/personaverification', {
-					assertion : assertion
-				}).then(function(response) {
-					onLoggedIn(response.data);
-				}, function(data) {
-					navigator.id.logout();
-					alert("Login failure: " + err);
-				});
-			},
-			onlogout : function() {
-				http.post('/personalogout').success(function() {
-					location.reload();
-				}).error(function(data) {
-					alert("Failed to log you out: " + data);
-					location.reload();
-				});
-			}
-		});
-	},
-	login : function() {
-		navigator.id.request();
-	},
-	logout : function() {
-		navigator.id.logout();
-	}
-};
-
 postrApp.controller('UserDataCtrl',
 		function postCtrl($scope, $http, orderByFilter, persona, $modal) {
-			$http.get('userdata').success(function(result) {
-				if (result.data != null) {
-					populateData($scope, orderByFilter, result);
-					persona.initialise($http, result.data.persona);
-					$scope.loggedOut = false;
-					$scope.loggedIn = true;
-				} else {
-					persona.initialise($http, null, function(newData) {
-						populateData($scope, orderByFilter, newData);
-					});
-					$scope.loggedOut = true;
-					$scope.loggedIn = false;
-				}
+	$http.get('userdata').success(function(result) {
+		if (result.data != null) {
+			populateData($scope, orderByFilter, result);
+			persona.initialise($http, result.data.persona);
+			$scope.loggedOut = false;
+			$scope.loggedIn = true;
+		} else {
+			persona.initialise($http, null, function(newData) {
+				populateData($scope, orderByFilter, newData);
 			});
-			$scope.showInput = function() {
-				alert($scope.currentInput.userName + "@"
-						+ $scope.currentInput.siteName);
-			};
-			$scope.addOutput = function() {
-				$modal.open({
-					templateUrl : 'outputs/' + $scope.currentPossibleOutput
-							+ '/details.html',
-					controller : DetailPopupCtrl,
-					resolve : {
-						output : function() {
-							var newOutput = new Object();
-							newOutput.siteName = $scope.currentPossibleOutput
-									.toLowerCase();
-							return newOutput;
-						},
-						action : function() {
-							return "Add";
-						}
-					}
-				}).result.then(function(result) {
-					result.method = "SaveData";
-					$http.post('/' + result.siteName.toLowerCase(), result)
-							.success(function(res, status, xhr) {
-								$scope.data.outputs.push(result);
-								$scope.currentOutput = result;
-								alert("Successfully added!");
-							}).error(function(xhr, status, err) {
-								alert("Failed to save data: " + err);
-							});
+			$scope.loggedOut = true;
+			$scope.loggedIn = false;
+		}
+	});
+	$scope.showInput = function() {
+		alert($scope.currentInput.userName + "@"
+				+ $scope.currentInput.siteName);
+	};
+	$scope.addOutput = function() {
+		$modal.open({
+			templateUrl : 'outputs/' + $scope.currentPossibleOutput
+			+ '/details.html',
+			controller : DetailPopupCtrl,
+			resolve : {
+				output : function() {
+					var newOutput = new Object();
+					newOutput.siteName = $scope.currentPossibleOutput
+					.toLowerCase();
+					return newOutput;
+				},
+				action : function() {
+					return "Add";
+				}
+			}
+		}).result.then(function(result) {
+			result.method = "SaveData";
+			$http.post('/' + result.siteName.toLowerCase(), result)
+			.success(function(res, status, xhr) {
+				$scope.data.outputs.push(result);
+				$scope.currentOutput = result;
+				alert("Successfully added!");
+			}).error(function(xhr, status, err) {
+				alert("Failed to save data: " + err);
+			});
 
-				});
-			};
-			$scope.updateOutput = function() {
-				$modal.open({
-					templateUrl : 'outputs/' + $scope.currentOutput.siteName
-							+ '/details.html',
-					controller : DetailPopupCtrl,
-					resolve : {
-						output : function() {
-							return angular.copy($scope.currentOutput);
-						},
-						action : function() {
-							return "Update";
-						}
-					}
-				}).result.then(function(result) {
-					result.method = "UpdateData";
-					$http.post('/' + result.siteName.toLowerCase(), result)
-							.success(function(res, status, xhr) {
-								angular.copy(result, $scope.currentOutput);
-								alert("Successfully updated!");
-							}).error(function(xhr, status, err) {
-								alert("Failed to update data: " + err);
-							});
-
-				});
-			};
-			$scope.login = function() {
-				persona.login();
-			};
-			$scope.logout = function() {
-				persona.logout();
-			};
 		});
+	};
+	$scope.updateOutput = function() {
+		$modal.open({
+			templateUrl : 'outputs/' + $scope.currentOutput.siteName
+			+ '/details.html',
+			controller : DetailPopupCtrl,
+			resolve : {
+				output : function() {
+					return angular.copy($scope.currentOutput);
+				},
+				action : function() {
+					return "Update";
+				}
+			}
+		}).result.then(function(result) {
+			result.method = "UpdateData";
+			$http.post('/' + result.siteName.toLowerCase(), result)
+			.success(function(res, status, xhr) {
+				angular.copy(result, $scope.currentOutput);
+				alert("Successfully updated!");
+			}).error(function(xhr, status, err) {
+				alert("Failed to update data: " + err);
+			});
+
+		});
+	};
+	$scope.login = function() {
+		persona.login();
+	};
+	$scope.logout = function() {
+		persona.logout();
+	};
+});
 
 var DetailPopupCtrl = function($scope, $modalInstance, output, action) {
 	$scope.output = output;
@@ -141,5 +109,35 @@ var DetailPopupCtrl = function($scope, $modalInstance, output, action) {
 };
 
 postrApp.factory('persona', function() {
-	return persona;
+	return {
+			initialise : function(http, currentUser, onLoggedIn) {
+				navigator.id.watch({
+					loggedInUser : currentUser,
+					onlogin : function(assertion) {
+						http.post('/personaverification', {
+							assertion : assertion
+						}).then(function(response) {
+							onLoggedIn(response.data);
+						}, function(data) {
+							navigator.id.logout();
+							alert("Login failure: " + err);
+						});
+					},
+					onlogout : function() {
+						http.post('/personalogout').success(function() {
+							location.reload();
+						}).error(function(data) {
+							alert("Failed to log you out: " + data);
+							location.reload();
+						});
+					}
+				});
+			},
+			login : function() {
+				navigator.id.request();
+			},
+			logout : function() {
+				navigator.id.logout();
+			}
+	};
 });
