@@ -34,10 +34,9 @@ public class UserData {
 				posts.add((BasePost) baseSaveable);
 				continue;
 			}
-			possibleOutputs.add("Dreamwidth");
-			possibleOutputs.add("Livejournal");
-			
 		}
+		possibleOutputs.add("Dreamwidth");
+		possibleOutputs.add("Livejournal");
 	}
 	
 	@SuppressWarnings("unused")

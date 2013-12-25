@@ -32,6 +32,18 @@ postrApp.controller('UserDataCtrl',
 		alert($scope.currentInput.userName + "@"
 				+ $scope.currentInput.siteName);
 	};
+	
+	var verifyPassword = function(toVerify){
+		toVerify.method = "VerifyPassword";
+		$http.post('/' + toVerify.siteName.toLowerCase(), toVerify)
+		.success(function(data) {
+			alert("Successfully verified!" + data.message);
+		}).error(function(data) {
+			alert("Failed to verify: " + data);
+		});
+	};
+
+	
 	$scope.addOutput = function() {
 		$modal.open({
 			templateUrl : 'outputs/' + $scope.currentPossibleOutput
@@ -46,6 +58,9 @@ postrApp.controller('UserDataCtrl',
 				},
 				action : function() {
 					return "Add";
+				},
+				verify : function(){
+					return verifyPassword;
 				}
 			}
 		}).result.then(function(result) {
@@ -58,9 +73,9 @@ postrApp.controller('UserDataCtrl',
 			}).error(function(xhr, status, err) {
 				alert("Failed to save data: " + err);
 			});
-
 		});
 	};
+		
 	$scope.updateOutput = function() {
 		$modal.open({
 			templateUrl : 'outputs/' + $scope.currentOutput.siteName
@@ -72,16 +87,19 @@ postrApp.controller('UserDataCtrl',
 				},
 				action : function() {
 					return "Update";
+				},
+				verify : function(){
+					return verifyPassword;
 				}
 			}
 		}).result.then(function(result) {
 			result.method = "UpdateData";
 			$http.post('/' + result.siteName.toLowerCase(), result)
-			.success(function(res, status, xhr) {
+			.success(function() {
 				angular.copy(result, $scope.currentOutput);
 				alert("Successfully updated!");
-			}).error(function(xhr, status, err) {
-				alert("Failed to update data: " + err);
+			}).error(function(data) {
+				alert("Failed to update data: " + data);
 			});
 
 		});
@@ -94,13 +112,34 @@ postrApp.controller('UserDataCtrl',
 	};
 });
 
-var DetailPopupCtrl = function($scope, $modalInstance, output, action) {
+var DetailPopupCtrl = function($scope, $modalInstance, output, action, verify, $http) {
 	$scope.output = output;
 	$scope.timeZones = timeZones;
 	$scope.action = action;
 
+	$scope.verify = function(){
+		$scope.verificationSuccess = false;
+		$scope.output.method = "VerifyPassword";
+		$http.post('/' + $scope.output.siteName.toLowerCase(), $scope.output)
+		.success(function(data) {
+			$scope.verificationMessage = data.message;
+			$scope.verificationSuccess = true;
+		}).error(function(data) {
+			if(data.message){
+				$scope.verificationMessage = data.message;
+			}else{
+				$scope.verificationMessage = data;
+			}
+		});
+	};
+
 	$scope.ok = function() {
-		$modalInstance.close($scope.output);
+		if($scope.verificationSuccess){
+			$modalInstance.close($scope.output);	
+		}else{
+			alert("Not yet verified");
+		}
+		
 	};
 
 	$scope.cancel = function() {
