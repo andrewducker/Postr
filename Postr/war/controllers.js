@@ -58,9 +58,6 @@ postrApp.controller('UserDataCtrl',
 				},
 				action : function() {
 					return "Add";
-				},
-				verify : function(){
-					return verifyPassword;
 				}
 			}
 		}).result.then(function(result) {
@@ -87,9 +84,6 @@ postrApp.controller('UserDataCtrl',
 				},
 				action : function() {
 					return "Update";
-				},
-				verify : function(){
-					return verifyPassword;
 				}
 			}
 		}).result.then(function(result) {
@@ -112,7 +106,7 @@ postrApp.controller('UserDataCtrl',
 	};
 });
 
-var DetailPopupCtrl = function($scope, $modalInstance, output, action, verify, $http) {
+var DetailPopupCtrl = function($scope, $modalInstance, output, action, $http) {
 	$scope.output = output;
 	$scope.timeZones = timeZones;
 	$scope.action = action;
