@@ -12,7 +12,7 @@ import com.postr.DataTypes.Outputs.ITemplate;
 
 public class UserData {
 
-	public UserData(String persona, Long userID){
+	public UserData(String persona, Long userID) throws Exception{
 		this.persona = persona;
 		List<BaseSaveable> saveables = DAO.LoadThings(BaseSaveable.class, userID);
 		for (BaseSaveable baseSaveable : saveables) {
@@ -35,9 +35,11 @@ public class UserData {
 				continue;
 			}
 			if (baseSaveable instanceof User) {
-				timeZone = ((User)baseSaveable).timeZone;
+				
 			}
 		}
+		timeZone = DAO.LoadThing(User.class, userID, userID).timeZone;
+		
 		possibleOutputs.add("Dreamwidth");
 		possibleOutputs.add("Livejournal");
 	}

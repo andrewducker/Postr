@@ -29,7 +29,7 @@ public class UserDataServlet extends BasePersonaSessionServlet {
 		return Result.Success("Updated");
 	}
 
-	private Result GetData(Json parameters) {
+	private Result GetData(Json parameters) throws Exception {
 		if (LoggedIn()) {
 			Long userID = GetUserID();
 			String persona = GetPersona();
