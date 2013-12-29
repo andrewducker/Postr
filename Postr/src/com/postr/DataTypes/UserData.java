@@ -42,6 +42,9 @@ public class UserData {
 		
 		possibleOutputs.add("Dreamwidth");
 		possibleOutputs.add("Livejournal");
+		
+		possibleInputs.add("Delicious");
+		possibleInputs.add("Pinboard");
 	}
 	
 	@SuppressWarnings("unused")
@@ -59,5 +62,7 @@ public class UserData {
 	private List<ITemplate> templates = new Vector<ITemplate>();
 	
 	private List<String> possibleOutputs = new Vector<String>();
+	
+	private List<String> possibleInputs = new Vector<String>();
 	
 }

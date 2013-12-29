@@ -17,7 +17,7 @@ abstract class BaseOutputServlet extends BasePersonaSessionServlet {
 
 		MethodTypes methodType = MethodTypes.valueOf(method);
 		switch (methodType) {
-		case VerifyPassword:
+		case Verify:
 			return VerifyPassword(parameters);
 		case SaveData:
 			return SaveData(parameters);

@@ -33,7 +33,7 @@
 		<div>
 			<select ng-model="currentInput"
 				ng-options="input.userName+'@'+input.siteName for input in data.inputs"></select>
-			<button ng-click="showInput()">Details</button>
+			<button ng-click="removeInput()">Details</button>
 		</div>
 
 		<div>
@@ -46,7 +46,13 @@
 		<select ng-model="currentPossibleOutput"
 			ng-options="possibleOutput for possibleOutput in data.possibleOutputs"></select>
 			<button class="btn" ng-click="addOutput()">Add</button>
+		</div>
+				<div>
+		<select ng-model="currentPossibleInput"
+			ng-options="possibleInput for possibleInput in data.possibleInputs"></select>
+			<button class="btn" ng-click="addInput()">Add</button>
 		</div>    
+		    
 	</span>
 </body>
 <script src="timezones.js"></script>

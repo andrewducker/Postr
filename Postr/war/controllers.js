@@ -8,12 +8,13 @@ var populateData = function(scope, orderByFilter, result) {
 	scope.currentInput = scope.data.inputs[0];
 	scope.currentOutput = scope.data.outputs[0];
 	scope.currentPossibleOutput = scope.data.possibleOutputs[0];
+	scope.currentPossibleInput = scope.data.possibleInputs[0];
 	scope.loggedIn = true;
 	scope.loggedOut = false;
 };
 
 postrApp.controller('UserDataCtrl',
-		function postCtrl($scope, $http, orderByFilter, persona, $modal) {
+		function postCtrl($scope, $http, orderByFilter, persona, $modal, $q) {
 	$http.post('userdata',{method:"GetData"}).success(function(result) {
 		if (result.data != null) {
 			populateData($scope, orderByFilter, result);
@@ -43,60 +44,71 @@ postrApp.controller('UserDataCtrl',
 			alert("Failed to update data: " + data);
 		});
 	};
+
+	
+	var addOrUpdateData = function(itemOrID, method) {
+		if (itemOrID.siteName) {
+			var item = angular.copy(itemOrID);
+		}else{
+			item = {siteName : itemOrID}; 
+		}
+		var deferred = $q.defer();
+		$modal.open({
+			templateUrl : 'sites/' + item.siteName + '/details.html',
+			controller : DataPopupCtrl,
+			resolve : {
+				output : function() {
+					return item;
+				},
+				action : function() {
+					return method;
+				}
+			}
+		}).result.then(function(result) {
+			result.method = method+"Data";
+			$http.post('/' + result.siteName, result)
+			.success(function(response) {
+				if(!result.id){
+					result.id = response.data;
+				}
+				console.log("About to alert");
+				alert(response.message);
+				console.log("About to resolve");
+				deferred.resolve(result);
+				console.log("Resolved");
+			}).error(function(err) {
+				alert("Failure: " + err);
+				deferred.reject(err);
+			});
+		});
+		return deferred.promise;
+	};
+	
 	
 	$scope.addOutput = function() {
-		$modal.open({
-			templateUrl : 'outputs/' + $scope.currentPossibleOutput
-			+ '/details.html',
-			controller : DetailPopupCtrl,
-			resolve : {
-				output : function() {
-					var newOutput = new Object();
-					newOutput.siteName = $scope.currentPossibleOutput
-					.toLowerCase();
-					return newOutput;
-				},
-				action : function() {
-					return "Add";
-				}
-			}
-		}).result.then(function(result) {
-			result.method = "SaveData";
-			$http.post('/' + result.siteName.toLowerCase(), result)
-			.success(function(res, status, xhr) {
-				$scope.data.outputs.push(result);
-				$scope.currentOutput = result;
-				alert("Successfully added!");
-			}).error(function(xhr, status, err) {
-				alert("Failed to save data: " + err);
+		addOrUpdateData($scope.currentPossibleOutput, "Save").then(function(result){
+			console.log("here");
+			$scope.data.outputs.push(result);
+			console.log("here 2");
+			$scope.currentOutput = result;
+			console.log("here 3");
 			});
-		});
 	};
 		
-	$scope.updateOutput = function() {
-		$modal.open({
-			templateUrl : 'outputs/' + $scope.currentOutput.siteName
-			+ '/details.html',
-			controller : DetailPopupCtrl,
-			resolve : {
-				output : function() {
-					return angular.copy($scope.currentOutput);
-				},
-				action : function() {
-					return "Update";
-				}
-			}
-		}).result.then(function(result) {
-			result.method = "UpdateData";
-			$http.post('/' + result.siteName.toLowerCase(), result)
-			.success(function() {
-				angular.copy(result, $scope.currentOutput);
-				alert("Successfully updated!");
-			}).error(function(data) {
-				alert("Failed to update data: " + data);
-			});
+	$scope.addInput = function() {
+		addOrUpdateData($scope.currentPossibleInput, "Save").then(function(result){
+			$scope.data.inputs.push(result);
+			$scope.currentInput = result;
 		});
 	};
+	
+	$scope.updateOutput = function() {
+		addOrUpdateData($scope.currentOutput, "Update").then(function(result){
+			console.log("About to copy data");
+			angular.copy(result, $scope.currentOutput);
+		});
+	};
+	
 	$scope.login = function() {
 		persona.login();
 	};
@@ -105,14 +117,14 @@ postrApp.controller('UserDataCtrl',
 	};
 });
 
-var DetailPopupCtrl = function($scope, $modalInstance, output, action, $http) {
+var DataPopupCtrl = function($scope, $modalInstance, output, action, $http) {
 	$scope.output = output;
 	$scope.action = action;
 
 	$scope.verify = function(){
 		$scope.verificationSuccess = false;
-		$scope.output.method = "VerifyPassword";
-		$http.post('/' + $scope.output.siteName.toLowerCase(), $scope.output)
+		$scope.output.method = "Verify";
+		$http.post('/' + $scope.output.siteName, $scope.output)
 		.success(function(data) {
 			$scope.verificationMessage = data.message;
 			$scope.verificationSuccess = true;

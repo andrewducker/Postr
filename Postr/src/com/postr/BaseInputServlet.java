@@ -13,7 +13,7 @@ abstract class BaseInputServlet extends BasePersonaSessionServlet {
 		switch (methodType) {
 		case SaveData:
 			return SaveData(parameters);
-		case VerifyUserExists:
+		case Verify:
 			return VerifyUserExists(parameters);
 		case UpdateData:
 			return UpdateData(parameters);

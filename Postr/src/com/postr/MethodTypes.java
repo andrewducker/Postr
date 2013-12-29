@@ -1,8 +1,7 @@
 package com.postr;
 
 enum MethodTypes {
-	VerifyPassword,
-	VerifyUserExists,
+	Verify,
 	SaveData,
 	RemoveData,
 	UpdateData, 

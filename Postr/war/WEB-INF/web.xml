@@ -5,7 +5,7 @@
 </servlet>
 <servlet-mapping>
 	<servlet-name>Dreamwidth</servlet-name>
-	<url-pattern>/dreamwidth</url-pattern>
+	<url-pattern>/Dreamwidth</url-pattern>
 </servlet-mapping>
 <servlet>
 	<servlet-name>Livejournal</servlet-name>
@@ -13,7 +13,7 @@
 </servlet>
 <servlet-mapping>
 	<servlet-name>Livejournal</servlet-name>
-	<url-pattern>/livejournal</url-pattern>
+	<url-pattern>/Livejournal</url-pattern>
 </servlet-mapping>
 <servlet>
 	<servlet-name>Delicious</servlet-name>
@@ -21,7 +21,7 @@
 </servlet>
 <servlet-mapping>
 	<servlet-name>Delicious</servlet-name>
-	<url-pattern>/delicious</url-pattern>
+	<url-pattern>/Delicious</url-pattern>
 </servlet-mapping>
 <servlet>
 	<servlet-name>Pinboard</servlet-name>
@@ -29,7 +29,7 @@
 </servlet>
 <servlet-mapping>
 	<servlet-name>Pinboard</servlet-name>
-	<url-pattern>/pinboard</url-pattern>
+	<url-pattern>/Pinboard</url-pattern>
 </servlet-mapping>
 <servlet>
 	<servlet-name>DataManagement</servlet-name>
