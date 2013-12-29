@@ -22,6 +22,14 @@
 		ng-click="login()"><span>Sign in</span></a></span>
 	<span ng-show="loggedIn">
 		<a class="persona-button orange" ng-click="logout()"><span>{{data.persona}} - sign out</span></a>
+		
+				<div class="control-group">
+					<label class="control-label" for="timeZone">Time Zone:</label>
+					<div class="controls">
+						<select ng-model="data.timeZone"ng-options="zone for zone in timeZones"></select>
+						<button ng-click="updateTimeZone()">Update</button>
+					</div>
+				</div>
 		<div>
 			<select ng-model="currentInput"
 				ng-options="input.userName+'@'+input.siteName for input in data.inputs"></select>

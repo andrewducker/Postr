@@ -36,6 +36,7 @@ public class DreamwidthServlet extends BaseOutputServlet {
 	@Override
 	protected DWPost CreatePost(Json parameters, long userID) {
 		DWPost post = parameters.FromJson(DWPost.class);
+		post.timeZone = GetTimeZone();
 		post.setParent(userID);
 		return post;
 	}
@@ -55,8 +56,6 @@ public class DreamwidthServlet extends BaseOutputServlet {
 		DWData existingDWData = DAO.LoadThing(DWData.class, newData.getId(), GetUserID());
 		existingDWData.password = newData.password;
 		existingDWData.EncryptPassword();
-		existingDWData.timeZone = newData.timeZone;
-		
 		DAO.SaveThing(existingDWData,GetUserID());
 		return Result.Success("Saved"); 
 	}

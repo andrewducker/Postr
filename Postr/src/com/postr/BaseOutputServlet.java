@@ -32,7 +32,6 @@ abstract class BaseOutputServlet extends BasePersonaSessionServlet {
 		default:
 			throw new Exception("No such method found: "+method);
 		}
-
 	}
 	
 	private Result MakePost(Json parameters){

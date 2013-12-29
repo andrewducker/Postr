@@ -47,11 +47,9 @@ public class LJTranslator {
 		    }
 		    return Result.Success("Logged in as " + postResult.get("fullname"));
 		}
-
-		
 		
 		@SuppressWarnings("unchecked")
-		public Result MakePost(LJData ljData, String contents, String header, String[] tags, LivejournalVisibilityTypes visibility, Boolean autoFormat){
+		public Result MakePost(LJData ljData, String contents, String header, String timeZone, String[] tags, LivejournalVisibilityTypes visibility, Boolean autoFormat){
 		    XmlRpcClient client;
 			try {
 				client = getClient();
@@ -88,7 +86,7 @@ public class LJTranslator {
 				break;
 			}
 		    
-		    DateTime calendar = new DateTime(GregorianChronology.getInstance(DateTimeZone.forID(ljData.timeZone)));
+		    DateTime calendar = new DateTime(GregorianChronology.getInstance(DateTimeZone.forID(timeZone)));
 		    postParams.put("year",calendar.getYear());
 		    postParams.put("mon",calendar.getMonthOfYear());
 		    postParams.put("day",calendar.getDayOfMonth());

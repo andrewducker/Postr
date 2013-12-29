@@ -9,5 +9,6 @@ enum MethodTypes {
 	MakePost,
 	SavePost, 
 	UpdatePost,
-	SaveTemplate
+	SaveTemplate,
+	GetData
 }

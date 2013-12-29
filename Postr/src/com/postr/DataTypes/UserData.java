@@ -34,6 +34,9 @@ public class UserData {
 				posts.add((BasePost) baseSaveable);
 				continue;
 			}
+			if (baseSaveable instanceof User) {
+				timeZone = ((User)baseSaveable).timeZone;
+			}
 		}
 		possibleOutputs.add("Dreamwidth");
 		possibleOutputs.add("Livejournal");
@@ -41,6 +44,9 @@ public class UserData {
 	
 	@SuppressWarnings("unused")
 	private String persona; // NO_UCD (JSON)
+	
+	@SuppressWarnings("unused")
+	private String timeZone;
 	
 	private List<BaseInput> inputs = new Vector<BaseInput>();
 	

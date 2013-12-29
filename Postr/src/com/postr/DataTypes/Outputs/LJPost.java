@@ -13,6 +13,7 @@ public class LJPost extends BasePost {
 	String tags;
 	LivejournalVisibilityTypes visibility;
 	Boolean autoFormat;
+	public String timeZone;
 
 	
 	@Override
@@ -27,6 +28,6 @@ public class LJPost extends BasePost {
 		}
 		
 		LJTranslator translator = new LJTranslator();
-		result = translator.MakePost(ljData, contents, subject, tags.split(","),visibility, autoFormat);
+		result = translator.MakePost(ljData, contents, subject, timeZone, tags.split(","),visibility, autoFormat);
 	}
 }

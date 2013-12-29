@@ -3,15 +3,11 @@
 		<h3>Dreamwidth details</h3>
 	</div>
 	<div class="modal-body">
-	<form class="form-horizontal">
-		<div class="control-group"><label class="control-label" for="userName">User Name:</label><div class="controls"><input ng-readonly="action=='Update'" ng-model="output.userName" name="userName"></div></div>	
-		<div class="control-group"><label class="control-label" for="password">Password:</label><div class="controls"><input ng-model="output.password" type="password" autocomplete="off" name="password"></div></div>
-		<div class="control-group"><div class="controls"><button class="btn" ng-click="verify()">Verify</button></div></div>
-		<div>{{verificationMessage}}</div>
-		
-		<div class="control-group"><label class="control-label" for="timeZone">Time Zone:</label><div class="controls"><select ng-model="output.timeZone"
-				ng-options="zone for zone in timeZones"></select>
-</div></div>
+		<form class="form-horizontal">
+			<div class="control-group"><label class="control-label" for="userName">User Name:</label><div class="controls"><input ng-readonly="action=='Update'" ng-model="output.userName" name="userName"></div></div>	
+			<div class="control-group"><label class="control-label" for="password">Password:</label><div class="controls"><input ng-model="output.password" type="password" autocomplete="off" name="password"></div></div>
+			<div class="control-group"><div class="controls"><button class="btn" ng-click="verify()">Verify</button></div></div>
+			<div>{{verificationMessage}}</div>
 		</form>
 	</div>
 	<div class="modal-footer">

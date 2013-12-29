@@ -29,6 +29,7 @@ public class LivejournalServlet extends BaseOutputServlet {
 	@Override
 	protected LJPost CreatePost(Json parameters, long userID) {
 		LJPost post = parameters.FromJson(LJPost.class);
+		post.timeZone = GetTimeZone();
 		post.setParent(userID);
 		return post;
 	}
@@ -51,7 +52,6 @@ public class LivejournalServlet extends BaseOutputServlet {
 		
 		existingLJData.password = newData.password;
 		existingLJData.EncryptPassword();
-		existingLJData.timeZone = newData.timeZone;
 		
 		Key<LJData> result = DAO.SaveThing(existingLJData,GetUserID());
 		return new Result("Saved!",result.getId());

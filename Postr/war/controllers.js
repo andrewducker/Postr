@@ -14,7 +14,7 @@ var populateData = function(scope, orderByFilter, result) {
 
 postrApp.controller('UserDataCtrl',
 		function postCtrl($scope, $http, orderByFilter, persona, $modal) {
-	$http.get('userdata').success(function(result) {
+	$http.post('userdata',{method:"GetData"}).success(function(result) {
 		if (result.data != null) {
 			populateData($scope, orderByFilter, result);
 			persona.initialise($http, result.data.persona);
@@ -28,21 +28,21 @@ postrApp.controller('UserDataCtrl',
 			$scope.loggedIn = false;
 		}
 	});
+	$scope.timeZones = timeZones;
 	$scope.showInput = function() {
 		alert($scope.currentInput.userName + "@"
 				+ $scope.currentInput.siteName);
 	};
 	
-	var verifyPassword = function(toVerify){
-		toVerify.method = "VerifyPassword";
-		$http.post('/' + toVerify.siteName.toLowerCase(), toVerify)
-		.success(function(data) {
-			alert("Successfully verified!" + data.message);
+	$scope.updateTimeZone = function(){
+		var user = {timeZone : $scope.data.timeZone, method:"UpdateData"};
+		$http.post('userdata', user)
+		.success(function() {
+			alert("Successfully updated!");
 		}).error(function(data) {
-			alert("Failed to verify: " + data);
+			alert("Failed to update data: " + data);
 		});
 	};
-
 	
 	$scope.addOutput = function() {
 		$modal.open({
@@ -95,7 +95,6 @@ postrApp.controller('UserDataCtrl',
 			}).error(function(data) {
 				alert("Failed to update data: " + data);
 			});
-
 		});
 	};
 	$scope.login = function() {
@@ -108,7 +107,6 @@ postrApp.controller('UserDataCtrl',
 
 var DetailPopupCtrl = function($scope, $modalInstance, output, action, $http) {
 	$scope.output = output;
-	$scope.timeZones = timeZones;
 	$scope.action = action;
 
 	$scope.verify = function(){

@@ -5,8 +5,6 @@ import com.postr.DataTypes.PasswordEncryptor;
 
 @EntitySubclass(index=true)
 public class LJData extends BaseOutput{
-	public String timeZone;
-
 	public void EncryptPassword(){
 		password = PasswordEncryptor.MD5Hex(password);
 	}

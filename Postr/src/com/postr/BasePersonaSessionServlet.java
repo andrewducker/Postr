@@ -1,5 +1,7 @@
 package com.postr;
 
+import com.postr.DataTypes.User;
+
 @SuppressWarnings("serial")
 abstract class BasePersonaSessionServlet extends BaseJSONServlet {
 
@@ -10,13 +12,26 @@ abstract class BasePersonaSessionServlet extends BaseJSONServlet {
 	}
 	
 	protected boolean LoggedIn(){
-		return session.getAttribute("UserID") != null;
+		return session.getAttribute("User") != null;
 	}
 	
 	
 	protected Long GetUserID()
 	{
-		return (Long) session.getAttribute("UserID");
+		return ((User) session.getAttribute("User")).getId();
+	}
+	
+	protected String GetTimeZone()
+	{
+		return ((User) session.getAttribute("User")).timeZone;
+	}
+	
+	protected void SetTimeZone(String timeZone){
+		((User) session.getAttribute("User")).timeZone = timeZone;
+	}
+	
+	protected void SaveUserData(){
+		DAO.SaveUser(((User) session.getAttribute("User")));
 	}
 
 	protected void SetPersona(String persona) throws Exception
@@ -25,8 +40,8 @@ abstract class BasePersonaSessionServlet extends BaseJSONServlet {
 		if (persona == null) {
 			session.setAttribute("UserID",null);
 		}else{
-			Long userID = DAO.GetUserID(persona);
-			session.setAttribute("UserID",userID);
+			User user = DAO.GetUser(persona);
+			session.setAttribute("User",user);
 		}
 	}
 }
