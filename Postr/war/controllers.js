@@ -13,8 +13,13 @@ var populateData = function(scope, orderByFilter, result) {
 	scope.loggedOut = false;
 };
 
+//The "alert" box causes the digest cycle to go awry, so we call it inside a timeout.
+var myAlert = function(alertMessage){
+	setTimeout(function(){ alert(alertMessage);});
+};
+
 postrApp.controller('UserDataCtrl',
-		function postCtrl($scope, $http, orderByFilter, persona, $modal, $q) {
+		function postCtrl($scope, $http, orderByFilter, persona, $modal, $q, $window,$timeout) {
 	$http.post('userdata',{method:"GetData"}).success(function(result) {
 		if (result.data != null) {
 			populateData($scope, orderByFilter, result);
@@ -31,7 +36,7 @@ postrApp.controller('UserDataCtrl',
 	});
 	$scope.timeZones = timeZones;
 	$scope.showInput = function() {
-		alert($scope.currentInput.userName + "@"
+		myAlert($scope.currentInput.userName + "@"
 				+ $scope.currentInput.siteName);
 	};
 	
@@ -39,13 +44,12 @@ postrApp.controller('UserDataCtrl',
 		var user = {timeZone : $scope.data.timeZone, method:"UpdateData"};
 		$http.post('userdata', user)
 		.success(function() {
-			alert("Successfully updated!");
+			myAlert("Successfully updated!");
 		}).error(function(data) {
-			alert("Failed to update data: " + data);
+			myAlert("Failed to update data: " + data);
 		});
 	};
 
-	
 	var addOrUpdateData = function(itemOrID, method) {
 		if (itemOrID.siteName) {
 			var item = angular.copy(itemOrID);
@@ -71,27 +75,47 @@ postrApp.controller('UserDataCtrl',
 				if(!result.id){
 					result.id = response.data;
 				}
-				console.log("About to alert");
-				alert(response.message);
-				console.log("About to resolve");
+				myAlert(response.message);
 				deferred.resolve(result);
-				console.log("Resolved");
 			}).error(function(err) {
-				alert("Failure: " + err);
+				myAlert("Failure: " + err);
 				deferred.reject(err);
 			});
 		});
 		return deferred.promise;
 	};
 	
+	var createOrUpdatePost = function(outputOrPost){
+		$modal.open({
+			templateUrl : 'sites/' + outputOrPost.siteName + '/post.html',
+			controller : PostCtrl,
+			resolve : {
+				outputOrPost : function() {
+					return outputOrPost;
+				}
+			}
+		}).result.then(function(result) {
+			result.method = "MakePost";
+			result.output = outputOrPost.id;
+			$http.post('/' + result.siteName, result)
+			.success(function(response) {
+				$scope.data.posts.push(result);
+				myAlert(response.message);
+			}).error(function(err) {
+				myAlert("Failure: " + err);
+			});
+		});
+	};
+	
+	$scope.createPost = function(){
+		createOrUpdatePost($scope.currentOutput);
+	};
+	
 	
 	$scope.addOutput = function() {
 		addOrUpdateData($scope.currentPossibleOutput, "Save").then(function(result){
-			console.log("here");
 			$scope.data.outputs.push(result);
-			console.log("here 2");
 			$scope.currentOutput = result;
-			console.log("here 3");
 			});
 	};
 		
@@ -104,7 +128,6 @@ postrApp.controller('UserDataCtrl',
 	
 	$scope.updateOutput = function() {
 		addOrUpdateData($scope.currentOutput, "Update").then(function(result){
-			console.log("About to copy data");
 			angular.copy(result, $scope.currentOutput);
 		});
 	};
@@ -116,6 +139,21 @@ postrApp.controller('UserDataCtrl',
 		persona.logout();
 	};
 });
+
+var PostCtrl = function($scope, $modalInstance, outputOrPost, $http) {
+	var newPost = angular.copy(outputOrPost);
+	newPost.id = null;
+	$scope.post = newPost;
+
+	$scope.ok = function() {
+			$modalInstance.close($scope.post);	
+	};
+
+	$scope.cancel = function() {
+		$modalInstance.dismiss('cancel');
+	};
+};
+
 
 var DataPopupCtrl = function($scope, $modalInstance, output, action, $http) {
 	$scope.output = output;
@@ -141,7 +179,7 @@ var DataPopupCtrl = function($scope, $modalInstance, output, action, $http) {
 		if($scope.verificationSuccess){
 			$modalInstance.close($scope.output);	
 		}else{
-			alert("Not yet verified");
+			myAlert("Not yet verified");
 		}
 		
 	};
@@ -163,14 +201,14 @@ postrApp.factory('persona', function() {
 							onLoggedIn(response.data);
 						}, function(data) {
 							navigator.id.logout();
-							alert("Login failure: " + err);
+							myAlert("Login failure: " + err);
 						});
 					},
 					onlogout : function() {
 						http.post('/personalogout').success(function() {
 							location.reload();
 						}).error(function(data) {
-							alert("Failed to log you out: " + data);
+							myAlert("Failed to log you out: " + data);
 							location.reload();
 						});
 					}

@@ -20,6 +20,10 @@ public class DWPost extends LJPost {
 			return;
 		}
 		
+		if (tags == null) {
+			tags = "";
+		}
+		
 		DWTranslator translator = new DWTranslator();
 		result = translator.MakePost(dwData, contents, subject, timeZone, tags.split(","), visibility, autoFormat);
 	}

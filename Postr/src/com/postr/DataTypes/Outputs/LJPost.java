@@ -27,6 +27,10 @@ public class LJPost extends BasePost {
 			return;
 		}
 		
+		if (tags == null) {
+			tags = "";
+		}
+		
 		LJTranslator translator = new LJTranslator();
 		result = translator.MakePost(ljData, contents, subject, timeZone, tags.split(","),visibility, autoFormat);
 	}
