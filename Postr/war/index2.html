@@ -8,8 +8,10 @@
 <script
 	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0/angular.min.js"></script>
 <script src="//login.persona.org/include.js"></script>
-<link rel="stylesheet" href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css">
-<script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.6.0/ui-bootstrap-tpls.min.js"></script>
+<link rel="stylesheet"
+	href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css">
+<script
+	src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.6.0/ui-bootstrap-tpls.min.js"></script>
 
 <link rel="stylesheet" href="persona-buttons.css" />
 
@@ -20,16 +22,17 @@
 
 	<span ng-show="loggedOut"><a class="persona-button orange"
 		ng-click="login()"><span>Sign in</span></a></span>
-	<span ng-show="loggedIn">
-		<a class="persona-button orange" ng-click="logout()"><span>{{data.persona}} - sign out</span></a>
-		
-				<div class="control-group">
-					<label class="control-label" for="timeZone">Time Zone:</label>
-					<div class="controls">
-						<select ng-model="data.timeZone"ng-options="zone for zone in timeZones"></select>
-						<button ng-click="updateTimeZone()">Update</button>
-					</div>
-				</div>
+	<span ng-show="loggedIn"> <a class="persona-button orange"
+		ng-click="logout()"><span>{{data.persona}} - sign out</span></a>
+
+		<div class="control-group">
+			<label class="control-label" for="timeZone">Time Zone:</label>
+			<div class="controls">
+				<select ng-model="data.timeZone"
+					ng-options="zone for zone in timeZones"></select>
+				<button ng-click="updateTimeZone()">Update</button>
+			</div>
+		</div>
 		<div>
 			<select ng-model="currentInput"
 				ng-options="input.userName+'@'+input.siteName for input in data.inputs"></select>
@@ -39,20 +42,42 @@
 		<div>
 			<select ng-model="currentOutput"
 				ng-options="output.userName+'@'+output.siteName for output in data.outputs"></select>
-			<button ng-click="updateOutput()">Update</button><button ng-click="createPost()">Post</button> <button ng-click="removeOutput()">Remove</button>
+			<button ng-click="updateOutput()">Update</button>
+			<button ng-click="createPost()">Post</button>
+			<button ng-click="removeOutput()">Remove</button>
 		</div>
-		
+
 		<div>
-		<select ng-model="currentPossibleOutput"
-			ng-options="possibleOutput for possibleOutput in data.possibleOutputs"></select>
+			<select ng-model="currentPossibleOutput"
+				ng-options="possibleOutput for possibleOutput in data.possibleOutputs"></select>
 			<button class="btn" ng-click="addOutput()">Add</button>
 		</div>
-				<div>
-		<select ng-model="currentPossibleInput"
-			ng-options="possibleInput for possibleInput in data.possibleInputs"></select>
+		<div>
+			<select ng-model="currentPossibleInput"
+				ng-options="possibleInput for possibleInput in data.possibleInputs"></select>
 			<button class="btn" ng-click="addInput()">Add</button>
-		</div>    
-		    
+		</div>
+
+		<fieldset>
+			<legend>Posts</legend>
+			<table id="existingPostsTable" border=1>
+				<tr>
+					<th>Posted</th>
+					<th>Subject</th>
+					<th>Destination</th>
+					<th>Result</th>
+				</tr>
+				<tr ng-repeat="post in data.posts | orderBy:'postingTime'">
+					<td>{{post.postingTime  | date:'dd/MM/yyyy @ HH:mma'}}</td>
+					<td>{{post.subject}}</td>
+					<td>{{postDescription(post)}}</td>
+					<td>{{post.result.message}}</td>
+					<td><button class=btn ng-click="displayPost(post)">Display</button>
+				</tr>
+			</table>
+		</fieldset>
+
+
 	</span>
 </body>
 <script src="timezones.js"></script>

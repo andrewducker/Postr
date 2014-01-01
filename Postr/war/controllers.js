@@ -19,7 +19,7 @@ var myAlert = function(alertMessage){
 };
 
 postrApp.controller('UserDataCtrl',
-		function postCtrl($scope, $http, orderByFilter, persona, $modal, $q, $window,$timeout) {
+		function postCtrl($scope, $http, orderByFilter, persona, $modal, $q, $window,$timeout, $filter) {
 	$http.post('userdata',{method:"GetData"}).success(function(result) {
 		if (result.data != null) {
 			populateData($scope, orderByFilter, result);
@@ -34,6 +34,18 @@ postrApp.controller('UserDataCtrl',
 			$scope.loggedIn = false;
 		}
 	});
+	
+	var getOutput = function(post){
+		return $filter('filter')($scope.data.outputs,function(outputToTest){return outputToTest.id == post.output;});
+	};
+	
+	$scope.postDescription = function(post){
+		var result = getOutput(post);
+		if (result.length > 0) {
+			return result[0].userName + "@" + result[0].siteName; 
+		}
+		return "Output not found";
+	};
 	$scope.timeZones = timeZones;
 	$scope.showInput = function() {
 		myAlert($scope.currentInput.userName + "@"
@@ -86,19 +98,36 @@ postrApp.controller('UserDataCtrl',
 	};
 	
 	var createOrUpdatePost = function(outputOrPost){
+		//Posts have outputs - so if output is set then this is an existing post to clone.
+		//Otherwise it's an output, so we use its id as the output on a brand new post.
+		if (outputOrPost.output) {
+			var newPost = angular.copy(outputOrPost);
+			delete newPost.id;
+			delete newPost.result;
+			delete newPost.postingTime;
+			var outputs = getOutput(newPost);
+			if (outputs.length == 0) {
+				myAlert("Unknown output for this post, cannot display");
+				return;
+			}
+			newPost.siteName = outputs[0].siteName;
+		}else{
+			newPost = {output : outputOrPost.id, siteName : outputOrPost.siteName};
+		}
 		$modal.open({
-			templateUrl : 'sites/' + outputOrPost.siteName + '/post.html',
+			templateUrl : 'sites/' + newPost.siteName + '/post.html',
 			controller : PostCtrl,
 			resolve : {
-				outputOrPost : function() {
-					return outputOrPost;
+				post : function() {
+					return newPost;
 				}
 			}
 		}).result.then(function(result) {
 			result.method = "MakePost";
-			result.output = outputOrPost.id;
 			$http.post('/' + result.siteName, result)
 			.success(function(response) {
+				result.result = response;
+				result.postingTime = Date.now();
 				$scope.data.posts.push(result);
 				myAlert(response.message);
 			}).error(function(err) {
@@ -111,6 +140,9 @@ postrApp.controller('UserDataCtrl',
 		createOrUpdatePost($scope.currentOutput);
 	};
 	
+	$scope.displayPost = function(post){
+		createOrUpdatePost(post);
+	};
 	
 	$scope.addOutput = function() {
 		addOrUpdateData($scope.currentPossibleOutput, "Save").then(function(result){
@@ -140,10 +172,8 @@ postrApp.controller('UserDataCtrl',
 	};
 });
 
-var PostCtrl = function($scope, $modalInstance, outputOrPost, $http) {
-	var newPost = angular.copy(outputOrPost);
-	newPost.id = null;
-	$scope.post = newPost;
+var PostCtrl = function($scope, $modalInstance, post, $http) {
+	$scope.post = post;
 
 	$scope.ok = function() {
 			$modalInstance.close($scope.post);	
