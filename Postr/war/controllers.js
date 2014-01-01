@@ -34,11 +34,52 @@ postrApp.controller('UserDataCtrl',
 			$scope.loggedIn = false;
 		}
 	});
-	
+
 	var getOutput = function(post){
 		return $filter('filter')($scope.data.outputs,function(outputToTest){return outputToTest.id == post.output;});
 	};
-	
+
+	//Removes an object from an array, and returns what the current Object should be, once it's been removed.
+	//Would update the pointer itself, but JS doesn't do Pass By Reference.
+	var removeFromArray = function(object, array){
+		var index = array.indexOf(object);
+		if (index > -1) {
+			array.splice(index,1);
+			if (index > array.length - 1) {
+				index = array.length - 1;
+			}
+			if (index > -1) {
+				return array[index];	
+			}
+		}
+		return null;
+	};
+
+	$scope.removeOutput = function(){
+		removeData($scope.currentOutput).then(function(){
+			$scope.currentOutput = removeFromArray($scope.currentOutput, $scope.data.outputs);
+		});
+	};
+
+	$scope.removeInput = function(){
+		removeData($scope.currentInput).then(function(){
+			$scope.currentInput = removeFromArray($scope.currentInput, $scope.data.inputs);
+		});
+	};
+
+	var removeData = function(data){
+		var deferred = $q.defer();
+		data.method = "RemoveData";
+		$http.post('/DataManagement', data)
+		.success(function(response) {
+			myAlert(response.message);
+			deferred.resolve();
+		}).error(function(err) {
+			myAlert("Failure: " + err);
+		});
+		return deferred.promise;
+	};
+
 	$scope.postDescription = function(post){
 		var result = getOutput(post);
 		if (result.length > 0) {
@@ -51,7 +92,7 @@ postrApp.controller('UserDataCtrl',
 		myAlert($scope.currentInput.userName + "@"
 				+ $scope.currentInput.siteName);
 	};
-	
+
 	$scope.updateTimeZone = function(){
 		var user = {timeZone : $scope.data.timeZone, method:"UpdateData"};
 		$http.post('userdata', user)
@@ -96,7 +137,7 @@ postrApp.controller('UserDataCtrl',
 		});
 		return deferred.promise;
 	};
-	
+
 	var createOrUpdatePost = function(outputOrPost){
 		//Posts have outputs - so if output is set then this is an existing post to clone.
 		//Otherwise it's an output, so we use its id as the output on a brand new post.
@@ -135,35 +176,35 @@ postrApp.controller('UserDataCtrl',
 			});
 		});
 	};
-	
+
 	$scope.createPost = function(){
 		createOrUpdatePost($scope.currentOutput);
 	};
-	
+
 	$scope.displayPost = function(post){
 		createOrUpdatePost(post);
 	};
-	
+
 	$scope.addOutput = function() {
 		addOrUpdateData($scope.currentPossibleOutput, "Save").then(function(result){
 			$scope.data.outputs.push(result);
 			$scope.currentOutput = result;
-			});
+		});
 	};
-		
+
 	$scope.addInput = function() {
 		addOrUpdateData($scope.currentPossibleInput, "Save").then(function(result){
 			$scope.data.inputs.push(result);
 			$scope.currentInput = result;
 		});
 	};
-	
+
 	$scope.updateOutput = function() {
 		addOrUpdateData($scope.currentOutput, "Update").then(function(result){
 			angular.copy(result, $scope.currentOutput);
 		});
 	};
-	
+
 	$scope.login = function() {
 		persona.login();
 	};
@@ -176,7 +217,7 @@ var PostCtrl = function($scope, $modalInstance, post, $http) {
 	$scope.post = post;
 
 	$scope.ok = function() {
-			$modalInstance.close($scope.post);	
+		$modalInstance.close($scope.post);	
 	};
 
 	$scope.cancel = function() {
@@ -211,7 +252,7 @@ var DataPopupCtrl = function($scope, $modalInstance, output, action, $http) {
 		}else{
 			myAlert("Not yet verified");
 		}
-		
+
 	};
 
 	$scope.cancel = function() {
@@ -221,34 +262,34 @@ var DataPopupCtrl = function($scope, $modalInstance, output, action, $http) {
 
 postrApp.factory('persona', function() {
 	return {
-			initialise : function(http, currentUser, onLoggedIn) {
-				navigator.id.watch({
-					loggedInUser : currentUser,
-					onlogin : function(assertion) {
-						http.post('/personaverification', {
-							assertion : assertion
-						}).then(function(response) {
-							onLoggedIn(response.data);
-						}, function(data) {
-							navigator.id.logout();
-							myAlert("Login failure: " + err);
-						});
-					},
-					onlogout : function() {
-						http.post('/personalogout').success(function() {
-							location.reload();
-						}).error(function(data) {
-							myAlert("Failed to log you out: " + data);
-							location.reload();
-						});
-					}
-				});
-			},
-			login : function() {
-				navigator.id.request();
-			},
-			logout : function() {
-				navigator.id.logout();
-			}
+		initialise : function(http, currentUser, onLoggedIn) {
+			navigator.id.watch({
+				loggedInUser : currentUser,
+				onlogin : function(assertion) {
+					http.post('/personaverification', {
+						assertion : assertion
+					}).then(function(response) {
+						onLoggedIn(response.data);
+					}, function(data) {
+						navigator.id.logout();
+						myAlert("Login failure: " + err);
+					});
+				},
+				onlogout : function() {
+					http.post('/personalogout').success(function() {
+						location.reload();
+					}).error(function(data) {
+						myAlert("Failed to log you out: " + data);
+						location.reload();
+					});
+				}
+			});
+		},
+		login : function() {
+			navigator.id.request();
+		},
+		logout : function() {
+			navigator.id.logout();
+		}
 	};
 });

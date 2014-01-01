@@ -38,7 +38,7 @@ abstract class BasePersonaSessionServlet extends BaseJSONServlet {
 	{
 		session.setAttribute("Persona", persona);
 		if (persona == null) {
-			session.setAttribute("UserID",null);
+			session.setAttribute("User",null);
 		}else{
 			User user = DAO.GetUser(persona);
 			session.setAttribute("User",user);

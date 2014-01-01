@@ -37,7 +37,7 @@
 </servlet>
 <servlet-mapping>
 	<servlet-name>DataManagement</servlet-name>
-	<url-pattern>/datamanagement</url-pattern>
+	<url-pattern>/DataManagement</url-pattern>
 </servlet-mapping>
 <servlet>
 	<servlet-name>UserData</servlet-name>
