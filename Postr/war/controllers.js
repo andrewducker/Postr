@@ -222,27 +222,17 @@ postrApp.controller('UserDataCtrl',
 var PostCtrl = function($scope, $modalInstance, post, $http) {
 	$scope.post = post;
 	
-	$scope.possibleTimes= [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23];
+	$scope.possibleTimes= ["0","1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23"];
 
-	$scope.postingHour = post.postingTime.getHours();
-	
-	$scope.postingHourChanged = function(newHour){
-		myAlert("setting Posting Hours" + newHour);
-		$scope.post.postingTime.setHours(newHour);
-	};
-	
-	$scope.openDateTimePicker = function($event) {
-	    $event.preventDefault();
-	    $event.stopPropagation();
-
-	    $scope.dateTimePickerOpened = true;
-	  };
+	$scope.post.postingHour = post.postingTime.getHours().toString();
 	
 	$scope.ok = function() {
-		debugger;
-		myAlert($scope.postingHour);
-		myAlert($scope.post.postingTime);
-		//$modalInstance.close($scope.post);	
+		if ($scope.post.postingInFuture) {
+			$scope.post.postingTime.setHours($scope.post.postingHour);
+		}else{
+			delete $scope.post.postingTime;
+		}
+		$modalInstance.close($scope.post);	
 	};
 
 	$scope.cancel = function() {

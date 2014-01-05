@@ -48,10 +48,12 @@
 			<div ng-show="post.postingInFuture" class="control-group">
 				<label class="control-label" for="postingHour">Times:</label>
 				<div class="controls">
-					<select id="postingHour"
+					<select 
+						ng-model="post.postingHour"
+						id="postingHour"
 						ng-options="possibleTime for possibleTime in possibleTimes"
-						ng-model="postingHour"
-						ng-change="postingHourChanged()"></select>
+						>
+					</select>
 				</div>
 				<p class="input-group">
 					<input type="text" class="form-control"
