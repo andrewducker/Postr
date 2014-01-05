@@ -143,9 +143,15 @@ postrApp.controller('UserDataCtrl',
 		//Otherwise it's an output, so we use its id as the output on a brand new post.
 		if (outputOrPost.output) {
 			var newPost = angular.copy(outputOrPost);
-			delete newPost.id;
 			delete newPost.result;
-			delete newPost.postingTime;
+			//We can update ones in the future, but not in the past.
+			//Hence, we delete the id if the posting time is in the past, because we're creating a new one.
+				if (newPost.postingTime < Date.now()) {
+					newPost.postingTime = new Date();
+					delete newPost.id;
+				}else{
+					newPost.postInFuture = true;
+				}
 			var outputs = getOutput(newPost);
 			if (outputs.length == 0) {
 				myAlert("Unknown output for this post, cannot display");
@@ -153,7 +159,7 @@ postrApp.controller('UserDataCtrl',
 			}
 			newPost.siteName = outputs[0].siteName;
 		}else{
-			newPost = {output : outputOrPost.id, siteName : outputOrPost.siteName};
+			newPost = {output : outputOrPost.id, siteName : outputOrPost.siteName, postingTime : new Date()};
 		}
 		$modal.open({
 			templateUrl : 'sites/' + newPost.siteName + '/post.html',
@@ -215,9 +221,28 @@ postrApp.controller('UserDataCtrl',
 
 var PostCtrl = function($scope, $modalInstance, post, $http) {
 	$scope.post = post;
+	
+	$scope.possibleTimes= [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23];
 
+	$scope.postingHour = post.postingTime.getHours();
+	
+	$scope.postingHourChanged = function(newHour){
+		myAlert("setting Posting Hours" + newHour);
+		$scope.post.postingTime.setHours(newHour);
+	};
+	
+	$scope.openDateTimePicker = function($event) {
+	    $event.preventDefault();
+	    $event.stopPropagation();
+
+	    $scope.dateTimePickerOpened = true;
+	  };
+	
 	$scope.ok = function() {
-		$modalInstance.close($scope.post);	
+		debugger;
+		myAlert($scope.postingHour);
+		myAlert($scope.post.postingTime);
+		//$modalInstance.close($scope.post);	
 	};
 
 	$scope.cancel = function() {

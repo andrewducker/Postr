@@ -37,6 +37,27 @@
 					<input type="text" id="tags" ng-model="post.tags">
 				</div>
 			</div>
+			<div class="control-group">
+				<label class="control-label" for="postInFuture">Post in
+					future?</label>
+				<div class="controls">
+					<input type="checkbox" id=postInFuture
+						ng-model=post.postingInFuture>
+				</div>
+			</div>
+			<div ng-show="post.postingInFuture" class="control-group">
+				<label class="control-label" for="postingHour">Times:</label>
+				<div class="controls">
+					<select id="postingHour"
+						ng-options="possibleTime for possibleTime in possibleTimes"
+						ng-model="postingHour"
+						ng-change="postingHourChanged()"></select>
+				</div>
+				<p class="input-group">
+					<input type="text" class="form-control"
+						datepicker-popup="yyyy-MM-dd" ng-model="post.postingTime" />
+				</p>
+			</div>
 		</form>
 	</div>
 	<div class="modal-footer">

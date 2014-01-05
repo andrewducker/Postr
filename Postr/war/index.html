@@ -1,277 +1,103 @@
-<!DOCTYPE html>
-<html>
-	<head>
-		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<meta charset="UTF-8"> 
-		<title>Postr</title>
-		<link rel="stylesheet" href="persona-buttons.css" />
-		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-		<link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.0/themes/base/jquery-ui.css">
-		<link rel="stylesheet" href ="styles.css">
-		<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js"></script>
-		<script src="laconic.js"></script>
-		<script src="wizards.js"></script>
-		<script src="//login.persona.org/include.js"></script>
-				<script src="persona.js"></script>
-		
-		<script type="text/javascript">
-			outputs = new Object();
-			inputs = new Object();
-			function AddOutput(outputName, AddOutput, UpdateOutput, PostFromOutput, DisplayPost, AddTemplate, UpdateTemplate) {
-				$("#output").append(new Option(outputName));
-				outputs[outputName] = {Add:AddOutput,Update:UpdateOutput,Post:PostFromOutput, DisplayPost:DisplayPost, AddTemplate: AddTemplate, UpdateTemplate: UpdateTemplate};
-			}
-			
-			function AddInput(inputName, AddInput) {
-				$("#input").append(new Option(inputName));
-				inputs[inputName] = {Add:AddInput};
-			}
 
-			function addNewComboItem(id, text, data){
-				var newOption = new Option(text);
-				$(id).append(newOption);
-				var newComboItem = $(id+' option:last-child');
-				newComboItem.data(data);
-			}
+<!doctype html>
+<html lang="en" ng-app="postrApp">
+<head>
+<meta charset="utf-8">
+<title>My HTML File</title>
+<!--  <link rel="stylesheet" href ="styles.css"> -->
+<script
+	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0/angular.min.js"></script>
+<script src="//login.persona.org/include.js"></script>
+<link rel="stylesheet"
+	href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css">
+<script
+	src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.6.0/ui-bootstrap-tpls.min.js"></script>
 
-			function addNewOutput(data){
-				addNewComboItem("#existingOutputs",data.userName+"@"+data.siteName,data);
-			}
-			
-			function addNewTemplate(data){
-				addNewComboItem("#existingTemplates",data.userName+"@"+data.siteName,data);
-			}
+<link rel="stylesheet" href="persona-buttons.css" />
 
-			function addNewInput(data){
-				addNewComboItem("#existingInputs",data.userName+"@"+data.siteName,data);
-			}
-			
-			function addNewPost(post){
-				var outputDescription;
-				if (post.outputObject) {
-					outputDescription =  post.outputObject.userName+"@"+post.outputObject.siteName;
-				}else{
-					outputDescription = "No associate Output found.";
-				}
-				var toAppendTemp = $.el.tr(
-						$.el.td(new Date(post.postingTime).toLocaleString()),
-						$.el.td(post.subject),
-						$.el.td(outputDescription),
-						$.el.td(post.result.message),
-						$.el.td(
-								$.el.input({
-									type:'button',
-									value:'display',
-									onclick:function(){
-										outputs[post.outputObject.siteName].DisplayPost(post).done(function(data){
-											addNewPost(data);
-											});
-										}})
-								)).appendTo(j("existingPostsTable").get(0));
-			}
+<script src="controllers.js"></script>
 
-			function j(id){
-				return $('#'+id);
-			}
-			function DisableIfComboEmpty(comboID, itemID){
-				SetDisabledState(itemID,ComboEmpty(comboID));
-			}
-			
-			function InitialiseData(){
-				var posting = $.post("userdata");
-				wizards.registerCallForWizardOnError(posting);
-				posting.done(function(data){
-					if(data.length > 0){
-						var emailAddress = PopulateData(data);
-						persona.initialise(emailAddress);
-					}else{
-						persona.initialise(null,PopulateData);
-						$('.loggedOut').show();
-					}
-				});
-			}
-			
-			function PopulateData(data){
-				$('.loggedOut').hide();
-				$('.loggedIn').show();
-				var userData = $.parseJSON(data);
-				$.each(userData.inputs, function(index,value){
-				addNewInput(value);});
-				$.each(userData.outputs, function(index,value){
-				addNewOutput(value);});
-				userData.posts.sort(function(a,b){return a.postingTime-b.postingTime});
-				$.each(userData.posts, function(index,post){
-					var attachedOutput = $.grep(userData.outputs,function(output){return output.id === post.output;});
-					
-					if(attachedOutput.length > 0){
-						post.outputObject = attachedOutput[0];
-					}
+</head>
+<body ng-controller="UserDataCtrl">
 
-					addNewPost(post);});
+	<span ng-show="loggedOut"><a class="persona-button orange"
+		ng-click="login()"><span>Sign in</span></a></span>
+	<span ng-show="loggedIn">
+		<form class="form-horizontal">
+			<fieldset>
+				<legend>User</legend>
+				{{data.persona}} - <a href=# ng-click="logout()">sign out</a>
+				<div class="control-group">
+					<label class="control-label" for="timeZone">Time Zone:</label>
+					<div class="controls">
+						<select ng-model="data.timeZone" id="timeZone"
+							ng-options="zone for zone in timeZones"></select>
+						<button ng-click="updateTimeZone()">Update</button>
+					</div>
+				</div>
+			</fieldset>
 
-				DisableIfComboEmpty("#existingOutputs","#RemoveOutputs");
-				DisableIfComboEmpty("#existingOutputs","#UpdateOutputs");
-				DisableIfComboEmpty("#existingInputs","#RemoveInputs");
-				DisableIfComboEmpty("#existingOutputs","#PostFromOutput");
-				DisableIfComboEmpty("#existingPosts","#DisplayPost");
-				j('emailAddress').html(userData.persona);
-				return userData.persona;
-			}
-			
-			
-			function SetDisabledState(itemID, state){
-				if(state){
-					$(itemID).prop('disabled','disabled');
-				}
-				else{
-					$(itemID).removeProp('disabled');
-				}
-			}
-			
-			function ComboEmpty(comboID){
-				return $(comboID + " option").length == 0;
-			}
+			<fieldset>
+				<legend>Inputs</legend>
+				<div class="control-group" ng-show="data.inputs.length > 0">
+					<label class="control-label" for="currentInput">Existing:</label>
+					<div class="controls">
+						<select ng-model="currentInput" id="currentInput"
+							ng-options="input.userName+'@'+input.siteName for input in data.inputs"></select>
+						<button ng-click="removeInput()">Remove</button>
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label" for="newInput">New Input?</label>
+					<div class="controls" id="newInput">
+						<select ng-model="currentPossibleInput" id="newInput"
+							ng-options="possibleInput for possibleInput in data.possibleInputs"></select>
+						<button class="btn" ng-click="addInput()">Add</button>
+					</div>
+				</div>
+			</fieldset>
 
-			InitialiseData();
-
-		</script>
-		<style>
-			.loggedIn {display:none;}
-			.loggedOut {display:none;}
-		</style>
-	</head>
-	<body>
-	<div class=loggedOut><a class="persona-button orange" onclick="navigator.id.request()"><span>Sign in</span> </a></div>
-		<div class=loggedIn>You are signed in as <span id="emailAddress"></span> <a class="persona-button orange" onclick= "navigator.id.logout()"><span>Sign out</span> </a>
-		
-		<fieldset>
-			<legend>Inputs</legend>
-			<label for="existingInputs">Existing</label>
-			<select id="existingInputs">
-			</select>
-			<input type="button" id="RemoveInput" value="Remove">
-			<BR>
-			<select id="input" name="input">
-			</select>
-			<label for="AddNewInput">New Input?</label>
-			<input type="button" id="AddNewInput" value="Add">
-		</fieldset>
-
-		<fieldset>
-			<legend>Outputs</legend>
-			<label for="existingOutputs">Existing</label>
-			<select id="existingOutputs">
-			</select>
-			<input type="button" id="PostFromOutput" value="Post">
-			<input type="button" id="UpdateOutput" value="Update">
-			<input type="button" id="RemoveOutput" value="Remove">
-			<input type="button" id="AddTemplate" value="Add Template">
-			<BR>
-			<select id="output" name="output">
-			</select>
-			<label for="AddNewOutput">New Output?</label>
-			<input type="button" id="AddNewOutput" value="Add">
-		</fieldset>
-		
-		<fieldset>
-			<legend>Templates</legend>
-			<label for="existingTemplates">Existing</label>
-			<select id="existingTemplates">
-			</select>
-			<input type="button" id="PostFromTemplate" value="Post">
-			<input type="button" id="UpdateTemplate" value="Update">
-			<input type="button" id="RemoveTemplate" value="Remove">
-		</fieldset>
-
-		<fieldset>
-			<legend>Posts</legend>
-			<table id="existingPostsTable" border=1><tr><th>Posted</th><th>Subject</th><th>Destination</th><th>Result</th></tr></table>
-		</fieldset>
-		</div>
-
-		<script src="timezones.js"></script>
-		<script src="outputs/Livejournal.js"></script>
-		<script src="inputs/StandardInput.js"></script>
-
-		<script type="text/javascript">
-			$(function(){
-				var dreamwidth = new Livejournal("Dreamwidth","dreamwidth");
-				var dreamwidth = new Livejournal("Livejournal","livejournal");
-				var delicious = new StandardInput("Delicious","delicious");
-				var pinboard = new StandardInput("Pinboard","pinboard");
-				$( "#AddNewOutput" ).click(function() {
-					var selectedValue = $("#output option:selected").text();
-					outputs[selectedValue].Add().done(function(data){
-						addNewOutput(data);
-						DisableIfComboEmpty("#existingOutputs","#RemoveOutputs");
-						DisableIfComboEmpty("#existingOutputs","#UpdateOutputs");
-						DisableIfComboEmpty("#existingOutputs","#PostFromOutput");
-					});
-				});
-				$( "#PostFromOutput" ).click(function() {
-					var selectedOption = $("#existingOutputs option:selected");
-					var selectedData = selectedOption.data();
-					outputs[selectedData.siteName].Post(selectedData).done(function(data){
-						addNewPost(data);
-						DisableIfComboEmpty("#existingPosts","#DisplayPost");
-						});
-				});
-				$( "#AddTemplate" ).click(function() {
-					var selectedOption = $("#existingOutputs option:selected");
-					var selectedData = selectedOption.data();
-					outputs[selectedData.siteName].AddTemplate(selectedData).done(function(data){
-						addNewTemplate(data);
-						DisableIfComboEmpty("#existingTemplates","#PostFromTemplate");
-						DisableIfComboEmpty("#existingTemplates","#RemoveTemplate");
-						DisableIfComboEmpty("#existingTemplates","#UpdateTemplate");
-						});
-				});
-				$( "#UpdateOutput" ).click(function() {
-					var selectedOption = $("#existingOutputs option:selected");
-					var selectedData = selectedOption.data();
-					outputs[selectedData.siteName].Update(selectedData);
-				});
-				$( "#RemoveOutput" ).click(function() {
-					var selectedData = $("#existingOutputs option:selected").data();
-					RemoveData(selectedData.id).done(function(){
-						$("#existingOutputs option:selected").remove();
-						DisableIfComboEmpty("#existingOutputs","#RemoveOutputs");
-						DisableIfComboEmpty("#existingOutputs","#UpdateOutputs");
-						DisableIfComboEmpty("#existingOutputs","#PostFromOutput");
-					});
-				});
-				$( "#RemoveTemplate" ).click(function() {
-					var selectedData = $("#existingTemplates option:selected").data();
-					RemoveData(selectedData.id).done(function(){
-						$("#existingTemplates option:selected").remove();
-						DisableIfComboEmpty("#existingTemplates","#PostFromTemplate");
-						DisableIfComboEmpty("#existingTemplates","#RemoveTemplate");
-						DisableIfComboEmpty("#existingTemplates","#UpdateTemplate");
-					});
-				});
-				$( "#AddNewInput" ).click(function() {
-					var selectedValue = $("#input option:selected").text();
-					inputs[selectedValue].Add().done(function(data){
-						addNewInput(data);
-						DisableIfComboEmpty("#existingInputs","#RemoveInputs");
-						DisableIfComboEmpty("#existingOutputs","#PostFromOutput");
-					});
-				});
-				$( "#RemoveInput" ).click(function() {
-					var selectedData = $("#existingInputs option:selected").data();
-					RemoveData(selectedData.id).done(function(){
-						$("#existingInputs option:selected").remove();
-						DisableIfComboEmpty("#existingInputs","#RemoveInputs");
-					});
-				});
-			});
-			
-			function RemoveData(id){
-				var params = {method:"RemoveData", id:parseInt(id)};
-				var deferral = $.post("datamanagement",{params:JSON.stringify(params)});
-				wizards.registerCallForWizardDisplay(deferral);
-				return deferral;
-			}
-		</script>
-	</body>
+			<fieldset>
+				<legend>Outputs</legend>
+				<div class="control-group" ng-show="data.outputs.length > 0">
+					<label class="control-label" for="currentOutput">Existing:</label>
+					<div class="controls">
+						<select ng-model="currentOutput" id="currentOutput"
+							ng-options="output.userName+'@'+output.siteName for output in data.outputs"></select>
+						<button ng-click="updateOutput()">Update</button>
+						<button ng-click="createPost()">Post</button>
+						<button ng-click="removeOutput()">Remove</button>
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label" for="newOutput">New Output?</label>
+					<div class="controls">
+						<select ng-model="currentPossibleOutput" id="newOutput"
+							ng-options="possibleOutput for possibleOutput in data.possibleOutputs"></select>
+						<button class="btn" ng-click="addOutput()">Add</button>
+					</div>
+				</div>
+			</fieldset>
+			<fieldset>
+				<legend>Posts</legend>
+				<table id="existingPostsTable" border=1>
+					<tr>
+						<th>Posted</th>
+						<th>Subject</th>
+						<th>Destination</th>
+						<th>Result</th>
+					</tr>
+					<tr ng-repeat="post in data.posts | orderBy:'postingTime'">
+						<td>{{post.postingTime | date:'dd/MM/yyyy @ HH:mma'}}</td>
+						<td>{{post.subject}}</td>
+						<td>{{postDescription(post)}}</td>
+						<td>{{post.result.message}}</td>
+						<td><button class=btn ng-click="displayPost(post)">Display</button>
+					</tr>
+				</table>
+			</fieldset>
+		</form>
+	</span>
+</body>
+<script src="timezones.js"></script>
 </html>
