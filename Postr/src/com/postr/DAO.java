@@ -1,15 +1,27 @@
 package com.postr;
 
+import static com.googlecode.objectify.ObjectifyService.ofy;
+
 import java.util.List;
+
+import org.joda.time.DateTime;
 
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.impl.translate.opt.joda.JodaTimeTranslators;
-import com.postr.DataTypes.*;
-import com.postr.DataTypes.Inputs.*;
-import com.postr.DataTypes.Outputs.*;
-
-import static com.googlecode.objectify.ObjectifyService.ofy;
+import com.postr.DataTypes.BaseSaveable;
+import com.postr.DataTypes.User;
+import com.postr.DataTypes.UserEmail;
+import com.postr.DataTypes.Inputs.DeliciousData;
+import com.postr.DataTypes.Inputs.PinboardData;
+import com.postr.DataTypes.Outputs.BaseOutput;
+import com.postr.DataTypes.Outputs.BasePost;
+import com.postr.DataTypes.Outputs.DWData;
+import com.postr.DataTypes.Outputs.DWPost;
+import com.postr.DataTypes.Outputs.LJData;
+import com.postr.DataTypes.Outputs.LJPost;
+import com.postr.DataTypes.Outputs.TestData;
+import com.postr.DataTypes.Outputs.TestPost;
 
 public class DAO {
 	static {
@@ -24,6 +36,8 @@ public class DAO {
 		ObjectifyService.register(User.class);
 		ObjectifyService.register(DWPost.class);
 		ObjectifyService.register(LJPost.class);
+		ObjectifyService.register(TestPost.class);
+		ObjectifyService.register(TestData.class);
 	}
 
 	static <T extends BaseSaveable> Key<T> SaveThing(T thing, Long userID){
@@ -72,6 +86,10 @@ public class DAO {
 			return ofy().load().key(email.get(0)).get().getParent();
 		}
 		throw new Exception("Multiple emails found with address: "+persona);
+	}
+	
+	public static List<BasePost> LoadPostsInPast(){
+		return ofy().load().type(BasePost.class).filter("postingTime <=",DateTime.now()).filter("awaitingPostingTime",true).list();
 	}
 
 	static User GetUser(String persona) throws Exception{

@@ -1,29 +1,19 @@
 
 <!doctype html>
-<html lang="en" ng-app="postrApp">
+<html lang="en" ng-app="testApp">
 <head>
 <meta charset="utf-8">
-<title>My HTML File</title>
-<!--  <link rel="stylesheet" href ="styles.css"> -->
+<title>Popup Test</title>
 <script
 	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0/angular.min.js"></script>
 <link rel="stylesheet" href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css">
-<script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.6.0/ui-bootstrap-tpls.min.js"></script>
-
-<link rel="stylesheet" href="../persona-buttons.css" />
+<script src="ui-bootstrap-tpls-0.10.0.min.js"></script>
 
 <script src="controllers.js"></script>
 
 </head>
 <body ng-controller="UserDataCtrl">
-
-	<span ng-show="loggedIn">
-		<div>
-			<select ng-model="currentInput"
-				ng-options="input.userName+'@'+input.siteName for input in data.inputs"></select>
-			<button ng-click="showInput()">Details</button>
-		</div>
-	</span>
+{{hour}}
+			<button ng-click="showPopup()">Update</button>
 </body>
-<script src="../timezones.js"></script>
 </html>

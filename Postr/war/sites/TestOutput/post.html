@@ -1,0 +1,71 @@
+<div>
+	<div class="modal-header">
+		<h3>Test post</h3>
+	</div>
+	<div class="modal-body">
+		<form class="form-horizontal">
+			<div class="control-group">
+				<label class="control-label" for="subject">Subject Line:</label>
+				<div class="controls">
+					<input type="text" id="subject" ng-model="post.subject">
+					<input type="text" id="subject" ng-model="subject">
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for="contents">Text:</label>
+				<div class="controls">
+					<textarea rows=5 id="contents" ng-model="post.contents"></textarea>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for="visibility">Visibility</label>
+				<div class="controls">
+					<select id="visibility" ng-model="post.visibility"><option>Public</option>
+						<option>FriendsOnly</option>
+						<option>Private</option>
+					</select>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for="format">Auto Format:</label>
+				<div class="controls">
+					<input type="checkbox" id="format" ng-model="post.autoFormat">
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for="tags">Tags:</label>
+				<div class="controls">
+					<input type="text" id="tags" ng-model="post.tags">
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for="postInFuture">Post in
+					future?</label>
+				<div class="controls">
+					<input type="checkbox" id=postInFuture
+						ng-model=post.postingInFuture>
+				</div>
+			</div>
+			<div ng-show="post.postingInFuture" class="control-group">
+				<label class="control-label" for="postingHour">Times:</label>
+				<div class="controls">
+					<select 
+						ng-model="post.postingHour"
+						id="postingHour"
+						ng-options="possibleTime for possibleTime in possibleTimes"
+						ng-change="changing()"
+						>
+					</select>
+				</div>
+				<p class="input-group">
+					<input type="text" class="form-control"
+						datepicker-popup="yyyy-MM-dd" ng-model="post.postingTime" />
+				</p>
+			</div>
+		</form>
+	</div>
+	<div class="modal-footer">
+		<button class="btn btn-primary" ng-click="ok()">OK</button>
+		<button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+	</div>
+</div>

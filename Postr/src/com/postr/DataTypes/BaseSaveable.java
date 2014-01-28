@@ -21,8 +21,7 @@ public class BaseSaveable {
 		return parent.getId();
 	}
 	
-	private @Index
-	transient Key<User> parent;
+	private @Index	transient Key<User> parent;
 	
 	protected BaseSaveable(){}
 

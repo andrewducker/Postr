@@ -3,8 +3,11 @@ package com.postr;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 
+import com.googlecode.objectify.Key;
 import com.postr.DataTypes.Json;
 import com.postr.DataTypes.Outputs.BasePost;
+import com.postr.DataTypes.Outputs.ResultData;
+import com.postr.DataTypes.Outputs.ResultStateEnum;
 
 @SuppressWarnings("serial")
 abstract class BaseOutputServlet extends BasePersonaSessionServlet {
@@ -35,11 +38,21 @@ abstract class BaseOutputServlet extends BasePersonaSessionServlet {
 	}
 	
 	private Result MakePost(Json parameters){
+		ResultStateEnum state;
 		BasePost post = CreatePost(parameters, GetUserID());
-		post.MakePost();
-		post.postingTime = DateTime.now(DateTimeZone.UTC);
-		DAO.SaveThing(post, GetUserID());
-		post.result.postingTime = post.postingTime.getMillis();
+		if (post.postingTime == null || post.postingTime.isBefore(DateTime.now())) {
+			post.MakePost();
+			post.postingTime = DateTime.now(DateTimeZone.UTC);
+			post.result.postingTime = post.postingTime.getMillis();
+			post.awaitingPostingTime = false;
+			state = ResultStateEnum.posted;
+		}else{
+			post.awaitingPostingTime = true;
+			post.result = Result.Success("Saved for later");
+			state = ResultStateEnum.saved;
+		}
+		Key<BasePost> response =  DAO.SaveThing(post, GetUserID());
+		post.result.data = new ResultData(response.getId(),state); 
 		return post.result;
 	}
 	

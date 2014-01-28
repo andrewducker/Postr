@@ -34,14 +34,20 @@ public class UserData {
 				posts.add((BasePost) baseSaveable);
 				continue;
 			}
-			if (baseSaveable instanceof User) {
-				
-			}
 		}
+		
+		List<BasePost> postsToMake = DAO.LoadPostsInPast();
+		
+		List<BasePost> postsToMake2 = new Vector<BasePost>();
+		for (BasePost basePost : postsToMake) {
+			postsToMake2.add(basePost);
+		}
+		
 		timeZone = DAO.LoadThing(User.class, userID, userID).timeZone;
 		
 		possibleOutputs.add("Dreamwidth");
 		possibleOutputs.add("Livejournal");
+		possibleOutputs.add("TestOutput");
 		
 		possibleInputs.add("Delicious");
 		possibleInputs.add("Pinboard");

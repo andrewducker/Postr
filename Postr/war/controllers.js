@@ -20,6 +20,7 @@ var myAlert = function(alertMessage){
 
 postrApp.controller('UserDataCtrl',
 		function postCtrl($scope, $http, orderByFilter, persona, $modal, $q, $window,$timeout, $filter) {
+	$scope.level = "UserDataCtrl";
 	$http.post('userdata',{method:"GetData"}).success(function(result) {
 		if (result.data != null) {
 			populateData($scope, orderByFilter, result);
@@ -141,21 +142,24 @@ postrApp.controller('UserDataCtrl',
 	var createOrUpdatePost = function(outputOrPost){
 		//Posts have outputs - so if output is set then this is an existing post to clone.
 		//Otherwise it's an output, so we use its id as the output on a brand new post.
+		var editingExistingPost = false;
 		if (outputOrPost.output) {
-			var newPost = angular.copy(outputOrPost);
-			delete newPost.result;
-			//We can update ones in the future, but not in the past.
-			//Hence, we delete the id if the posting time is in the past, because we're creating a new one.
-				if (newPost.postingTime < Date.now()) {
-					newPost.postingTime = new Date();
-					delete newPost.id;
-				}else{
-					newPost.postInFuture = true;
-				}
-			var outputs = getOutput(newPost);
+			var outputs = getOutput(outputOrPost);
 			if (outputs.length == 0) {
 				myAlert("Unknown output for this post, cannot display");
 				return;
+			}
+
+			//The post is in the past, so it's taken place.  We are therefore creating a new post based on it, rather than editing it.
+			if (outputOrPost.postingTime < new Date()) {
+				var newPost = angular.copy(outputOrPost);
+				delete newPost.result;	
+				newPost.postingTime = new Date();
+				delete newPost.id;
+			}
+			else{
+				newPost.postInFuture = true;
+				editingExistingPost = true;
 			}
 			newPost.siteName = outputs[0].siteName;
 		}else{
@@ -174,8 +178,15 @@ postrApp.controller('UserDataCtrl',
 			$http.post('/' + result.siteName, result)
 			.success(function(response) {
 				result.result = response;
-				result.postingTime = Date.now();
-				$scope.data.posts.push(result);
+				if (response.data.state == "posted") {
+					result.postingTime = Date.now();
+				}
+				result.id = response.data.id;
+				if (editingExistingPost) {
+					angular.copy(result, outputOrPost);
+				}else{
+					$scope.data.posts.push(result);	
+				}
 				myAlert(response.message);
 			}).error(function(err) {
 				myAlert("Failure: " + err);
@@ -220,15 +231,18 @@ postrApp.controller('UserDataCtrl',
 });
 
 var PostCtrl = function($scope, $modalInstance, post, $http) {
+	$scope.level="PostCtrl";
 	$scope.post = post;
-	
-	$scope.possibleTimes= ["0","1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23"];
+
+	$scope.possibleTimes= [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23];
 
 	$scope.post.postingHour = post.postingTime.getHours().toString();
-	
+
 	$scope.ok = function() {
 		if ($scope.post.postingInFuture) {
 			$scope.post.postingTime.setHours($scope.post.postingHour);
+			$scope.post.postingTime.setMinutes(0);
+			$scope.post.postingTime.setSeconds(0);
 		}else{
 			delete $scope.post.postingTime;
 		}
@@ -242,6 +256,7 @@ var PostCtrl = function($scope, $modalInstance, post, $http) {
 
 
 var DataPopupCtrl = function($scope, $modalInstance, output, action, $http) {
+	$scope.level = "DataPopupCtrl";
 	$scope.output = output;
 	$scope.action = action;
 

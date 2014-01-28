@@ -1,4 +1,12 @@
-<!-- Indices written at Sun, 5 Jan 2014 17:58:51 GMT -->
+<!-- Indices written at Tue, 28 Jan 2014 20:22:28 GMT -->
 
-<datastore-indexes/>
+<datastore-indexes>
 
+    <!-- Used 1 time in query history -->
+    <datastore-index kind="BaseSaveable" ancestor="false" source="auto">
+        <property name="^i" direction="asc"/>
+        <property name="awaitingPostingTime" direction="asc"/>
+        <property name="postingTime" direction="asc"/>
+    </datastore-index>
+
+</datastore-indexes>

@@ -10,6 +10,7 @@ public abstract class BaseOutput extends BaseSaveable {
 	
 	public String userName;
 	public String password;
+	
 
 	protected abstract String getSiteName();
 	

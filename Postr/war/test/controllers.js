@@ -1,23 +1,46 @@
 "use strict";
-var postrApp = angular.module('postrApp', []);
+var testApp = angular.module('testApp', ['ui.bootstrap' ]);
 
-postrApp.controller('UserDataCtrl',
-		function postCtrl($scope, $http, orderByFilter) {
-			$http.get('/userdata').success(function(result) {
-				if (result.data != null) {
-					$scope.data = result.data;
-					$scope.currentInput = $scope.data.inputs[0];
-					$scope.currentOutput = $scope.data.outputs[0];
-					$scope.currentPossibleOutput = $scope.data.possibleOutputs[0];
-					$scope.loggedIn = true;
-					$scope.loggedOut = false;
-				} else {
-					$scope.loggedOut = true;
-					$scope.loggedIn = false;
+testApp.controller('UserDataCtrl',function ($scope, $modal) {
+	$scope.hour = 12;
+	$scope.showPopup = function() {
+		$modal.open({
+			templateUrl : 'popup.html',
+			controller : PopupCtrl,
+			resolve : {
+				hour : function() {
+					return $scope.hour;
+				},
+				oldScope : function(){
+					return $scope;
 				}
-			});
-			$scope.showInput = function() {
-				alert($scope.currentInput.userName + "@"
-						+ $scope.currentInput.siteName);
-			};
+		
+			}
+		}).result.then(function(result) {
+			$scope.hour = result;
 		});
+	};
+
+});
+
+var PopupCtrl = function($scope, $modalInstance, $http, hour, oldScope) {
+	var myOldScope = oldScope;
+	$scope.level="PopupCtrl";
+
+	$scope.possibleTimes= [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23];
+
+	$scope.hour = hour;
+
+	$scope.ok = function() {
+		$modalInstance.close($scope.hour);	
+	};
+
+	$scope.cancel = function() {
+		$modalInstance.dismiss('cancel');
+	};
+
+	$scope.changing = function(){
+		var x = 5;
+	};
+
+};

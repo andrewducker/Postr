@@ -1,0 +1,63 @@
+package com.postr;
+
+import com.googlecode.objectify.Key;
+import com.postr.DataTypes.Json;
+import com.postr.DataTypes.Outputs.LJTemplate;
+import com.postr.DataTypes.Outputs.TestData;
+import com.postr.DataTypes.Outputs.TestPost;
+
+@SuppressWarnings("serial")
+public class TestOutputServlet extends BaseOutputServlet {
+
+	@Override
+	protected Result VerifyPassword(Json parameters) throws Exception {
+		return  Result.Success("Logged in as Test User");
+		}
+
+	@Override
+	protected Result SaveData(Json parameters) throws Exception {
+		TestData ljData = parameters.FromJson(TestData.class);
+		ljData.EncryptPassword();
+		
+		Key<TestData> result = DAO.SaveThing(ljData,GetUserID());
+		return new Result("Saved!",result.getId());
+	}
+
+	@Override
+	protected TestPost CreatePost(Json parameters, long userID) {
+		TestPost post = parameters.FromJson(TestPost.class);
+		post.timeZone = GetTimeZone();
+		post.setParent(userID);
+		return post;
+	}
+	
+	@Override
+	protected Result SavePost(Json parameters) throws Exception {
+		TestPost post = CreatePost(parameters,GetUserID());
+	
+		Key<TestPost> result = DAO.SaveThing(post, GetUserID());
+		
+		return new Result("Saved!",result.getId());
+	}
+
+	
+	@Override
+	protected Result UpdateData(Json parameters) throws Exception {
+		TestData newData = parameters.FromJson(TestData.class);
+		TestData existingLJData = DAO.LoadThing(TestData.class, newData.getId(), GetUserID());
+		
+		
+		existingLJData.password = newData.password;
+		existingLJData.EncryptPassword();
+		
+		Key<TestData> result = DAO.SaveThing(existingLJData,GetUserID());
+		return new Result("Saved!",result.getId());
+	}
+
+	@Override
+	protected Result SaveTemplate(Json parameters) {
+		LJTemplate template = parameters.FromJson(LJTemplate.class);
+		Key<LJTemplate> result = DAO.SaveThing(template,GetUserID());
+		return new Result("Saved!",result.getId());
+	}
+}
