@@ -88,7 +88,7 @@ public class DAO {
 		throw new Exception("Multiple emails found with address: "+persona);
 	}
 	
-	public static List<BasePost> LoadPostsInPast(){
+	public static List<BasePost> LoadPostsInQueue(){
 		return ofy().load().type(BasePost.class).filter("postingTime <=",DateTime.now()).filter("awaitingPostingTime",true).list();
 	}
 

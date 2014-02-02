@@ -36,8 +36,6 @@ public class UserData {
 			}
 		}
 		
-		List<BasePost> postsToMake = DAO.LoadPostsInPast();
-		
 		timeZone = DAO.LoadThing(User.class, userID, userID).timeZone;
 		
 		possibleOutputs.add("Dreamwidth");
