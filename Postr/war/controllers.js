@@ -9,6 +9,9 @@ var populateData = function(scope, orderByFilter, result) {
 	scope.currentOutput = scope.data.outputs[0];
 	scope.currentPossibleOutput = scope.data.possibleOutputs[0];
 	scope.currentPossibleInput = scope.data.possibleInputs[0];
+	scope.data.posts.forEach(function(post){
+		post.postingTime = new Date(post.postingTime);
+	});
 	scope.loggedIn = true;
 	scope.loggedOut = false;
 };
@@ -143,22 +146,22 @@ postrApp.controller('UserDataCtrl',
 		//Posts have outputs - so if output is set then this is an existing post to clone.
 		//Otherwise it's an output, so we use its id as the output on a brand new post.
 		var editingExistingPost = false;
+		var newPost;
 		if (outputOrPost.output) {
 			var outputs = getOutput(outputOrPost);
 			if (outputs.length == 0) {
 				myAlert("Unknown output for this post, cannot display");
 				return;
 			}
-
+			newPost = angular.copy(outputOrPost);
 			//The post is in the past, so it's taken place.  We are therefore creating a new post based on it, rather than editing it.
 			if (outputOrPost.postingTime < new Date()) {
-				var newPost = angular.copy(outputOrPost);
 				delete newPost.result;	
 				newPost.postingTime = new Date();
 				delete newPost.id;
 			}
 			else{
-				newPost.postInFuture = true;
+				newPost.postInFuture = newPost.postingTime < new Date();
 				editingExistingPost = true;
 			}
 			newPost.siteName = outputs[0].siteName;
@@ -236,7 +239,15 @@ var PostCtrl = function($scope, $modalInstance, post, $http) {
 
 	$scope.possibleTimes= [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23];
 
-	$scope.post.postingHour = post.postingTime.getHours().toString();
+	var currentDate = new Date();
+	
+	if (post.postingTime && post.postingTime > currentDate) {
+		$scope.post.postingHour = post.postingTime.getHours();
+		$scope.post.postingInFuture = true;
+	}
+	
+	
+	
 
 	$scope.ok = function() {
 		if ($scope.post.postingInFuture) {

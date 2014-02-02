@@ -38,11 +38,6 @@ public class UserData {
 		
 		List<BasePost> postsToMake = DAO.LoadPostsInPast();
 		
-		List<BasePost> postsToMake2 = new Vector<BasePost>();
-		for (BasePost basePost : postsToMake) {
-			postsToMake2.add(basePost);
-		}
-		
 		timeZone = DAO.LoadThing(User.class, userID, userID).timeZone;
 		
 		possibleOutputs.add("Dreamwidth");

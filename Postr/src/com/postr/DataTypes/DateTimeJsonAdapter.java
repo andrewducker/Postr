@@ -3,6 +3,8 @@ package com.postr.DataTypes;
 import java.io.IOException;
 
 import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.ISODateTimeFormat;
 
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
@@ -17,6 +19,7 @@ class DateTimeJsonAdapter extends TypeAdapter<DateTime>{
 
 	@Override
 	public void write(JsonWriter writer, DateTime dateTime) throws IOException {
-		writer.value(dateTime.getMillis());
+		DateTimeFormatter fmt = ISODateTimeFormat.dateTime();
+		writer.value(fmt.print(dateTime));
 	}
 }
