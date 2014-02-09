@@ -18,11 +18,10 @@ public class DataManagementServlet extends BaseJSONServlet {
 			throw new Exception("No such method found: "+request.method);
 		}
 	}
-
+	
 	private Result RemoveData(Request parameters) {
 		Long key = parameters.id;
 		DAO.RemoveThing(key);
 		return Result.Success("Removed!");
 	}
-
 }

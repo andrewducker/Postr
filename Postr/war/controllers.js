@@ -14,6 +14,7 @@ var populateData = function(scope, orderByFilter, result) {
 	});
 	scope.loggedIn = true;
 	scope.loggedOut = false;
+	scope.timeNow = Date();
 };
 
 //The "alert" box causes the digest cycle to go awry, so we call it inside a timeout.
@@ -141,6 +142,7 @@ postrApp.controller('UserDataCtrl',
 		});
 		return deferred.promise;
 	};
+	
 
 	var createOrUpdatePost = function(outputOrPost){
 		//Posts have outputs - so if output is set then this is an existing post to clone.
@@ -157,12 +159,14 @@ postrApp.controller('UserDataCtrl',
 			//The post is in the past, so it's taken place.  We are therefore creating a new post based on it, rather than editing it.
 			if (outputOrPost.postingTime < new Date()) {
 				delete newPost.result;	
-				newPost.postingTime = new Date();
 				delete newPost.id;
+				newPost.postingTime = new Date();
 			}
 			else{
-				newPost.postInFuture = newPost.postingTime < new Date();
 				editingExistingPost = true;
+				newPost.postingTime = new Date(newPost.postingTime
+						.getUTCFullYear(), newPost.postingTime.getUTCMonth(),
+						newPost.postingTime.getUTCDate(), newPost.postingTime.getUTCHours());
 			}
 			newPost.siteName = outputs[0].siteName;
 		}else{

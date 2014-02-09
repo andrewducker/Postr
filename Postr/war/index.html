@@ -24,6 +24,7 @@
 		ng-click="login()"><span>Sign in</span></a></span>
 	<span ng-show="loggedIn">
 		<form class="form-horizontal">
+		{{timeNow}}
 			<fieldset>
 				<legend>User</legend>
 				{{data.persona}} - <a href=# ng-click="logout()">sign out</a>

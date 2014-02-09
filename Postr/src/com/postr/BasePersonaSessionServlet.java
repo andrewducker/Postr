@@ -1,5 +1,6 @@
 package com.postr;
 
+import com.postr.DataTypes.ThreadStorage;
 import com.postr.DataTypes.User;
 
 @SuppressWarnings("serial")
@@ -42,6 +43,13 @@ abstract class BasePersonaSessionServlet extends BaseJSONServlet {
 		}else{
 			User user = DAO.GetUser(persona);
 			session.setAttribute("User",user);
+		}
+	}
+	
+	@Override
+	void InitialiseProcessing(){
+		if (LoggedIn()) {
+			ThreadStorage.setDateTimeZone(GetTimeZone());
 		}
 	}
 }

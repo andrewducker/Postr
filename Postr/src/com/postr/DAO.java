@@ -94,9 +94,10 @@ public class DAO {
 
 	static User GetUser(String persona) throws Exception{
 		long userID = GetUserID(persona);
-		return LoadThing(User.class, userID, userID);
+		User user = LoadThing(User.class, userID, userID);
+		return user;
 	}
-
+	
 	public static void SaveUser(User user) {
 		ofy().save().entity(user).now();
 	}

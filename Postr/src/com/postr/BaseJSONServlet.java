@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.postr.DataTypes.Json;
+import com.postr.DataTypes.ThreadStorage;
 
 @SuppressWarnings("serial")
 abstract class BaseJSONServlet extends HttpServlet {
@@ -51,6 +52,8 @@ abstract class BaseJSONServlet extends HttpServlet {
 		    sb.append(line);
 		    }
 		    
+		    InitialiseProcessing();
+		    
 			Result result = ProcessRequest(new Json(sb.toString()));
 			
 			processResult(resp, result);
@@ -58,9 +61,15 @@ abstract class BaseJSONServlet extends HttpServlet {
 			resp.setStatus(500);
 			resp.getWriter().print(e.getMessage());
 			e.printStackTrace();
+		} finally {
+			ThreadStorage.ClearAll();
 		}
 	}
 	
+	void InitialiseProcessing(){
+	}
+
+
 	private void processResult(HttpServletResponse resp, Result result)
 			throws IOException, Exception {
 		if (result.failure) {

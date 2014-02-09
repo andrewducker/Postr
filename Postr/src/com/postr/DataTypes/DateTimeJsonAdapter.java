@@ -3,6 +3,7 @@ package com.postr.DataTypes;
 import java.io.IOException;
 
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
 
@@ -14,12 +15,16 @@ class DateTimeJsonAdapter extends TypeAdapter<DateTime>{
 
 	@Override
 	public DateTime read(JsonReader arg0) throws IOException {
-		return DateTime.parse(arg0.nextString());
+		DateTime dateTime =DateTime.parse(arg0.nextString());
+		dateTime = dateTime.withZoneRetainFields(ThreadStorage.getDateTimeZone()).withZone(DateTimeZone.UTC);
+		return dateTime;
 	}
 
 	@Override
 	public void write(JsonWriter writer, DateTime dateTime) throws IOException {
+		DateTime convertedDateTime = dateTime.withZone(ThreadStorage.getDateTimeZone()).withZoneRetainFields(DateTimeZone.UTC);
 		DateTimeFormatter fmt = ISODateTimeFormat.dateTime();
-		writer.value(fmt.print(dateTime));
+		String myValue = fmt.print(convertedDateTime);
+		writer.value(fmt.print(convertedDateTime));
 	}
 }
