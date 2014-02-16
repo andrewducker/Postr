@@ -1,29 +1,8 @@
 "use strict";
 var postrApp = angular.module('postrApp', [ 'ui.bootstrap' ]);
 
-var populateData = function(scope, orderByFilter, result) {
-	scope.data = result.data;
-	scope.data.inputs = orderByFilter(scope.data.inputs, 'userName');
-	scope.data.outputs = orderByFilter(scope.data.outputs, 'userName');
-	scope.currentInput = scope.data.inputs[0];
-	scope.currentOutput = scope.data.outputs[0];
-	scope.currentPossibleOutput = scope.data.possibleOutputs[0];
-	scope.currentPossibleInput = scope.data.possibleInputs[0];
-	scope.data.posts.forEach(function(post){
-		post.postingTime = new Date(post.postingTime);
-	});
-	scope.loggedIn = true;
-	scope.loggedOut = false;
-	scope.timeNow = Date();
-};
-
-//The "alert" box causes the digest cycle to go awry, so we call it inside a timeout.
-var myAlert = function(alertMessage){
-	setTimeout(function(){ alert(alertMessage);});
-};
-
 postrApp.controller('UserDataCtrl',
-		function postCtrl($scope, $http, orderByFilter, persona, $modal, $q, $window,$timeout, $filter) {
+		function postCtrl($scope, $http, orderByFilter, persona, $modal, $q, $window,$timeout, $filter, alerter) {
 	$scope.level = "UserDataCtrl";
 	$http.post('userdata',{method:"GetData"}).success(function(result) {
 		if (result.data != null) {
@@ -39,6 +18,23 @@ postrApp.controller('UserDataCtrl',
 			$scope.loggedIn = false;
 		}
 	});
+
+	var populateData = function(scope, orderByFilter, result) {
+		scope.data = result.data;
+		scope.data.inputs = orderByFilter(scope.data.inputs, 'userName');
+		scope.data.outputs = orderByFilter(scope.data.outputs, 'userName');
+		scope.currentInput = scope.data.inputs[0];
+		scope.currentOutput = scope.data.outputs[0];
+		scope.currentPossibleOutput = scope.data.possibleOutputs[0];
+		scope.currentPossibleInput = scope.data.possibleInputs[0];
+		scope.data.posts.forEach(function(post){
+			post.postingTime = new Date(post.postingTime);
+		});
+		scope.loggedIn = true;
+		scope.loggedOut = false;
+		scope.timeNow = Date();
+	};
+
 
 	var getOutput = function(post){
 		return $filter('filter')($scope.data.outputs,function(outputToTest){return outputToTest.id == post.output;});
@@ -77,10 +73,10 @@ postrApp.controller('UserDataCtrl',
 		data.method = "RemoveData";
 		$http.post('/DataManagement', data)
 		.success(function(response) {
-			myAlert(response.message);
+			alerter.alert(response.message);
 			deferred.resolve();
 		}).error(function(err) {
-			myAlert("Failure: " + err);
+			alerter.alert("Failure: " + err);
 		});
 		return deferred.promise;
 	};
@@ -94,7 +90,7 @@ postrApp.controller('UserDataCtrl',
 	};
 	$scope.timeZones = timeZones;
 	$scope.showInput = function() {
-		myAlert($scope.currentInput.userName + "@"
+		alerter.alert($scope.currentInput.userName + "@"
 				+ $scope.currentInput.siteName);
 	};
 
@@ -102,9 +98,9 @@ postrApp.controller('UserDataCtrl',
 		var user = {timeZone : $scope.data.timeZone, method:"UpdateData"};
 		$http.post('userdata', user)
 		.success(function() {
-			myAlert("Successfully updated!");
+			alerter.alert("Successfully updated!");
 		}).error(function(data) {
-			myAlert("Failed to update data: " + data);
+			alerter.alert("Failed to update data: " + data);
 		});
 	};
 
@@ -133,16 +129,16 @@ postrApp.controller('UserDataCtrl',
 				if(!result.id){
 					result.id = response.data;
 				}
-				myAlert(response.message);
+				alerter.alert(response.message);
 				deferred.resolve(result);
 			}).error(function(err) {
-				myAlert("Failure: " + err);
+				alerter.alert("Failure: " + err);
 				deferred.reject(err);
 			});
 		});
 		return deferred.promise;
 	};
-	
+
 
 	var createOrUpdatePost = function(outputOrPost){
 		//Posts have outputs - so if output is set then this is an existing post to clone.
@@ -152,21 +148,22 @@ postrApp.controller('UserDataCtrl',
 		if (outputOrPost.output) {
 			var outputs = getOutput(outputOrPost);
 			if (outputs.length == 0) {
-				myAlert("Unknown output for this post, cannot display");
+				alerter.alert("Unknown output for this post, cannot display");
 				return;
 			}
 			newPost = angular.copy(outputOrPost);
-			//The post is in the past, so it's taken place.  We are therefore creating a new post based on it, rather than editing it.
-			if (outputOrPost.postingTime < new Date()) {
-				delete newPost.result;	
-				delete newPost.id;
-				newPost.postingTime = new Date();
-			}
-			else{
+			//The post is awaiting posting time then we edit it.
+			// Otherwise create a new post based on it, rather than editing it.
+			if (outputOrPost.awaitingPostingTime) {
 				editingExistingPost = true;
 				newPost.postingTime = new Date(newPost.postingTime
 						.getUTCFullYear(), newPost.postingTime.getUTCMonth(),
 						newPost.postingTime.getUTCDate(), newPost.postingTime.getUTCHours());
+			}
+			else{
+				delete newPost.result;	
+				delete newPost.id;
+				newPost.postingTime = new Date();
 			}
 			newPost.siteName = outputs[0].siteName;
 		}else{
@@ -187,6 +184,8 @@ postrApp.controller('UserDataCtrl',
 				result.result = response;
 				if (response.data.state == "posted") {
 					result.postingTime = Date.now();
+				}else{
+					result.awaitingPostingTime = true;
 				}
 				result.id = response.data.id;
 				if (editingExistingPost) {
@@ -194,9 +193,9 @@ postrApp.controller('UserDataCtrl',
 				}else{
 					$scope.data.posts.push(result);	
 				}
-				myAlert(response.message);
+				alerter.alert(response.message);
 			}).error(function(err) {
-				myAlert("Failure: " + err);
+				alerter.alertAndReload("Failure: " + err);
 			});
 		});
 	};
@@ -243,15 +242,10 @@ var PostCtrl = function($scope, $modalInstance, post, $http) {
 
 	$scope.possibleTimes= [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23];
 
-	var currentDate = new Date();
-	
-	if (post.postingTime && post.postingTime > currentDate) {
+	if (post.awaitingPostingTime) {
 		$scope.post.postingHour = post.postingTime.getHours();
 		$scope.post.postingInFuture = true;
 	}
-	
-	
-	
 
 	$scope.ok = function() {
 		if ($scope.post.postingInFuture) {
@@ -295,7 +289,7 @@ var DataPopupCtrl = function($scope, $modalInstance, output, action, $http) {
 		if($scope.verificationSuccess){
 			$modalInstance.close($scope.output);	
 		}else{
-			myAlert("Not yet verified");
+			alerter.alert("Not yet verified");
 		}
 
 	};
@@ -305,7 +299,22 @@ var DataPopupCtrl = function($scope, $modalInstance, output, action, $http) {
 	};
 };
 
-postrApp.factory('persona', function() {
+postrApp.factory('alerter',function($timeout){
+	return {
+		alert : function(alertMessage){
+			return $timeout(function(){ 
+				alert(alertMessage);
+			});},
+			alertAndReload : function(alertMessage){
+				$timeout(function(){
+					alert(alertMessage + " The page will now reload to get clean data.");
+				})
+				.then(function(){window.location.reload();});
+			}
+	};
+});
+
+postrApp.factory('persona', function(alerter) {
 	return {
 		initialise : function(http, currentUser, onLoggedIn) {
 			navigator.id.watch({
@@ -317,14 +326,14 @@ postrApp.factory('persona', function() {
 						onLoggedIn(response.data);
 					}, function(data) {
 						navigator.id.logout();
-						myAlert("Login failure: " + err);
+						alerter.alert("Login failure: " + err);
 					});
 				},
 				onlogout : function() {
 					http.post('/personalogout').success(function() {
 						location.reload();
 					}).error(function(data) {
-						myAlert("Failed to log you out: " + data);
+						alerter.alert("Failed to log you out: " + data);
 						location.reload();
 					});
 				}

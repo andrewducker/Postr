@@ -12,6 +12,10 @@ public class BaseSaveable {
 	public long getId() {
 		return id;
 	}
+	
+	public boolean hasbeenSaved(){
+		return id != null;
+	}
 
 	public void setParent(long parentID) {
 		this.parent = Key.create(User.class, parentID);

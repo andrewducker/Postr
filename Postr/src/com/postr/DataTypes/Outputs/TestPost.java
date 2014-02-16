@@ -27,7 +27,7 @@ public class TestPost extends BasePost {
 			result = Result.Failure("Failed to load Output.");
 			return;
 		}
-		result = Result.Success("Test data, successfully not saved");
+		result = Result.Success("Test data, successfully not posted");
 		return;
 		}
 }
