@@ -89,7 +89,7 @@
 						<th>Result</th>
 					</tr>
 					<tr ng-repeat="post in data.posts | orderBy:'postingTime'">
-						<td>{{post.postingTime | date:'dd/MM/yyyy @ HH:mma'}}</td>
+						<td>{{post.postingTimeText()}}</td>
 						<td>{{post.subject}}</td>
 						<td>{{postDescription(post)}}</td>
 						<td>{{post.result.message}}</td>

@@ -19,6 +19,12 @@ postrApp.controller('UserDataCtrl',
 		}
 	});
 
+	var postingTimeToText = function(){
+		var time = this.postingTime;
+		return time.toUTCString().replace(" GMT","");
+		//return time.getUTCFullYear()+"/"+time.getUTCMonth()+"/"+time.getUTCDate()+" - "+time.getUTCHours()+":"+time.getUTCMinutes()+":"+time.getUTCSeconds();
+	};
+
 	var populateData = function(scope, orderByFilter, result) {
 		scope.data = result.data;
 		scope.data.inputs = orderByFilter(scope.data.inputs, 'userName');
@@ -29,12 +35,12 @@ postrApp.controller('UserDataCtrl',
 		scope.currentPossibleInput = scope.data.possibleInputs[0];
 		scope.data.posts.forEach(function(post){
 			post.postingTime = new Date(post.postingTime);
+			post.postingTimeText = postingTimeToText; 
 		});
 		scope.loggedIn = true;
 		scope.loggedOut = false;
 		scope.timeNow = Date();
 	};
-
 
 	var getOutput = function(post){
 		return $filter('filter')($scope.data.outputs,function(outputToTest){return outputToTest.id == post.output;});
@@ -98,9 +104,9 @@ postrApp.controller('UserDataCtrl',
 		var user = {timeZone : $scope.data.timeZone, method:"UpdateData"};
 		$http.post('userdata', user)
 		.success(function() {
-			alerter.alert("Successfully updated!");
+			alerter.alertAndReload("Successfully updated!");
 		}).error(function(data) {
-			alerter.alert("Failed to update data: " + data);
+			alerter.alertAndReload("Failed to update data: " + data);
 		});
 	};
 
