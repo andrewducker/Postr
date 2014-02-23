@@ -255,9 +255,10 @@ var PostCtrl = function($scope, $modalInstance, post, $http) {
 
 	$scope.ok = function() {
 		if ($scope.post.postingInFuture) {
-			$scope.post.postingTime.setHours($scope.post.postingHour);
-			$scope.post.postingTime.setMinutes(0);
-			$scope.post.postingTime.setSeconds(0);
+			var localPostingTime = $scope.post.postingTime;
+			$scope.post.postingTime = new Date();
+			$scope.post.postingTime.setUTCFullYear(localPostingTime.getFullYear(), localPostingTime.getMonth(), localPostingTime.getDate());
+			$scope.post.postingTime.setUTCHours($scope.post.postingHour,0,0,0);
 		}else{
 			delete $scope.post.postingTime;
 		}

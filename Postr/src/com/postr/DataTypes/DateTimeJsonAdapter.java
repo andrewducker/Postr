@@ -16,15 +16,13 @@ class DateTimeJsonAdapter extends TypeAdapter<DateTime>{
 	@Override
 	public DateTime read(JsonReader arg0) throws IOException {
 		DateTime dateTime =DateTime.parse(arg0.nextString());
-		dateTime = dateTime.withZoneRetainFields(ThreadStorage.getDateTimeZone()).withZone(DateTimeZone.UTC);
-		return dateTime;
+		return dateTime.withZoneRetainFields(ThreadStorage.getDateTimeZone()).withZone(DateTimeZone.UTC);
 	}
 
 	@Override
 	public void write(JsonWriter writer, DateTime dateTime) throws IOException {
 		DateTime convertedDateTime = dateTime.withZone(ThreadStorage.getDateTimeZone()).withZoneRetainFields(DateTimeZone.UTC);
 		DateTimeFormatter fmt = ISODateTimeFormat.dateTime();
-		String myValue = fmt.print(convertedDateTime);
 		writer.value(fmt.print(convertedDateTime));
 	}
 }
