@@ -193,6 +193,7 @@ postrApp.controller('UserDataCtrl',
 				}else{
 					result.awaitingPostingTime = true;
 				}
+				result.postingTimeText = postingTimeToText;
 				result.id = response.data.id;
 				if (editingExistingPost) {
 					angular.copy(result, outputOrPost);
