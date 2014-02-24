@@ -42,6 +42,7 @@ abstract class BasePersonaSessionServlet extends BaseJSONServlet {
 			session.setAttribute("User",null);
 		}else{
 			User user = DAO.GetUser(persona);
+			ThreadStorage.setDateTimeZone(user.timeZone);
 			session.setAttribute("User",user);
 		}
 	}
