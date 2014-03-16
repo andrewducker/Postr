@@ -1,9 +1,5 @@
 package com.postr;
 
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
-
-import com.googlecode.objectify.Key;
 import com.postr.DataTypes.Json;
 import com.postr.DataTypes.Outputs.BasePost;
 import com.postr.DataTypes.Outputs.ResultData;
@@ -36,9 +32,8 @@ abstract class BaseOutputServlet extends BasePersonaSessionServlet {
 	}
 
 	private Result MakePost(Json parameters) throws Exception {
-		ResultStateEnum state;
 		BasePost post = CreatePost(parameters, GetUserID());
-
+		
 		if (post.hasbeenSaved()) {
 			BasePost savedPost = DAO.LoadThing(BasePost.class, post.getId(),
 					GetUserID());
@@ -47,21 +42,9 @@ abstract class BaseOutputServlet extends BasePersonaSessionServlet {
 						.Failure("This post has already been posted, and can no longer be updated.");
 			}
 		}
+		ResultStateEnum state = post.PostOrSave();
 
-		if (post.postingTime == null
-				|| post.postingTime.isBefore(DateTime.now())) {
-			post.MakePost();
-			post.postingTime = DateTime.now(DateTimeZone.UTC);
-			post.result.postingTime = post.postingTime.getMillis();
-			post.awaitingPostingTime = false;
-			state = ResultStateEnum.posted;
-		} else {
-			post.awaitingPostingTime = true;
-			post.result = Result.Success("Saved for later");
-			state = ResultStateEnum.saved;
-		}
-		Key<BasePost> response = DAO.SaveThing(post, GetUserID());
-		post.result.data = new ResultData(response.getId(), state);
+		post.result.data = new ResultData(post.getId(), state);
 		return post.result;
 	}
 

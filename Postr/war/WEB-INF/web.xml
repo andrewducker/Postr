@@ -16,6 +16,22 @@
 	<url-pattern>/Livejournal</url-pattern>
 </servlet-mapping>
 <servlet>
+	<servlet-name>PostSingleFeed</servlet-name>
+	<servlet-class>com.postr.PostSingleFeedServlet</servlet-class>
+</servlet>
+<servlet-mapping>
+	<servlet-name>PostSingleFeed</servlet-name>
+	<url-pattern>/PostSingleFeed</url-pattern>
+</servlet-mapping>
+<servlet>
+	<servlet-name>PostBacklog</servlet-name>
+	<servlet-class>com.postr.PostBacklogServlet</servlet-class>
+</servlet>
+<servlet-mapping>
+	<servlet-name>PostBacklog</servlet-name>
+	<url-pattern>/PostBacklog</url-pattern>
+</servlet-mapping>
+<servlet>
 	<servlet-name>TestOutput</servlet-name>
 	<servlet-class>com.postr.TestOutputServlet</servlet-class>
 </servlet>

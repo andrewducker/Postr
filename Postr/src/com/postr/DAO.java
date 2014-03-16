@@ -3,11 +3,13 @@ package com.postr;
 import static com.googlecode.objectify.ObjectifyService.ofy;
 
 import java.util.List;
+import java.util.Vector;
 
 import org.joda.time.DateTime;
 
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.ObjectifyService;
+import com.googlecode.objectify.cmd.QueryKeys;
 import com.googlecode.objectify.impl.translate.opt.joda.JodaTimeTranslators;
 import com.postr.DataTypes.BaseSaveable;
 import com.postr.DataTypes.User;
@@ -40,11 +42,14 @@ public class DAO {
 		ObjectifyService.register(TestData.class);
 	}
 
-	static <T extends BaseSaveable> Key<T> SaveThing(T thing, Long userID){
+	public static <T extends BaseSaveable> Key<T> SaveThing(T thing, Long userID){
 		thing.setParent(userID);
 		return ofy().save().entity(thing).now();
 	}
 
+	public static <T extends BaseSaveable> Key<T> SaveThing(T thing){
+		return ofy().save().entity(thing).now();
+	}
 	public static <T extends BaseSaveable> T LoadThing(Class<T> clazz, Long id, Long userID) throws Exception{
 		T retrieved = ofy().load().type(clazz).id(id).get();
 		if (retrieved instanceof User) {
@@ -59,6 +64,11 @@ public class DAO {
 		return retrieved;
 	}
 
+	public static <T extends BaseSaveable> T LoadThing(Class<T> clazz, Long id) throws Exception{
+		return ofy().load().type(clazz).id(id).get();
+	}
+
+	
 	public static <T extends BaseSaveable> List<T> LoadThings(Class<T> clazz, Long userID){
 		return ofy().load().type(clazz).filter("parent", userKey(userID)).list();
 	}
@@ -88,8 +98,15 @@ public class DAO {
 		throw new Exception("Multiple emails found with address: "+persona);
 	}
 	
-	public static List<BasePost> LoadPostsInQueue(){
-		return ofy().load().type(BasePost.class).filter("postingTime <=",DateTime.now()).filter("awaitingPostingTime",true).list();
+	public static List<Long> LoadPostsInQueue(){
+		QueryKeys<BasePost> query = ofy().load().type(BasePost.class)
+				.filter("postingTime <=", DateTime.now())
+				.filter("awaitingPostingTime",true).keys();
+		Vector<Long> outputList = new Vector<Long>();
+		for (Key<BasePost> feedKey : query) {
+			outputList.add(feedKey.getId());
+		}
+		return outputList;
 	}
 
 	static User GetUser(String persona) throws Exception{

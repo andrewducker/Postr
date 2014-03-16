@@ -24,7 +24,7 @@ public class Result {
 	
 	String message;
 	
-	long postingTime; // NO_UCD (JSON)
+	public long postingTime; // NO_UCD (JSON)
 	
 	public static Result Success(String message){
 		return new Result(false,message);

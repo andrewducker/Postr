@@ -1,15 +1,34 @@
 package com.postr.DataTypes.Outputs;
 
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 
 import com.googlecode.objectify.annotation.EntitySubclass;
 import com.googlecode.objectify.annotation.Index;
+import com.postr.DAO;
 import com.postr.Result;
 import com.postr.DataTypes.BaseSaveable;
 
 @EntitySubclass(index = true)
 public abstract class BasePost extends BaseSaveable {
-	abstract public void MakePost();
+	abstract void MakePost();
+	public ResultStateEnum PostOrSave(){
+		ResultStateEnum state;
+		if (postingTime == null
+				|| postingTime.isBefore(DateTime.now())) {
+			MakePost();
+			postingTime = DateTime.now(DateTimeZone.UTC);
+			result.postingTime = postingTime.getMillis();
+			awaitingPostingTime = false;
+			state = ResultStateEnum.posted;
+		} else {
+			awaitingPostingTime = true;
+			result = Result.Success("Saved for later");
+			state = ResultStateEnum.saved;
+		}
+		DAO.SaveThing(this, this.getParent());
+		return state;
+	}
 
 	String subject;
 	String contents;
