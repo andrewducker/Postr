@@ -1,46 +1,52 @@
 "use strict";
-var testApp = angular.module('testApp', ['ui.bootstrap' ]);
+var testApp = angular.module('testApp', ['ngRoute' ]);
 
-testApp.controller('UserDataCtrl',function ($scope, $modal) {
-	$scope.hour = 12;
-	$scope.showPopup = function() {
-		$modal.open({
-			templateUrl : 'popup.html',
-			controller : PopupCtrl,
-			resolve : {
-				hour : function() {
-					return $scope.hour;
-				},
-				oldScope : function(){
-					return $scope;
-				}
-		
-			}
-		}).result.then(function(result) {
-			$scope.hour = result;
-		});
-	};
-
+testApp.controller('MainController',function ($scope, $location, myData) {
+	$scope.data = myData;
+	$scope.data.message = "Hello!";
+	$scope.data.location = $location;
 });
 
-var PopupCtrl = function($scope, $modalInstance, $http, hour, oldScope) {
-	var myOldScope = oldScope;
-	$scope.level="PopupCtrl";
-
-	$scope.possibleTimes= [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23];
-
-	$scope.hour = hour;
-
-	$scope.ok = function() {
-		$modalInstance.close($scope.hour);	
+testApp.controller('FriendController',function ($scope, $routeParams, myData, $filter, $location) {
+	
+	var search = {id: $routeParams.friendID};
+	var found = $filter('filter')(myData.friends, search, true);
+	$scope.data = {friend: angular.copy(found[0])};
+	$scope.Save = function(){
+		angular.copy($scope.data.friend, found[0]);
+		$location.path("");
 	};
-
-	$scope.cancel = function() {
-		$modalInstance.dismiss('cancel');
+	$scope.Cancel = function(){
+		$location.path("");
 	};
+});
 
-	$scope.changing = function(){
-		var x = 5;
+testApp.factory('myData', function(){
+	return {
+		friends : [
+		           {id:"1",name: "Andy"}, 
+		           {id:"2", name: "Bob"},
+		           {id:"3", name: "Charlie"}],
+		wife: "Julie"
 	};
+});
 
-};
+
+testApp.config(function($routeProvider){
+	$routeProvider.when('/',{
+		templateUrl:"MainPage.htm",
+			controller: "MainController"
+	})
+	.when ("/subpage/",{
+		templateUrl:"ILove.htm",
+		controller: "MainController"
+	})
+	.when ("/friend/:friendID",{
+		templateUrl: "FriendDetails.htm",
+		controller: "FriendController"
+	})
+	.otherwise({
+		template:"<H1>I am lost at {{data.location.path()}}</H1>",
+		controller: "MainController"
+			});
+});

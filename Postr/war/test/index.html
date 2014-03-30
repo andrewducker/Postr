@@ -4,16 +4,21 @@
 <head>
 <meta charset="utf-8">
 <title>Popup Test</title>
-<script
-	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0/angular.min.js"></script>
+<script	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular-route.min.js"></script>
 <link rel="stylesheet" href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css">
-<script src="ui-bootstrap-tpls-0.10.0.min.js"></script>
+
 
 <script src="controllers.js"></script>
 
 </head>
-<body ng-controller="UserDataCtrl">
-{{hour}}
-			<button ng-click="showPopup()">Update</button>
+<body ng-app="testApp">
+Buncha stuff above.
+<BR>
+<BR>
+<div ng-view></div>
+<BR>
+<BR>
+<A href=".">Go back to main page</A>
 </body>
 </html>

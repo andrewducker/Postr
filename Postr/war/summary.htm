@@ -1,0 +1,74 @@
+<form class="form-horizontal">
+	<fieldset>
+		<legend>User</legend>
+		{{data.persona}} - <a href=# ng-click="logout()">sign out</a>
+		<div class="control-group">
+			<label class="control-label" for="timeZone">Time Zone:</label>
+			<div class="controls">
+				<select ng-model="data.timeZone" id="timeZone"
+					ng-options="zone for zone in timeZones"></select>
+				<button ng-click="updateTimeZone()">Update</button>
+			</div>
+		</div>
+	</fieldset>
+
+	<fieldset>
+		<legend>Inputs</legend>
+		<div class="control-group" ng-show="data.inputs.length > 0">
+			<label class="control-label" for="currentInput">Existing:</label>
+			<div class="controls">
+				<select ng-model="currentInput" id="currentInput"
+					ng-options="input.userName+'@'+input.siteName for input in data.inputs"></select>
+				<button ng-click="removeInput()">Remove</button>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="newInput">New Input?</label>
+			<div class="controls" id="newInput">
+				<select ng-model="currentPossibleInput" id="newInput"
+					ng-options="possibleInput for possibleInput in data.possibleInputs"></select>
+				<button class="btn" ng-click="addInput()">Add</button>
+			</div>
+		</div>
+	</fieldset>
+
+	<fieldset>
+		<legend>Outputs</legend>
+		<div class="control-group" ng-show="data.outputs.length > 0">
+			<label class="control-label" for="currentOutput">Existing:</label>
+			<div class="controls">
+				<select ng-model="currentOutput" id="currentOutput"
+					ng-options="output.userName+'@'+output.siteName for output in data.outputs"></select>
+				<button ng-click="updateOutput()">Update</button>
+				<button ng-click="createPost()">Post</button>
+				<button ng-click="removeOutput()">Remove</button>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="newOutput">New Output?</label>
+			<div class="controls">
+				<select ng-model="currentPossibleOutput" id="newOutput"
+					ng-options="possibleOutput for possibleOutput in data.possibleOutputs"></select>
+				<button class="btn" ng-click="addOutput()">Add</button>
+			</div>
+		</div>
+	</fieldset>
+	<fieldset>
+		<legend>Posts</legend>
+		<table id="existingPostsTable" border=1>
+			<tr>
+				<th>Posted</th>
+				<th>Subject</th>
+				<th>Destination</th>
+				<th>Result</th>
+			</tr>
+			<tr ng-repeat="post in data.posts | orderBy:'postingTime'">
+				<td>{{post.postingTimeText()}}</td>
+				<td>{{post.subject}}</td>
+				<td>{{postDescription(post)}}</td>
+				<td>{{post.result.message}}</td>
+				<td><button class=btn ng-click="displayPost(post)">Display</button>
+			</tr>
+		</table>
+	</fieldset>
+</form>
