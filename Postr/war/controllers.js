@@ -1,46 +1,53 @@
 "use strict";
-var postrApp = angular.module('postrApp', [ 'ui.bootstrap' ]);
+var postrApp = angular.module('postrApp', [ 'ui.bootstrap','ngRoute' ]);
 
-postrApp.controller('UserDataCtrl',
-		function postCtrl($scope, $http, orderByFilter, persona, $modal, $q, $window,$timeout, $filter, alerter) {
-	$scope.level = "UserDataCtrl";
-	$http.post('userdata',{method:"GetData"}).success(function(result) {
-		if (result.data != null) {
-			populateData($scope, orderByFilter, result);
-			persona.initialise($http, result.data.persona);
-			$scope.loggedOut = false;
-			$scope.loggedIn = true;
-		} else {
-			persona.initialise($http, null, function(newData) {
-				populateData($scope, orderByFilter, newData);
-			});
-			$scope.loggedOut = true;
-			$scope.loggedIn = false;
-		}
-	});
-
+postrApp.factory('userData', function(persona, $http,orderByFilter){
 	var postingTimeToText = function(){
 		var time = this.postingTime;
 		return time.toUTCString().replace(" GMT","");
-		//return time.getUTCFullYear()+"/"+time.getUTCMonth()+"/"+time.getUTCDate()+" - "+time.getUTCHours()+":"+time.getUTCMinutes()+":"+time.getUTCSeconds();
 	};
+	var data = {
+			loggedOut : false,
+			loggedIn : false,
+			populate : function(result) {
+				angular.extend(this,result.data);
+				this.inputs = orderByFilter(this.inputs, 'userName');
+				this.outputs = orderByFilter(this.outputs, 'userName');
+				this.currentInput = this.inputs[0];
+				this.currentOutput = this.outputs[0];
+				this.currentPossibleOutput = this.possibleOutputs[0];
+				this.currentPossibleInput = this.possibleInputs[0];
+				this.posts.forEach(function(post){
+					post.postingTime = new Date(post.postingTime);
+					post.postingTimeText = postingTimeToText; 
+				});
+				this.loggedOut = false;
+				this.loggedIn = true;
+			}
+	};
+	$http.post('userdata',{method:"GetData"}).success(function(result) {
+		if (result.data != null) {
+			data.populate(result);
+			persona.initialise($http, result.data.persona);
+		} else {
+			persona.initialise($http, null, function(newData) {
+				data.populate(newData);
+			});
+			data.loggedOut = true;
+			data.loggedIn = false;
+		}
+	});
 
-	var populateData = function(scope, orderByFilter, result) {
-		scope.data = result.data;
-		scope.data.inputs = orderByFilter(scope.data.inputs, 'userName');
-		scope.data.outputs = orderByFilter(scope.data.outputs, 'userName');
-		scope.currentInput = scope.data.inputs[0];
-		scope.currentOutput = scope.data.outputs[0];
-		scope.currentPossibleOutput = scope.data.possibleOutputs[0];
-		scope.currentPossibleInput = scope.data.possibleInputs[0];
-		scope.data.posts.forEach(function(post){
-			post.postingTime = new Date(post.postingTime);
-			post.postingTimeText = postingTimeToText; 
-		});
-		scope.loggedIn = true;
-		scope.loggedOut = false;
-		scope.timeNow = Date();
-	};
+	return data;
+});
+
+postrApp.controller('SummaryController',function summaryController($scope,userData){
+	$scope.data = userData;
+});
+
+postrApp.controller('UserDataCtrl',
+		function postCtrl($scope, $http, persona, $modal, $q, $window,$timeout, $filter, alerter,userData) {
+	$scope.data = userData;
 
 	var getOutput = function(post){
 		return $filter('filter')($scope.data.outputs,function(outputToTest){return outputToTest.id == post.output;});
@@ -101,8 +108,8 @@ postrApp.controller('UserDataCtrl',
 	};
 
 	$scope.updateTimeZone = function(){
-		var user = {timeZone : $scope.data.timeZone, method:"UpdateData"};
-		$http.post('userdata', user)
+		var userData = {timeZone : $scope.data.timeZone, method:"UpdateData"};
+		$http.post('userdata', userData)
 		.success(function() {
 			alerter.alertAndReload("Successfully updated!");
 		}).error(function(data) {
@@ -241,6 +248,17 @@ postrApp.controller('UserDataCtrl',
 	$scope.logout = function() {
 		persona.logout();
 	};
+});
+
+postrApp.config(function($routeProvider){
+	$routeProvider.when('/',{
+		templateUrl:"summary.htm",
+			controller: "SummaryController"
+	})
+	.otherwise({
+		template:"<H1>I am lost at {{data.location.path()}}</H1>",
+		controller: "MainController"
+			});
 });
 
 var PostCtrl = function($scope, $modalInstance, post, $http) {

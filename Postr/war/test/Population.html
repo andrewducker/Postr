@@ -1,0 +1,28 @@
+<html>
+<body>
+<script>
+function myFunction() {
+    document.getElementById("demo").innerHTML = data.name;
+}
+
+function repopulate() {
+	data.populate();
+    document.getElementById("demo").innerHTML = data.name;
+}
+
+
+var data = {
+  		populate : function(){
+  			this.name = "Dave";
+  		},
+  name: "Andy"
+  };
+
+</script>
+<p id="demo">A Paragraph</p>
+
+<button type="button" onclick="myFunction()">Populate original</button> 
+<button type="button" onclick="repopulate()">Repopulate</button>
+</body>
+
+</html>

@@ -8,7 +8,6 @@ testApp.controller('MainController',function ($scope, $location, myData) {
 });
 
 testApp.controller('FriendController',function ($scope, $routeParams, myData, $filter, $location) {
-	
 	var search = {id: $routeParams.friendID};
 	var found = $filter('filter')(myData.friends, search, true);
 	$scope.data = {friend: angular.copy(found[0])};
@@ -21,12 +20,24 @@ testApp.controller('FriendController',function ($scope, $routeParams, myData, $f
 	};
 });
 
+testApp.controller('NewFriendController',function ($scope, $routeParams, myData, $filter, $location) {
+	$scope.data = {friend: {id: myData.friends.length+1}};
+	$scope.Save = function(){
+		myData.friends.push($scope.data.friend);
+		$location.path("");
+	};
+	$scope.Cancel = function(){
+		$location.path("");
+	};
+});
+
+
 testApp.factory('myData', function(){
 	return {
 		friends : [
-		           {id:"1",name: "Andy"}, 
-		           {id:"2", name: "Bob"},
-		           {id:"3", name: "Charlie"}],
+		           {id:"1",name: "Andy", petType:"Dog", dogName: "Woof" }, 
+		           {id:"2", name: "Bob", petType:"Cat", catName: "Miaow"},
+		           {id:"3", name: "Charlie", petType:"Dog", dogName: "Bark"}],
 		wife: "Julie"
 	};
 });
@@ -41,8 +52,12 @@ testApp.config(function($routeProvider){
 		templateUrl:"ILove.htm",
 		controller: "MainController"
 	})
-	.when ("/friend/:friendID",{
-		templateUrl: "FriendDetails.htm",
+	.when("/friend/new",{
+		templateUrl:"FriendDetails.htm",
+		controller: "NewFriendController"
+	})
+	.when ("/friend/:petType/:friendID",{
+		templateUrl:  function(params){return params.petType + "FriendDetails.htm";}  ,
 		controller: "FriendController"
 	})
 	.otherwise({
