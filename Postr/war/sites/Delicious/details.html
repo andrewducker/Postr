@@ -1,13 +1,13 @@
 <div>
-	<div class="modal-header">
+	<div>
 		<h3>Delicious details</h3>
 	</div>
-	<div class="modal-body">
+	<div>
 		<form class="form-horizontal">
 			<div class="control-group">
 				<label class="control-label" for="userName">User Name:</label>
 				<div class="controls">
-					<input ng-model="output.userName" name="userName">
+					<input ng-model="item.userName" name="userName">
 				</div>
 			</div>
 			<div class="control-group">
@@ -18,8 +18,8 @@
 			<div>{{verificationMessage}}</div>
 		</form>
 	</div>
-	<div class="modal-footer">
-		<button class="btn btn-primary" ng-click="ok()">OK</button>
-		<button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+	<div>
+		<button class="btn btn-primary" ng-click="Save()">OK</button>
+		<button class="btn btn-warning" ng-click="Cancel()">Cancel</button>
 	</div>
 </div>

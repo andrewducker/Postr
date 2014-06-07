@@ -14,22 +14,19 @@
 
 	<fieldset>
 		<legend>Inputs</legend>
-		<div class="control-group" ng-show="data.inputs.length > 0">
-			<label class="control-label" for="currentInput">Existing:</label>
-			<div class="controls">
-				<select ng-model="currentInput" id="currentInput"
-					ng-options="input.userName+'@'+input.siteName for input in data.inputs"></select>
-				<button ng-click="removeInput()">Remove</button>
-			</div>
+		<div ng-show="data.inputs.length > 0">
+			<table id="existingInputsTable" border=1>
+				<tr>
+					<th>User@Site</th>
+					<th>Remove</th>
+				</tr>
+				<tr ng-repeat="input in data.inputs | orderBy:'userName'">
+					<td>{{input.userName}}@{{input.siteName}}</td>
+					<td><button class=btn ng-click="removeItem(input.ID)">Remove</button>
+				</tr>
+			</table>
 		</div>
-		<div class="control-group">
-			<label class="control-label" for="newInput">New Input?</label>
-			<div class="controls" id="newInput">
-				<select ng-model="currentPossibleInput" id="newInput"
-					ng-options="possibleInput for possibleInput in data.possibleInputs"></select>
-				<button class="btn" ng-click="addInput()">Add</button>
-			</div>
-		</div>
+		<A href="#/input/new">Add New Input</A>
 	</fieldset>
 
 	<fieldset>

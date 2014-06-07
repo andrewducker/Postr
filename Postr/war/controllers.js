@@ -1,6 +1,25 @@
 "use strict";
 var postrApp = angular.module('postrApp', [ 'ui.bootstrap','ngRoute' ]);
 
+postrApp.config(function($routeProvider){
+	$routeProvider.when('/',{
+		templateUrl:"summary.htm",
+			controller: "SummaryController"
+	})	
+	.when ("/input/new/:siteName",{
+		templateUrl:  function(params){params.itemType="input"; return "sites/"+ params.siteName + "/details.html";}  ,
+		controller: "NewInputDataController"
+	})
+	.when("/input/new",{
+		templateUrl:"newInput.htm",
+		controller: "NewInputSelectionController"
+	})
+	.otherwise({
+		template:"<H1>I am lost at {{data.location.path()}}</H1>",
+		controller: "MainController"
+			});
+});
+
 postrApp.factory('userData', function(persona, $http,orderByFilter){
 	var postingTimeToText = function(){
 		var time = this.postingTime;
@@ -39,6 +58,60 @@ postrApp.factory('userData', function(persona, $http,orderByFilter){
 	});
 
 	return data;
+});
+
+postrApp.controller('NewInputSelectionController',function ($scope, userData) {
+	$scope.userData = userData;
+	$scope.Cancel = function(){
+		$location.path("");
+	};
+});
+
+postrApp.controller('NewInputDataController', function($routeParams, $scope, alerter, $location, $http, userData){
+	var siteName = $routeParams.siteName;
+	$scope.item = {siteName : siteName};
+	$scope.verify = function(){
+		$scope.verificationSuccess = false;
+		$scope.item.method = "Verify";
+		$http.post('/' + siteName, $scope.item)
+		.success(function(data) {
+			$scope.verificationMessage = data.message;
+			$scope.verificationSuccess = true;
+		}).error(function(data) {
+			if(data.message){
+				$scope.verificationMessage = data.message;
+			}else{
+				$scope.verificationMessage = data;
+			}
+		});
+	};
+	
+	$scope.Save = function(){
+		if(!$scope.verificationSuccess){
+			alerter.alert("Not yet verified");
+			return;
+		}
+
+		$scope.item.method = "SaveData";
+		$http.post('/' + siteName, $scope.item)
+		.success(function(response) {
+			$scope.item.id = response.data;
+			if($routeParams.itemType = "input"){
+				userData.inputs.push($scope.item);
+			}else{
+				userData.outputs.push($scope.item);
+			}
+			alerter.alert(response.message);
+			$location.path("");
+		}).error(function(err) {
+			alerter.alert("Failure: " + err);
+			$location.path("");
+		});
+	};
+
+	$scope.Cancel = function(){
+		$location.path("");
+	};
 });
 
 postrApp.controller('SummaryController',function summaryController($scope,userData){
@@ -248,17 +321,6 @@ postrApp.controller('UserDataCtrl',
 	$scope.logout = function() {
 		persona.logout();
 	};
-});
-
-postrApp.config(function($routeProvider){
-	$routeProvider.when('/',{
-		templateUrl:"summary.htm",
-			controller: "SummaryController"
-	})
-	.otherwise({
-		template:"<H1>I am lost at {{data.location.path()}}</H1>",
-		controller: "MainController"
-			});
 });
 
 var PostCtrl = function($scope, $modalInstance, post, $http) {
