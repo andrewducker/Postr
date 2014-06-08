@@ -17,12 +17,12 @@
 		<div ng-show="data.inputs.length > 0">
 			<table id="existingInputsTable" border=1>
 				<tr>
-					<th>User@Site</th>
+					<th>Input</th>
 					<th>Remove</th>
 				</tr>
 				<tr ng-repeat="input in data.inputs | orderBy:'userName'">
-					<td>{{input.userName}}@{{input.siteName}}</td>
-					<td><button class=btn ng-click="removeItem(input.ID)">Remove</button>
+					<td><A href="#/input/{{input.siteName}}/{{input.id}}">{{input.userName}}@{{input.siteName}}</A></td>
+					<td><button class=btn ng-click="removeItem(input.id)">Remove</button>
 				</tr>
 			</table>
 		</div>

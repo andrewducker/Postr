@@ -10,6 +10,10 @@ postrApp.config(function($routeProvider){
 		templateUrl:  function(params){params.itemType="input"; return "sites/"+ params.siteName + "/details.html";}  ,
 		controller: "NewInputDataController"
 	})
+		.when ("/input/:siteName/:id",{
+		templateUrl:  function(params){params.itemType="input"; return "sites/"+ params.siteName + "/details.html";}  ,
+		controller: "EditInputDataController"
+	})
 	.when("/input/new",{
 		templateUrl:"newInput.htm",
 		controller: "NewInputSelectionController"
@@ -113,6 +117,65 @@ postrApp.controller('NewInputDataController', function($routeParams, $scope, ale
 		$location.path("");
 	};
 });
+
+postrApp.controller('EditInputDataController', function($routeParams, $scope, alerter, $location, $http, userData, $filter){
+	var siteName = $routeParams.siteName;
+	var search = {id:parseInt($routeParams.id)};
+	var found;
+	if($routeParams.itemType = "input"){
+		found = $filter('filter')(userData.inputs, search, true);
+	}else{
+		found = $filter('filter')(userData.outputs, search, true);
+	}
+	if(found.length){
+		var item = found[0];
+		$scope.item =  angular.copy(item);
+	}else{
+		alerter.alert("Error - item not found.  Please report this!");
+		$location.path("");
+		return;
+	}
+	
+	
+	$scope.verify = function(){
+		$scope.verificationSuccess = false;
+		$scope.item.method = "Verify";
+		$http.post('/' + siteName, $scope.item)
+		.success(function(data) {
+			$scope.verificationMessage = data.message;
+			$scope.verificationSuccess = true;
+		}).error(function(data) {
+			if(data.message){
+				$scope.verificationMessage = data.message;
+			}else{
+				$scope.verificationMessage = data;
+			}
+		});
+	};
+	
+	$scope.Save = function(){
+		if(!$scope.verificationSuccess){
+			alerter.alert("Not yet verified");
+			return;
+		}
+
+		$scope.item.method = "UpdateData";
+		$http.post('/' + siteName, $scope.item)
+		.success(function(response) {
+			angular.copy($scope.item,item);
+			alerter.alert(response.message);
+			$location.path("");
+		}).error(function(err) {
+			alerter.alert("Failure: " + err);
+			$location.path("");
+		});
+	};
+
+	$scope.Cancel = function(){
+		$location.path("");
+	};
+});
+
 
 postrApp.controller('SummaryController',function summaryController($scope,userData){
 	$scope.data = userData;
