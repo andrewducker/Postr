@@ -125,7 +125,7 @@ postrApp.controller('NewSiteDataController', function($routeParams, $scope, aler
 		$http.post('/' + siteName, $scope.item)
 		.success(function(response) {
 			$scope.item.id = response.data;
-			if($routeParams.itemType = "input"){
+			if($routeParams.itemType == "input"){
 				userData.inputs.push($scope.item);
 			}else{
 				userData.outputs.push($scope.item);
