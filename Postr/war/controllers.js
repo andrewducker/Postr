@@ -6,25 +6,30 @@ postrApp.config(function($routeProvider){
 		templateUrl:"summary.htm",
 			controller: "SummaryController"
 	})	
-	.when ("/input/new/:siteName",{
-		templateUrl:  function(params){params.itemType="input"; return "sites/"+ params.siteName + "/details.html";}  ,
-		controller: "NewInputDataController"
+	.when ("/site/new/:siteName",{
+		templateUrl:  function(params){return "sites/"+ params.siteName + "/details.html";}  ,
+		controller: "NewSiteDataController"
 	})
-		.when ("/input/:siteName/:id",{
-		templateUrl:  function(params){params.itemType="input"; return "sites/"+ params.siteName + "/details.html";}  ,
-		controller: "EditInputDataController"
+	.when("/site/:itemType/new",{
+		templateUrl: function(params){return "newSite.htm";},
+		controller: "NewSiteDataSelectionController"
 	})
-	.when("/input/new",{
-		templateUrl:"newInput.htm",
-		controller: "NewInputSelectionController"
+	.when ("/site/:siteName/:id",{
+		templateUrl:  function(params){return "sites/"+ params.siteName + "/details.html";}  ,
+		controller: "EditSiteDataController"
 	})
 	.otherwise({
-		template:"<H1>I am lost at {{data.location.path()}}</H1>",
-		controller: "MainController"
+		template:"<H1>I am lost at {{location.path()}}</H1>",
+		controller: "LostController"
 			});
 });
 
-postrApp.factory('userData', function(persona, $http,orderByFilter){
+postrApp.controller('LostController',function ($scope, $location) {
+	$scope.location = $location;
+});
+
+
+postrApp.factory('userData', function(persona, $http,orderByFilter, $filter){
 	var postingTimeToText = function(){
 		var time = this.postingTime;
 		return time.toUTCString().replace(" GMT","");
@@ -32,6 +37,19 @@ postrApp.factory('userData', function(persona, $http,orderByFilter){
 	var data = {
 			loggedOut : false,
 			loggedIn : false,
+			getSiteItem : function(id){
+				var search = {id:parseInt(id)};
+				var found;
+				found = $filter('filter')(this.inputs, search, true);
+				if(found.length){
+					return found[0];
+				}
+				found = $filter('filter')(this.outputs, search, true);
+				if(found.length){
+					return found[0];
+				}
+				return null;
+			},
 			populate : function(result) {
 				angular.extend(this,result.data);
 				this.inputs = orderByFilter(this.inputs, 'userName');
@@ -64,14 +82,21 @@ postrApp.factory('userData', function(persona, $http,orderByFilter){
 	return data;
 });
 
-postrApp.controller('NewInputSelectionController',function ($scope, userData) {
-	$scope.userData = userData;
+postrApp.controller('NewSiteDataSelectionController',function ($routeParams, $scope, userData) {
+	$scope.siteList = function(){
+		if($routeParams.itemType == "input"){
+			return userData.possibleInputs;
+		}
+		else{
+			return userData.possibleOutputs;
+		}
+	};
 	$scope.Cancel = function(){
 		$location.path("");
 	};
 });
 
-postrApp.controller('NewInputDataController', function($routeParams, $scope, alerter, $location, $http, userData){
+postrApp.controller('NewSiteDataController', function($routeParams, $scope, alerter, $location, $http, userData){
 	var siteName = $routeParams.siteName;
 	$scope.item = {siteName : siteName};
 	$scope.verify = function(){
@@ -118,24 +143,17 @@ postrApp.controller('NewInputDataController', function($routeParams, $scope, ale
 	};
 });
 
-postrApp.controller('EditInputDataController', function($routeParams, $scope, alerter, $location, $http, userData, $filter){
+postrApp.controller('EditSiteDataController', function($routeParams, $scope, alerter, $location, $http, userData, $filter){
 	var siteName = $routeParams.siteName;
-	var search = {id:parseInt($routeParams.id)};
-	var found;
-	if($routeParams.itemType = "input"){
-		found = $filter('filter')(userData.inputs, search, true);
-	}else{
-		found = $filter('filter')(userData.outputs, search, true);
-	}
-	if(found.length){
-		var item = found[0];
+	var item = userData.getSiteItem($routeParams.id);
+	
+	if(item){
 		$scope.item =  angular.copy(item);
 	}else{
 		alerter.alert("Error - item not found.  Please report this!");
 		$location.path("");
 		return;
 	}
-	
 	
 	$scope.verify = function(){
 		$scope.verificationSuccess = false;
