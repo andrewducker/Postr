@@ -155,6 +155,8 @@ postrApp.controller('EditSiteDataController', function($routeParams, $scope, ale
 		return;
 	}
 	
+	$scope.action = "Update";
+	
 	$scope.verify = function(){
 		$scope.verificationSuccess = false;
 		$scope.item.method = "Verify";

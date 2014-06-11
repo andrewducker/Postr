@@ -21,7 +21,7 @@
 					<th>Remove</th>
 				</tr>
 				<tr ng-repeat="input in data.inputs | orderBy:'userName'">
-					<td><A href="#/site/{{input.siteName}}/{{input.id}}">{{input.userName}}@{{input.siteName}}</A></td>
+					<td>{{input.userName}}@{{input.siteName}}</td>
 					<td><button class=btn ng-click="removeItem(input.id)">Remove</button>
 				</tr>
 			</table>
