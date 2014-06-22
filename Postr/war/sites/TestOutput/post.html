@@ -7,19 +7,19 @@
 			<div class="control-group">
 				<label class="control-label" for="subject">Subject Line:</label>
 				<div class="controls">
-					<input type="text" id="subject" ng-model="post.subject">
+					<input type="text" id="subject" ng-readonly="readOnly" ng-model="post.subject">
 				</div>
 			</div>
 			<div class="control-group">
 				<label class="control-label" for="contents">Text:</label>
 				<div class="controls">
-					<textarea rows=5 id="contents" ng-model="post.contents"></textarea>
+					<textarea rows=5 id="contents" ng-readonly="readOnly" ng-model="post.contents"></textarea>
 				</div>
 			</div>
 			<div class="control-group">
 				<label class="control-label" for="visibility">Visibility</label>
 				<div class="controls">
-					<select id="visibility" ng-model="post.visibility"><option>Public</option>
+					<select id="visibility" ng-readonly="readOnly" ng-model="post.visibility"><option>Public</option>
 						<option>FriendsOnly</option>
 						<option>Private</option>
 					</select>
@@ -28,20 +28,20 @@
 			<div class="control-group">
 				<label class="control-label" for="format">Auto Format:</label>
 				<div class="controls">
-					<input type="checkbox" id="format" ng-model="post.autoFormat">
+					<input type="checkbox" id="format" ng-readonly="readOnly" ng-model="post.autoFormat">
 				</div>
 			</div>
 			<div class="control-group">
 				<label class="control-label" for="tags">Tags:</label>
 				<div class="controls">
-					<input type="text" id="tags" ng-model="post.tags">
+					<input type="text" id="tags" ng-readonly="readOnly" ng-model="post.tags">
 				</div>
 			</div>
 			<div class="control-group">
 				<label class="control-label" for="postInFuture">Post in
 					future?</label>
 				<div class="controls">
-					<input type="checkbox" id=postInFuture
+					<input type="checkbox" id=postInFuture ng-readonly="readOnly"
 						ng-model=post.postingInFuture>
 				</div>
 			</div>
@@ -51,19 +51,20 @@
 					<select 
 						ng-model="post.postingHour"
 						id="postingHour"
+						ng-readonly="readOnly"
 						ng-options="possibleTime for possibleTime in possibleTimes"
 						>
 					</select>
 				</div>
 				<p class="input-group">
-					<input type="text" class="form-control"
+					<input type="text" class="form-control"  ng-readonly="readOnly"
 						datepicker-popup="yyyy-MM-dd" ng-model="post.postingTime" />
 				</p>
 			</div>
 		</form>
 	</div>
 	<div>
-		<button class="btn btn-primary" ng-click="Save()">OK</button>
+		<button class="btn btn-primary" ng-show="!readOnly" ng-click="Save()">OK</button>
 		<button class="btn btn-warning" ng-click="Cancel()">Cancel</button>
 	</div>
 </div>

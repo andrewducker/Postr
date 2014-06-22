@@ -71,7 +71,7 @@ postrApp.factory('userData', function(persona, $http,orderByFilter, $filter){
 				var search = {id:parseInt(id)};
 				var found;
 				found = $filter('filter')(this.posts, search, true);
-				if(found.length){
+				if(found && found.length){
 					return found[0];
 				}
 				return null;
