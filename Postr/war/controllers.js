@@ -32,6 +32,11 @@ postrApp.config(function($routeProvider){
 		templateUrl: function(params){return "sites/"+params.siteName + "/post.html";},
 		controller: "NewPostDataController"
 	})
+	//Details for an existing post
+	.when("/post/:siteName/:postId",{
+		templateUrl: function(params){return "sites/"+params.siteName + "/post.html";},
+		controller: "ExistingPostDataController"
+	})
 	//Something has gone wrong
 	.otherwise({
 		template:"<H1>I am lost at {{location.path()}}</H1>",
@@ -57,6 +62,15 @@ postrApp.factory('userData', function(persona, $http,orderByFilter, $filter){
 					return found[0];
 				}
 				found = $filter('filter')(this.outputs, search, true);
+				if(found.length){
+					return found[0];
+				}
+				return null;
+			},			
+			getPost : function(id){
+				var search = {id:parseInt(id)};
+				var found;
+				found = $filter('filter')(this.posts, search, true);
 				if(found.length){
 					return found[0];
 				}
@@ -119,13 +133,20 @@ postrApp.controller('NewPostDataController',function($scope, $routeParams,userDa
 	};
 });
 
+postrApp.controller('ExistingPostDataController',function($scope, $routeParams,userData, $http, alerter, $location){
+	$scope.post = userData.getPost($routeParams.postId);
+	$scope.readOnly = true;
+	$scope.Cancel = function(){
+		$location.path("");
+	};
+});
+
 postrApp.controller('NewPostOutputSelectionController',function ($scope, userData) {
 	$scope.userData = userData;
 	$scope.Cancel = function(){
 		$location.path("");
 	};
 });
-
 
 postrApp.controller('NewSiteDataSelectionController',function ($routeParams, $scope, userData) {
 	$scope.siteList = function(){

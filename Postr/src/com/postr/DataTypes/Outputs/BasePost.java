@@ -32,6 +32,7 @@ public abstract class BasePost extends BaseSaveable {
 
 	String subject;
 	String contents;
+	String siteName;
 	long output;
 	public Result result;
 	@Index public DateTime postingTime;
