@@ -1,0 +1,2 @@
+Please select a site to post to:<BR>
+<div ng-repeat="output in userData.outputs | orderBy:'userName'"><a ng-href="#/post/new/{{output.siteName}}/{{output.id}}">{{userData.describeSite(output)}}</a></div>

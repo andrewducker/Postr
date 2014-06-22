@@ -2,22 +2,37 @@
 var postrApp = angular.module('postrApp', [ 'ui.bootstrap','ngRoute' ]);
 
 postrApp.config(function($routeProvider){
+	//Main page
 	$routeProvider.when('/',{
 		templateUrl:"summary.htm",
 			controller: "SummaryController"
 	})	
+	//New object for a particular site (i.e. Delicious or LJ)
 	.when ("/site/new/:siteName",{
 		templateUrl:  function(params){return "sites/"+ params.siteName + "/details.html";}  ,
 		controller: "NewSiteDataController"
 	})
+	//New object of a particular type (i.e. Input or Output)
 	.when("/site/:itemType/new",{
-		templateUrl: function(params){return "newSite.htm";},
+		templateUrl: "newSite.htm",
 		controller: "NewSiteDataSelectionController"
 	})
+	//Existing object
 	.when ("/site/:siteName/:id",{
 		templateUrl:  function(params){return "sites/"+ params.siteName + "/details.html";}  ,
 		controller: "EditSiteDataController"
 	})
+	//Specifying the Output for a new Post
+	.when("/post/new",{
+		templateUrl: "newPost.htm",
+		controller: "NewPostOutputSelectionController"
+	})
+	//Details for a new post
+	.when("/post/new/:siteName/id:",{
+		templateUrl: function(params){return "sites/"+params.siteName + "/post.html";},
+		controller: "NewPostDataController"
+	})
+	//Something has gone wrong
 	.otherwise({
 		template:"<H1>I am lost at {{location.path()}}</H1>",
 		controller: "LostController"
@@ -37,6 +52,7 @@ postrApp.factory('userData', function(persona, $http,orderByFilter, $filter){
 	var data = {
 			loggedOut : false,
 			loggedIn : false,
+			describeSite : function(site){return  site.userName + "@" + site.siteName;},
 			getSiteItem : function(id){
 				var search = {id:parseInt(id)};
 				var found;
@@ -52,8 +68,6 @@ postrApp.factory('userData', function(persona, $http,orderByFilter, $filter){
 			},
 			populate : function(result) {
 				angular.extend(this,result.data);
-				this.inputs = orderByFilter(this.inputs, 'userName');
-				this.outputs = orderByFilter(this.outputs, 'userName');
 				this.currentInput = this.inputs[0];
 				this.currentOutput = this.outputs[0];
 				this.currentPossibleOutput = this.possibleOutputs[0];
@@ -81,6 +95,14 @@ postrApp.factory('userData', function(persona, $http,orderByFilter, $filter){
 
 	return data;
 });
+
+postrApp.controller('NewPostOutputSelectionController',function ($scope, userData) {
+	$scope.userData = userData;
+	$scope.Cancel = function(){
+		$location.path("");
+	};
+});
+
 
 postrApp.controller('NewSiteDataSelectionController',function ($routeParams, $scope, userData) {
 	$scope.siteList = function(){
@@ -273,42 +295,6 @@ postrApp.controller('UserDataCtrl',
 		});
 	};
 
-	var addOrUpdateData = function(itemOrID, method) {
-		if (itemOrID.siteName) {
-			var item = angular.copy(itemOrID);
-		}else{
-			item = {siteName : itemOrID}; 
-		}
-		var deferred = $q.defer();
-		$modal.open({
-			templateUrl : 'sites/' + item.siteName + '/details.html',
-			controller : DataPopupCtrl,
-			resolve : {
-				output : function() {
-					return item;
-				},
-				action : function() {
-					return method;
-				}
-			}
-		}).result.then(function(result) {
-			result.method = method+"Data";
-			$http.post('/' + result.siteName, result)
-			.success(function(response) {
-				if(!result.id){
-					result.id = response.data;
-				}
-				alerter.alert(response.message);
-				deferred.resolve(result);
-			}).error(function(err) {
-				alerter.alert("Failure: " + err);
-				deferred.reject(err);
-			});
-		});
-		return deferred.promise;
-	};
-
-
 	var createOrUpdatePost = function(outputOrPost){
 		//Posts have outputs - so if output is set then this is an existing post to clone.
 		//Otherwise it's an output, so we use its id as the output on a brand new post.
@@ -367,34 +353,6 @@ postrApp.controller('UserDataCtrl',
 			}).error(function(err) {
 				alerter.alertAndReload("Failure: " + err);
 			});
-		});
-	};
-
-	$scope.createPost = function(){
-		createOrUpdatePost($scope.currentOutput);
-	};
-
-	$scope.displayPost = function(post){
-		createOrUpdatePost(post);
-	};
-
-	$scope.addOutput = function() {
-		addOrUpdateData($scope.currentPossibleOutput, "Save").then(function(result){
-			$scope.data.outputs.push(result);
-			$scope.currentOutput = result;
-		});
-	};
-
-	$scope.addInput = function() {
-		addOrUpdateData($scope.currentPossibleInput, "Save").then(function(result){
-			$scope.data.inputs.push(result);
-			$scope.currentInput = result;
-		});
-	};
-
-	$scope.updateOutput = function() {
-		addOrUpdateData($scope.currentOutput, "Update").then(function(result){
-			angular.copy(result, $scope.currentOutput);
 		});
 	};
 

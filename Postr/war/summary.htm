@@ -21,14 +21,13 @@
 					<th>Remove</th>
 				</tr>
 				<tr ng-repeat="input in data.inputs | orderBy:'userName'">
-					<td>{{input.userName}}@{{input.siteName}}</td>
+					<td>{{data.describeSite(input)}}</td>
 					<td><button class=btn ng-click="removeItem(input.id)">Remove</button>
 				</tr>
 			</table>
 		</div>
 		<A href="#/site/input/new">Add New Input</A>
 	</fieldset>
-
 	<fieldset>
 		<legend>Outputs</legend>
 		<div class="control-group" ng-show="data.outputs.length > 0">
@@ -38,7 +37,7 @@
 					<th>Remove</th>
 				</tr>
 				<tr ng-repeat="output in data.outputs | orderBy:'userName'">
-					<td><A href="#/site/{{output.siteName}}/{{output.id}}">{{output.userName}}@{{output.siteName}}</A></td>
+					<td><A href="#/site/{{output.siteName}}/{{output.id}}">{{data.describeSite(output)}}</A></td>
 					<td><button class=btn ng-click="removeItem(input.id)">Remove</button>
 				</tr>
 			</table>
@@ -47,6 +46,7 @@
 	</fieldset>
 	<fieldset>
 		<legend>Posts</legend>
+		<A href="#/post/new">Create New Post</A>
 		<table id="existingPostsTable" border=1>
 			<tr>
 				<th>Posted</th>
