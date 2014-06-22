@@ -48,6 +48,23 @@ postrApp.controller('LostController',function ($scope, $location) {
 	$scope.location = $location;
 });
 
+postrApp.factory('dates',function(){
+	var dateUtilities = {
+		now : function(){
+			return this.convertToUTC(new Date());
+		},
+		convertFromUTC : function(dateToConvert){
+			return new Date(dateToConvert.getUTCFullYear(), dateToConvert.getUTCMonth(),
+			dateToConvert.getUTCDate(), dateToConvert.getUTCHours(), dateToConvert.getMinutes(),dateToConvert.getSeconds());
+		},
+		convertToUTC : function(dateToConvert){
+			var offset = dateToConvert.getTimezoneOffset();
+			offset = offset * 60000;
+			return new Date(dateToConvert.getTime()-offset);
+		}
+	};
+	return dateUtilities;
+});
 
 postrApp.factory('userData', function(persona, $http,orderByFilter, $filter){
 	var data = {
@@ -108,8 +125,39 @@ postrApp.factory('userData', function(persona, $http,orderByFilter, $filter){
 	return data;
 });
 
-postrApp.controller('NewPostDataController',function($scope, $routeParams,userData, $http, alerter, $location){
+postrApp.controller('NewPostDataController',function($scope, $routeParams,userData, $http, alerter, $location, dates){
 	$scope.post = {output: $routeParams.outputId, siteName: $routeParams.siteName, postingTime : new Date()};
+	$scope.Cancel = function(){
+		$location.path("");
+	};
+	$scope.Save = function() {
+		$scope.post.method = "MakePost";
+		$http.post('/' + $scope.post.siteName, $scope.post)
+		.success(function(response) {
+			$scope.post.result = response;
+			if (response.data.state == "posted") {
+				$scope.post.postingTime = dates.now();
+			}else{
+				$scope.post.awaitingPostingTime = true;
+			}
+			$scope.post.id = response.data.id;
+			$scope.data.posts.push($scope.post);	
+			alerter.alert(response.message);
+			$location.path("");
+		}).error(function(err) {
+			alerter.alertAndReload("Failure: " + err);
+		});
+	};
+});
+
+postrApp.controller('ExistingPostDataController',function($scope, $routeParams,userData, $http, alerter, $location, dates){
+	var originalPost =userData.getPost($routeParams.postId);
+	$scope.post = angular.copy(originalPost);
+	if($scope.post.awaitingPostingTime){
+		$scope.post.postingTime = dates.convertFromUTC($scope.post.postingTime);
+	}else{
+		$scope.readOnly = true;
+	}
 	$scope.Cancel = function(){
 		$location.path("");
 	};
@@ -124,20 +172,12 @@ postrApp.controller('NewPostDataController',function($scope, $routeParams,userDa
 				$scope.post.awaitingPostingTime = true;
 			}
 			$scope.post.id = response.data.id;
-			$scope.data.posts.push($scope.post);	
+			angular.copy($scope.post, originalPost);
 			alerter.alert(response.message);
 			$location.path("");
 		}).error(function(err) {
 			alerter.alertAndReload("Failure: " + err);
 		});
-	};
-});
-
-postrApp.controller('ExistingPostDataController',function($scope, $routeParams,userData, $http, alerter, $location){
-	$scope.post = userData.getPost($routeParams.postId);
-	$scope.readOnly = true;
-	$scope.Cancel = function(){
-		$location.path("");
 	};
 });
 

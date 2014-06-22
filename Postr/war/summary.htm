@@ -55,11 +55,10 @@
 				<th>Result</th>
 			</tr>
 			<tr ng-repeat="post in data.posts | orderBy:'postingTime'">
-				<td>{{data.postingTimeAsText(post)}}</td>
-				<td><A href="#/post/{{post.siteName}}/{{post.id}}">{{post.subject}}</A></td>
+				<td><A href="#/post/{{post.siteName}}/{{post.id}}">{{data.postingTimeAsText(post)}}</A></td>
+				<td>{{post.subject}}</td>
 				<td>{{postDescription(post)}}</td>
 				<td>{{post.result.message}}</td>
-				<td><button class=btn ng-click="displayPost(post)">Display</button>
 			</tr>
 		</table>
 	</fieldset>
