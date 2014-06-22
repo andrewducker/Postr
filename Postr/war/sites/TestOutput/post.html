@@ -1,8 +1,8 @@
 <div>
-	<div class="modal-header">
+	<div>
 		<h3>Test post</h3>
 	</div>
-	<div class="modal-body">
+	<div>
 		<form class="form-horizontal">
 			<div class="control-group">
 				<label class="control-label" for="subject">Subject Line:</label>
@@ -52,7 +52,6 @@
 						ng-model="post.postingHour"
 						id="postingHour"
 						ng-options="possibleTime for possibleTime in possibleTimes"
-						ng-change="changing()"
 						>
 					</select>
 				</div>
@@ -63,8 +62,8 @@
 			</div>
 		</form>
 	</div>
-	<div class="modal-footer">
-		<button class="btn btn-primary" ng-click="ok()">OK</button>
-		<button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+	<div>
+		<button class="btn btn-primary" ng-click="Save()">OK</button>
+		<button class="btn btn-warning" ng-click="Cancel()">Cancel</button>
 	</div>
 </div>

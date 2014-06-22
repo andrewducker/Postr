@@ -28,7 +28,7 @@ postrApp.config(function($routeProvider){
 		controller: "NewPostOutputSelectionController"
 	})
 	//Details for a new post
-	.when("/post/new/:siteName/id:",{
+	.when("/post/new/:siteName/:outputId",{
 		templateUrl: function(params){return "sites/"+params.siteName + "/post.html";},
 		controller: "NewPostDataController"
 	})
@@ -45,10 +45,6 @@ postrApp.controller('LostController',function ($scope, $location) {
 
 
 postrApp.factory('userData', function(persona, $http,orderByFilter, $filter){
-	var postingTimeToText = function(){
-		var time = this.postingTime;
-		return time.toUTCString().replace(" GMT","");
-	};
 	var data = {
 			loggedOut : false,
 			loggedIn : false,
@@ -66,6 +62,9 @@ postrApp.factory('userData', function(persona, $http,orderByFilter, $filter){
 				}
 				return null;
 			},
+			postingTimeAsText : function(post){
+				return post.postingTime.toUTCString().replace(" GMT","");
+			},
 			populate : function(result) {
 				angular.extend(this,result.data);
 				this.currentInput = this.inputs[0];
@@ -74,7 +73,6 @@ postrApp.factory('userData', function(persona, $http,orderByFilter, $filter){
 				this.currentPossibleInput = this.possibleInputs[0];
 				this.posts.forEach(function(post){
 					post.postingTime = new Date(post.postingTime);
-					post.postingTimeText = postingTimeToText; 
 				});
 				this.loggedOut = false;
 				this.loggedIn = true;
@@ -94,6 +92,31 @@ postrApp.factory('userData', function(persona, $http,orderByFilter, $filter){
 	});
 
 	return data;
+});
+
+postrApp.controller('NewPostDataController',function($scope, $routeParams,userData, $http, alerter, $location){
+	$scope.post = {output: $routeParams.outputId, siteName: $routeParams.siteName, postingTime : new Date()};
+	$scope.Cancel = function(){
+		$location.path("");
+	};
+	$scope.Save = function() {
+		$scope.post.method = "MakePost";
+		$http.post('/' + $scope.post.siteName, $scope.post)
+		.success(function(response) {
+			$scope.post.result = response;
+			if (response.data.state == "posted") {
+				$scope.post.postingTime = Date.now();
+			}else{
+				$scope.post.awaitingPostingTime = true;
+			}
+			$scope.post.id = response.data.id;
+			$scope.data.posts.push($scope.post);	
+			alerter.alert(response.message);
+			$location.path("");
+		}).error(function(err) {
+			alerter.alertAndReload("Failure: " + err);
+		});
+	};
 });
 
 postrApp.controller('NewPostOutputSelectionController',function ($scope, userData) {

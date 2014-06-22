@@ -55,7 +55,7 @@
 				<th>Result</th>
 			</tr>
 			<tr ng-repeat="post in data.posts | orderBy:'postingTime'">
-				<td>{{post.postingTimeText()}}</td>
+				<td>{{data.postingTimeAsText(post)}}</td>
 				<td>{{post.subject}}</td>
 				<td>{{postDescription(post)}}</td>
 				<td>{{post.result.message}}</td>
