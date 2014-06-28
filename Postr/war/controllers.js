@@ -127,6 +127,7 @@ postrApp.factory('userData', function(persona, $http,orderByFilter, $filter){
 
 postrApp.controller('NewPostDataController',function($scope, $routeParams,userData, $http, alerter, $location, dates){
 	$scope.post = {output: $routeParams.outputId, siteName: $routeParams.siteName};
+	$scope.possibleTimes= [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23];
 	$scope.Cancel = function(){
 		$location.path("");
 	};
@@ -152,6 +153,7 @@ postrApp.controller('NewPostDataController',function($scope, $routeParams,userDa
 
 postrApp.controller('ExistingPostDataController',function($scope, $routeParams,userData, $http, alerter, $location, dates){
 	var originalPost =userData.getPost($routeParams.postId);
+	$scope.possibleTimes= [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23];
 	$scope.post = angular.copy(originalPost);
 	if($scope.post.awaitingPostingTime){
 		$scope.post.postingTime = dates.convertFromUTC($scope.post.postingTime);

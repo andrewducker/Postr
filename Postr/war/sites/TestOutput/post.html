@@ -45,8 +45,8 @@
 						ng-model=post.postingInFuture>
 				</div>
 			</div>
-			<div ng-show="post.postingInFuture" class="control-group">
-				<label class="control-label" for="postingHour">Times:</label>
+			<div ng-show="post.postingInFuture">
+				<label class="control-label" for="postingHour">Time:</label>
 				<div class="controls">
 					<select 
 						ng-model="post.postingHour"
@@ -56,10 +56,11 @@
 						>
 					</select>
 				</div>
-				<p class="input-group">
+				<label class="control-label" for="postingDay">Day:</label>
+				<div class="controls">
 					<input type="text" class="form-control"  ng-readonly="readOnly"
 						datepicker-popup="yyyy-MM-dd" ng-model="post.postingTime" />
-				</p>
+				</div>
 			</div>
 		</form>
 	</div>
