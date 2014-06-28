@@ -231,7 +231,8 @@ postrApp.controller('NewSiteDataController', function($routeParams, $scope, aler
 		$http.post('/' + siteName, $scope.item)
 		.success(function(response) {
 			$scope.item.id = response.data;
-			if($routeParams.itemType == "input"){
+			//Is the item an input?  Check if the site name is in the list of possible inputs
+			if(userData.possibleInputs.indexOf($scope.item.siteName) > -1){
 				userData.inputs.push($scope.item);
 			}else{
 				userData.outputs.push($scope.item);
