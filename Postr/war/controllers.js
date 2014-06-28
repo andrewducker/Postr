@@ -125,14 +125,20 @@ postrApp.factory('userData', function(persona, $http,orderByFilter, $filter){
 	return data;
 });
 
-postrApp.controller('NewPostDataController',function($scope, $routeParams,userData, $http, alerter, $location, dates){
+postrApp.controller('NewPostDataController',function($scope, $routeParams,userData, $http, alerter, $location, dates, postFunctions){
 	$scope.post = {output: $routeParams.outputId, siteName: $routeParams.siteName};
-	$scope.possibleTimes= [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23];
+	$scope.possibleTimes= postFunctions.possibleTimes;
+	$scope.postInFutureChanged = function(){
+			postFunctions.postInFutureChanged($scope.post);
+		};
 	$scope.Cancel = function(){
 		$location.path("");
 	};
+	
 	$scope.Save = function() {
 		$scope.post.method = "MakePost";
+		postFunctions.processPostingTime($scope.post);
+
 		$http.post('/' + $scope.post.siteName, $scope.post)
 		.success(function(response) {
 			$scope.post.result = response;
@@ -153,18 +159,23 @@ postrApp.controller('NewPostDataController',function($scope, $routeParams,userDa
 
 postrApp.controller('ExistingPostDataController',function($scope, $routeParams,userData, $http, alerter, $location, dates){
 	var originalPost =userData.getPost($routeParams.postId);
-	$scope.possibleTimes= [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23];
+	$scope.possibleTimes= postFunctions.possibleTimes;
+	$scope.postInFutureChanged = function(){
+		postFunctions.postInFutureChanged($scope.post);
+	};
 	$scope.post = angular.copy(originalPost);
-	if($scope.post.awaitingPostingTime){
-		$scope.post.postingTime = dates.convertFromUTC($scope.post.postingTime);
-	}else{
-		$scope.readOnly = true;
+	
+	if (post.awaitingPostingTime) {
+		$scope.post.postingHour = post.postingTime.getHours();
+		$scope.post.postingInFuture = true;
 	}
+
 	$scope.Cancel = function(){
 		$location.path("");
 	};
 	$scope.Save = function() {
 		$scope.post.method = "MakePost";
+		postFunctions.processPostingTime($scope.post);
 		$http.post('/' + $scope.post.siteName, $scope.post)
 		.success(function(response) {
 			$scope.post.result = response;
@@ -527,6 +538,33 @@ postrApp.factory('alerter',function($timeout){
 				})
 				.then(function(){window.location.reload();});
 			}
+	};
+});
+
+postrApp.factory('postFunctions', function(){
+	return {
+		possibleTimes : [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23],
+		postInFutureChanged : function(post){
+			if(post.postingInFuture){
+				var newTime = new Date();
+				post.postingTime = new Date(newTime.getFullYear(), newTime.getMonth(),newTime.getDate());
+				post.postingHour = newTime.getHours();
+			}
+			else{
+				delete post.postingHour;
+				delete post.postingTime;
+			}
+		},
+		processPostingTime : function(post){
+			if (post.postingInFuture) {
+				var localPostingTime = post.postingTime;
+				post.postingTime = new Date();
+				post.postingTime.setUTCFullYear(localPostingTime.getFullYear(), localPostingTime.getMonth(), localPostingTime.getDate());
+				post.postingTime.setUTCHours(post.postingHour,0,0,0);
+			}else{
+				delete post.postingTime;
+			}
+		}
 	};
 });
 

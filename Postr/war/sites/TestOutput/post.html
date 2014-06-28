@@ -41,8 +41,10 @@
 				<label class="control-label" for="postInFuture">Post in
 					future?</label>
 				<div class="controls">
-					<input type="checkbox" id=postInFuture ng-readonly="readOnly"
-						ng-model=post.postingInFuture>
+					<input type="checkbox" 
+						id=postInFuture
+						ng-model=post.postingInFuture
+						ng-change="postInFutureChanged()">
 				</div>
 			</div>
 			<div ng-show="post.postingInFuture">
