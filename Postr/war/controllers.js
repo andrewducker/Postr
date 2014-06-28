@@ -126,7 +126,7 @@ postrApp.factory('userData', function(persona, $http,orderByFilter, $filter){
 });
 
 postrApp.controller('NewPostDataController',function($scope, $routeParams,userData, $http, alerter, $location, dates){
-	$scope.post = {output: $routeParams.outputId, siteName: $routeParams.siteName, postingTime : new Date()};
+	$scope.post = {output: $routeParams.outputId, siteName: $routeParams.siteName};
 	$scope.Cancel = function(){
 		$location.path("");
 	};
