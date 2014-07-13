@@ -18,11 +18,9 @@
 			<table id="existingInputsTable" border=1>
 				<tr>
 					<th>Input</th>
-					<th>Remove</th>
 				</tr>
 				<tr ng-repeat="input in data.inputs | orderBy:'userName'">
-					<td>{{data.describeSite(input)}}</td>
-					<td><button class=btn ng-click="removeItem(input.id)">Remove</button>
+					<td><A href="#/site/{{input.siteName}}/{{input.id}}">{{data.describeSite(input)}}</A></td>
 				</tr>
 			</table>
 		</div>
@@ -34,11 +32,9 @@
 			<table id="existingOutputsTable" border=1>
 				<tr>
 					<th>Output</th>
-					<th>Remove</th>
 				</tr>
 				<tr ng-repeat="output in data.outputs | orderBy:'userName'">
 					<td><A href="#/site/{{output.siteName}}/{{output.id}}">{{data.describeSite(output)}}</A></td>
-					<td><button class=btn ng-click="removeItem(input.id)">Remove</button>
 				</tr>
 			</table>
 		</div>
@@ -57,7 +53,7 @@
 			<tr ng-repeat="post in data.posts | orderBy:'postingTime'">
 				<td><A href="#/post/{{post.siteName}}/{{post.id}}">{{data.postingTimeAsText(post)}}</A></td>
 				<td>{{post.subject}}</td>
-				<td>{{postDescription(post)}}</td>
+				<td>{{postDestination(post)}}</td>
 				<td>{{post.result.message}}</td>
 			</tr>
 		</table>

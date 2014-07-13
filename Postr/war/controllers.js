@@ -66,11 +66,30 @@ postrApp.factory('dates',function(){
 	return dateUtilities;
 });
 
-postrApp.factory('userData', function(persona, $http,orderByFilter, $filter){
+postrApp.factory('userData', function(persona, $http,orderByFilter, $filter, alerter){
+	var removeFromArray = function(object, array){
+		var index = array.indexOf(object);
+		if (index > -1) {
+			array.splice(index,1);
+		}
+	};
+
 	var data = {
 			loggedOut : false,
 			loggedIn : false,
 			describeSite : function(site){return  site.userName + "@" + site.siteName;},
+			deleteSiteItem : function(item){
+				item.method = "RemoveData";
+				var self = this;
+				$http.post('/DataManagement', item)
+				.success(function(response) {
+					removeFromArray(item, self.inputs);
+					removeFromArray(item, self.outputs);
+					alerter.alert(response.message);
+				}).error(function(err) {
+					alerter.alert("Failure: " + err);
+				});
+			},
 			getSiteItem : function(id){
 				var search = {id:parseInt(id)};
 				var found;
@@ -121,7 +140,6 @@ postrApp.factory('userData', function(persona, $http,orderByFilter, $filter){
 			data.loggedIn = false;
 		}
 	});
-
 	return data;
 });
 
@@ -310,6 +328,11 @@ postrApp.controller('EditSiteDataController', function($routeParams, $scope, ale
 			$location.path("");
 		});
 	};
+	
+	$scope.Delete = function(){
+		userData.deleteSiteItem(item);
+		$location.path("");
+	};
 
 	$scope.Cancel = function(){
 		$location.path("");
@@ -317,71 +340,17 @@ postrApp.controller('EditSiteDataController', function($routeParams, $scope, ale
 });
 
 
-postrApp.controller('SummaryController',function summaryController($scope,userData){
+postrApp.controller('SummaryController',function summaryController($scope,userData,$filter,$http,alerter){
 	$scope.data = userData;
-});
-
-postrApp.controller('UserDataCtrl',
-		function postCtrl($scope, $http, persona, $modal, $q, $window,$timeout, $filter, alerter,userData) {
-	$scope.data = userData;
-
-	var getOutput = function(post){
-		return $filter('filter')($scope.data.outputs,function(outputToTest){return outputToTest.id == post.output;});
-	};
-
-	//Removes an object from an array, and returns what the current Object should be, once it's been removed.
-	//Would update the pointer itself, but JS doesn't do Pass By Reference.
-	var removeFromArray = function(object, array){
-		var index = array.indexOf(object);
-		if (index > -1) {
-			array.splice(index,1);
-			if (index > array.length - 1) {
-				index = array.length - 1;
-			}
-			if (index > -1) {
-				return array[index];	
-			}
-		}
-		return null;
-	};
-
-	$scope.removeOutput = function(){
-		removeData($scope.currentOutput).then(function(){
-			$scope.currentOutput = removeFromArray($scope.currentOutput, $scope.data.outputs);
-		});
-	};
-
-	$scope.removeInput = function(){
-		removeData($scope.currentInput).then(function(){
-			$scope.currentInput = removeFromArray($scope.currentInput, $scope.data.inputs);
-		});
-	};
-
-	var removeData = function(data){
-		var deferred = $q.defer();
-		data.method = "RemoveData";
-		$http.post('/DataManagement', data)
-		.success(function(response) {
-			alerter.alert(response.message);
-			deferred.resolve();
-		}).error(function(err) {
-			alerter.alert("Failure: " + err);
-		});
-		return deferred.promise;
-	};
-
-	$scope.postDescription = function(post){
-		var result = getOutput(post);
-		if (result.length > 0) {
-			return result[0].userName + "@" + result[0].siteName; 
+	$scope.postDestination = function(post){
+		var result = userData.getSiteItem(post.output);
+		if (result != null) {
+			return result.userName + "@" + result.siteName; 
 		}
 		return "Output not found";
 	};
+	
 	$scope.timeZones = timeZones;
-	$scope.showInput = function() {
-		alerter.alert($scope.currentInput.userName + "@"
-				+ $scope.currentInput.siteName);
-	};
 
 	$scope.updateTimeZone = function(){
 		var userData = {timeZone : $scope.data.timeZone, method:"UpdateData"};
@@ -392,67 +361,12 @@ postrApp.controller('UserDataCtrl',
 			alerter.alertAndReload("Failed to update data: " + data);
 		});
 	};
+	
+});
 
-	var createOrUpdatePost = function(outputOrPost){
-		//Posts have outputs - so if output is set then this is an existing post to clone.
-		//Otherwise it's an output, so we use its id as the output on a brand new post.
-		var editingExistingPost = false;
-		var newPost;
-		if (outputOrPost.output) {
-			var outputs = getOutput(outputOrPost);
-			if (outputs.length == 0) {
-				alerter.alert("Unknown output for this post, cannot display");
-				return;
-			}
-			newPost = angular.copy(outputOrPost);
-			//The post is awaiting posting time then we edit it.
-			// Otherwise create a new post based on it, rather than editing it.
-			if (outputOrPost.awaitingPostingTime) {
-				editingExistingPost = true;
-				newPost.postingTime = new Date(newPost.postingTime
-						.getUTCFullYear(), newPost.postingTime.getUTCMonth(),
-						newPost.postingTime.getUTCDate(), newPost.postingTime.getUTCHours());
-			}
-			else{
-				delete newPost.result;	
-				delete newPost.id;
-				newPost.postingTime = new Date();
-			}
-			newPost.siteName = outputs[0].siteName;
-		}else{
-			newPost = {output : outputOrPost.id, siteName : outputOrPost.siteName, postingTime : new Date()};
-		}
-		$modal.open({
-			templateUrl : 'sites/' + newPost.siteName + '/post.html',
-			controller : PostCtrl,
-			resolve : {
-				post : function() {
-					return newPost;
-				}
-			}
-		}).result.then(function(result) {
-			result.method = "MakePost";
-			$http.post('/' + result.siteName, result)
-			.success(function(response) {
-				result.result = response;
-				if (response.data.state == "posted") {
-					result.postingTime = Date.now();
-				}else{
-					result.awaitingPostingTime = true;
-				}
-				result.postingTimeText = postingTimeToText;
-				result.id = response.data.id;
-				if (editingExistingPost) {
-					angular.copy(result, outputOrPost);
-				}else{
-					$scope.data.posts.push(result);	
-				}
-				alerter.alert(response.message);
-			}).error(function(err) {
-				alerter.alertAndReload("Failure: " + err);
-			});
-		});
-	};
+postrApp.controller('UserDataCtrl',
+		function postCtrl($scope, $http, persona, $modal, $q, $window,$timeout, $filter, alerter,userData) {
+	$scope.data = userData;
 
 	$scope.login = function() {
 		persona.login();
