@@ -32,6 +32,11 @@ postrApp.config(function($routeProvider){
 		templateUrl: function(params){return "sites/"+params.siteName + "/post.html";},
 		controller: "NewPostDataController"
 	})
+	//Details for a cloned post
+	.when("/post/new/:siteName/from/:cloneId",{
+		templateUrl: function(params){return "sites/"+params.siteName + "/post.html";},
+		controller: "NewPostDataController"
+	})
 	//Details for an existing post
 	.when("/post/:siteName/:postId",{
 		templateUrl: function(params){return "sites/"+params.siteName + "/post.html";},
@@ -144,7 +149,17 @@ postrApp.factory('userData', function(persona, $http,orderByFilter, $filter, ale
 });
 
 postrApp.controller('NewPostDataController',function($scope, $routeParams,userData, $http, alerter, $location, dates, postFunctions){
-	$scope.post = {output: $routeParams.outputId, siteName: $routeParams.siteName};
+	if($routeParams.cloneId == null){
+		$scope.post = {output: $routeParams.outputId, siteName: $routeParams.siteName};
+	}
+	else{
+		var postToClone = userData.getPost($routeParams.cloneId); 
+		$scope.post = angular.copy(postToClone);
+		delete $scope.post.result;	
+		delete $scope.post.id;
+		delete $scope.post.postingTime;
+	}
+
 	$scope.possibleTimes= postFunctions.possibleTimes;
 	$scope.postInFutureChanged = function(){
 			postFunctions.postInFutureChanged($scope.post);
@@ -175,7 +190,8 @@ postrApp.controller('NewPostDataController',function($scope, $routeParams,userDa
 	};
 });
 
-postrApp.controller('ExistingPostDataController',function($scope, $routeParams,userData, $http, alerter, $location, dates){
+postrApp.controller('ExistingPostDataController',function($scope, $routeParams,userData, $http, alerter, $location, dates, postFunctions){
+	$scope.action = "Update";
 	var originalPost =userData.getPost($routeParams.postId);
 	$scope.possibleTimes= postFunctions.possibleTimes;
 	$scope.postInFutureChanged = function(){
@@ -183,8 +199,8 @@ postrApp.controller('ExistingPostDataController',function($scope, $routeParams,u
 	};
 	$scope.post = angular.copy(originalPost);
 	
-	if (post.awaitingPostingTime) {
-		$scope.post.postingHour = post.postingTime.getHours();
+	if ($scope.post.awaitingPostingTime) {
+		$scope.post.postingHour = $scope.post.postingTime.getHours();
 		$scope.post.postingInFuture = true;
 	}
 
@@ -209,6 +225,10 @@ postrApp.controller('ExistingPostDataController',function($scope, $routeParams,u
 		}).error(function(err) {
 			alerter.alertAndReload("Failure: " + err);
 		});
+	};
+	
+	$scope.Clone = function(){
+		$location.path("/post/new/"+$scope.post.siteName+ "/from/"+$scope.post.id);
 	};
 });
 
@@ -235,7 +255,9 @@ postrApp.controller('NewSiteDataSelectionController',function ($routeParams, $sc
 
 postrApp.controller('NewSiteDataController', function($routeParams, $scope, alerter, $location, $http, userData){
 	var siteName = $routeParams.siteName;
-	$scope.item = {siteName : siteName};
+	$scope.item = {
+			siteName : siteName 
+			};
 	$scope.verify = function(){
 		$scope.verificationSuccess = false;
 		$scope.item.method = "Verify";
@@ -364,8 +386,7 @@ postrApp.controller('SummaryController',function summaryController($scope,userDa
 	
 });
 
-postrApp.controller('UserDataCtrl',
-		function postCtrl($scope, $http, persona, $modal, $q, $window,$timeout, $filter, alerter,userData) {
+postrApp.controller('UserDataCtrl', function postCtrl($scope, persona, userData) {
 	$scope.data = userData;
 
 	$scope.login = function() {
@@ -375,70 +396,6 @@ postrApp.controller('UserDataCtrl',
 		persona.logout();
 	};
 });
-
-var PostCtrl = function($scope, $modalInstance, post, $http) {
-	$scope.level="PostCtrl";
-	$scope.post = post;
-
-	$scope.possibleTimes= [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23];
-
-	if (post.awaitingPostingTime) {
-		$scope.post.postingHour = post.postingTime.getHours();
-		$scope.post.postingInFuture = true;
-	}
-
-	$scope.ok = function() {
-		if ($scope.post.postingInFuture) {
-			var localPostingTime = $scope.post.postingTime;
-			$scope.post.postingTime = new Date();
-			$scope.post.postingTime.setUTCFullYear(localPostingTime.getFullYear(), localPostingTime.getMonth(), localPostingTime.getDate());
-			$scope.post.postingTime.setUTCHours($scope.post.postingHour,0,0,0);
-		}else{
-			delete $scope.post.postingTime;
-		}
-		$modalInstance.close($scope.post);	
-	};
-
-	$scope.cancel = function() {
-		$modalInstance.dismiss('cancel');
-	};
-};
-
-
-var DataPopupCtrl = function($scope, $modalInstance, output, action, $http) {
-	$scope.level = "DataPopupCtrl";
-	$scope.output = output;
-	$scope.action = action;
-
-	$scope.verify = function(){
-		$scope.verificationSuccess = false;
-		$scope.output.method = "Verify";
-		$http.post('/' + $scope.output.siteName, $scope.output)
-		.success(function(data) {
-			$scope.verificationMessage = data.message;
-			$scope.verificationSuccess = true;
-		}).error(function(data) {
-			if(data.message){
-				$scope.verificationMessage = data.message;
-			}else{
-				$scope.verificationMessage = data;
-			}
-		});
-	};
-
-	$scope.ok = function() {
-		if($scope.verificationSuccess){
-			$modalInstance.close($scope.output);	
-		}else{
-			alerter.alert("Not yet verified");
-		}
-
-	};
-
-	$scope.cancel = function() {
-		$modalInstance.dismiss('cancel');
-	};
-};
 
 postrApp.factory('alerter',function($timeout){
 	return {
