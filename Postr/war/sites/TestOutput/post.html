@@ -28,7 +28,7 @@
 			<div class="control-group">
 				<label class="control-label" for="format">Auto Format:</label>
 				<div class="controls">
-					<input type="checkbox" id="format" ng-readonly="readOnly" ng-model="post.autoFormat">
+					<input type="checkbox" id="format" ng-disabled="readOnly" ng-model="post.autoFormat">
 				</div>
 			</div>
 			<div class="control-group">
@@ -44,6 +44,7 @@
 					<input type="checkbox" 
 						id=postInFuture
 						ng-model=post.postingInFuture
+						ng-disabled="readOnly"
 						ng-change="postInFutureChanged()">
 				</div>
 			</div>

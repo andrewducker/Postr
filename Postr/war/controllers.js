@@ -199,9 +199,13 @@ postrApp.controller('ExistingPostDataController',function($scope, $routeParams,u
 	};
 	$scope.post = angular.copy(originalPost);
 	
+	//Has it posted?
 	if ($scope.post.awaitingPostingTime) {
 		$scope.post.postingHour = $scope.post.postingTime.getHours();
 		$scope.post.postingInFuture = true;
+		
+	}else{
+		$scope.readOnly = true;
 	}
 
 	$scope.Cancel = function(){
