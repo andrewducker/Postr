@@ -192,7 +192,7 @@ postrApp.controller('NewPostDataController',function($scope, $routeParams,userDa
 
 postrApp.controller('ExistingPostDataController',function($scope, $routeParams,userData, $http, alerter, $location, dates, postFunctions){
 	$scope.action = "Update";
-	var originalPost =userData.getPost($routeParams.postId);
+	var originalPost = userData.getPost($routeParams.postId);
 	$scope.possibleTimes= postFunctions.possibleTimes;
 	$scope.postInFutureChanged = function(){
 		postFunctions.postInFutureChanged($scope.post);
