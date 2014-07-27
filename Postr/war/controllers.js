@@ -5,42 +5,82 @@ postrApp.config(function($routeProvider){
 	//Main page
 	$routeProvider.when('/',{
 		templateUrl:"summary.htm",
-			controller: "SummaryController"
+		controller: "SummaryController",
+		resolve : {
+			userDataLoaded : function(userData){
+				return userData.loaded;
+			}
+		}
 	})	
 	//New object for a particular site (i.e. Delicious or LJ)
 	.when ("/site/new/:siteName",{
 		templateUrl:  function(params){return "sites/"+ params.siteName + "/details.html";}  ,
-		controller: "NewSiteDataController"
+		controller: "NewSiteDataController",
+		resolve : {
+			userDataLoaded : function(userData){
+				return userData.loaded;
+			}
+		}
 	})
 	//New object of a particular type (i.e. Input or Output)
 	.when("/site/:itemType/new",{
 		templateUrl: "newSite.htm",
-		controller: "NewSiteDataSelectionController"
+		controller: "NewSiteDataSelectionController",
+		resolve : {
+			userDataLoaded : function(userData){
+				return userData.loaded;
+			}
+		}
 	})
 	//Existing object
 	.when ("/site/:siteName/:id",{
 		templateUrl:  function(params){return "sites/"+ params.siteName + "/details.html";}  ,
-		controller: "EditSiteDataController"
+		controller: "EditSiteDataController",
+		resolve : {
+			userDataLoaded : function(userData){
+				return userData.loaded;
+			}
+		}
 	})
 	//Specifying the Output for a new Post
 	.when("/post/new",{
 		templateUrl: "newPost.htm",
-		controller: "NewPostOutputSelectionController"
+		controller: "NewPostOutputSelectionController",
+		resolve : {
+			userDataLoaded : function(userData){
+				return userData.loaded;
+			}
+		}
 	})
 	//Details for a new post
 	.when("/post/new/:siteName/:outputId",{
 		templateUrl: function(params){return "sites/"+params.siteName + "/post.html";},
-		controller: "NewPostDataController"
+		controller: "NewPostDataController",
+		resolve : {
+			userDataLoaded : function(userData){
+				return userData.loaded;
+			}
+		}
 	})
 	//Details for a cloned post
 	.when("/post/new/:siteName/from/:cloneId",{
 		templateUrl: function(params){return "sites/"+params.siteName + "/post.html";},
-		controller: "NewPostDataController"
+		controller: "NewPostDataController",
+		resolve : {
+			userDataLoaded : function(userData){
+				return userData.loaded;
+			}
+		}
 	})
 	//Details for an existing post
 	.when("/post/:siteName/:postId",{
 		templateUrl: function(params){return "sites/"+params.siteName + "/post.html";},
-		controller: "ExistingPostDataController"
+		controller: "ExistingPostDataController",
+		resolve : {
+			userDataLoaded : function(userData){
+				return userData.loaded;
+			}
+		}
 	})
 	//Something has gone wrong
 	.otherwise({
@@ -71,14 +111,16 @@ postrApp.factory('dates',function(){
 	return dateUtilities;
 });
 
-postrApp.factory('userData', function(persona, $http,orderByFilter, $filter, alerter){
+postrApp.factory('userData', function(persona, $http,orderByFilter, $filter, alerter,$q){
 	var removeFromArray = function(object, array){
 		var index = array.indexOf(object);
 		if (index > -1) {
 			array.splice(index,1);
 		}
 	};
-
+	
+	var loadedDeferral = $q.defer();
+	
 	var data = {
 			loggedOut : false,
 			loggedIn : false,
@@ -131,7 +173,9 @@ postrApp.factory('userData', function(persona, $http,orderByFilter, $filter, ale
 				});
 				this.loggedOut = false;
 				this.loggedIn = true;
-			}
+				loadedDeferral.resolve();
+			},
+			loaded : loadedDeferral.promise
 	};
 	$http.post('userdata',{method:"GetData"}).success(function(result) {
 		if (result.data != null) {
