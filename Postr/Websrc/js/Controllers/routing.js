@@ -1,7 +1,7 @@
 postrApp.config(function($routeProvider){
 	//Main page
 	$routeProvider.when('/',{
-		templateUrl:"summary.htm",
+		templateUrl:"summary.html",
 		controller: "SummaryController",
 		resolve : {
 			userDataLoaded : function(userData){
@@ -21,7 +21,7 @@ postrApp.config(function($routeProvider){
 	})
 	//New object of a particular type (i.e. Input or Output)
 	.when("/site/:itemType/new",{
-		templateUrl: "newSite.htm",
+		templateUrl: "newSite.html",
 		controller: "NewSiteDataSelectionController",
 		resolve : {
 			userDataLoaded : function(userData){
@@ -41,7 +41,7 @@ postrApp.config(function($routeProvider){
 	})
 	//Specifying the Output for a new Post
 	.when("/post/new",{
-		templateUrl: "newPost.htm",
+		templateUrl: "newPost.html",
 		controller: "NewPostOutputSelectionController",
 		resolve : {
 			userDataLoaded : function(userData){
