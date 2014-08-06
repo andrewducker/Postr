@@ -1,3 +1,5 @@
 *.bin
 war/WEB-INF/classes/
 build/
+war/alljs*.js
+war/index.html

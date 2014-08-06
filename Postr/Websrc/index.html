@@ -1,0 +1,28 @@
+
+<!doctype html>
+<html lang="en" ng-app="postrApp">
+<head>
+<meta charset="utf-8">
+<title>My HTML File</title>
+<!--  <link rel="stylesheet" href ="styles.css"> -->
+<script	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular-route.min.js"></script>
+<script src="//login.persona.org/include.js"></script>
+<script src="alljs.js"></script>
+<link rel="stylesheet" href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.6.0/ui-bootstrap-tpls.min.js"></script>
+
+<link rel="stylesheet" href="persona-buttons.css" />
+
+
+</head>
+<body ng-controller="UserDataCtrl">
+
+	<span ng-show="data.loggedOut"><a class="persona-button orange"
+		ng-click="login()"><span>Sign in</span></a></span>
+	<span ng-show="data.loggedIn">
+	<div ng-view></div> 
+
+	</span>
+</body>
+</html>
