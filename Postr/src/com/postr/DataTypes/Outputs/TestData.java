@@ -1,9 +1,9 @@
 package com.postr.DataTypes.Outputs;
 
-import com.googlecode.objectify.annotation.EntitySubclass;
+import com.googlecode.objectify.annotation.Subclass;
 import com.postr.DataTypes.PasswordEncryptor;
 
-@EntitySubclass(index=true)
+@Subclass(index=true)
 public class TestData extends BaseOutput{
 	public void EncryptPassword(){
 		password = PasswordEncryptor.MD5Hex(password);

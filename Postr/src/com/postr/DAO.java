@@ -51,7 +51,7 @@ public class DAO {
 		return ofy().save().entity(thing).now();
 	}
 	public static <T extends BaseSaveable> T LoadThing(Class<T> clazz, Long id, Long userID) throws Exception{
-		T retrieved = ofy().load().type(clazz).id(id).get();
+		T retrieved = ofy().load().type(clazz).id(id).now();
 		if (retrieved instanceof User) {
 			if(((User)retrieved).getId() != userID){
 				throw new Exception("User ID did not match - possible security attack");
@@ -65,7 +65,7 @@ public class DAO {
 	}
 
 	public static <T extends BaseSaveable> T LoadThing(Class<T> clazz, Long id) throws Exception{
-		return ofy().load().type(clazz).id(id).get();
+		return ofy().load().type(clazz).id(id).now();
 	}
 
 	
@@ -93,7 +93,7 @@ public class DAO {
 			return parent;
 		}
 		if(email.size() == 1){
-			return ofy().load().key(email.get(0)).get().getParent();
+			return ofy().load().key(email.get(0)).now().getParent();
 		}
 		throw new Exception("Multiple emails found with address: "+persona);
 	}

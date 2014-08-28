@@ -1,13 +1,13 @@
 package com.postr.DataTypes.Outputs;
 
-import com.googlecode.objectify.annotation.EntitySubclass;
+import com.googlecode.objectify.annotation.Subclass;
 import com.postr.DAO;
 import com.postr.LivejournalVisibilityTypes;
 import com.postr.MessageLogger;
 import com.postr.Result;
 import com.postr.Translators.LJTranslator;
 
-@EntitySubclass(index=true)
+@Subclass(index=true)
 public class LJPost extends BasePost {
 
 	String tags;

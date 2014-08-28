@@ -3,13 +3,13 @@ package com.postr.DataTypes.Outputs;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 
-import com.googlecode.objectify.annotation.EntitySubclass;
 import com.googlecode.objectify.annotation.Index;
+import com.googlecode.objectify.annotation.Subclass;
 import com.postr.DAO;
 import com.postr.Result;
 import com.postr.DataTypes.BaseSaveable;
 
-@EntitySubclass(index = true)
+@Subclass(index = true)
 public abstract class BasePost extends BaseSaveable {
 	abstract void MakePost();
 	public ResultStateEnum PostOrSave(){

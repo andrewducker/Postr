@@ -1,8 +1,8 @@
 package com.postr.DataTypes.Inputs;
 
-import com.googlecode.objectify.annotation.EntitySubclass;
+import com.googlecode.objectify.annotation.Subclass;
 
-@EntitySubclass(index=true)
+@Subclass(index=true)
 public class PinboardData extends BaseInput {
 
 	protected PinboardData(){}

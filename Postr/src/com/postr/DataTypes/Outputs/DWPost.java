@@ -1,12 +1,12 @@
 package com.postr.DataTypes.Outputs;
 
-import com.googlecode.objectify.annotation.EntitySubclass;
+import com.googlecode.objectify.annotation.Subclass;
 import com.postr.DAO;
 import com.postr.MessageLogger;
 import com.postr.Result;
 import com.postr.Translators.DWTranslator;
 
-@EntitySubclass(index=true)
+@Subclass(index=true)
 public class DWPost extends LJPost {
 
 	@Override

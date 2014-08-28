@@ -1,8 +1,5 @@
 package com.postr;
 
-import com.googlecode.objectify.annotation.Embed;
-
-@Embed
 public class Result {
 	
 	@SuppressWarnings("unused")

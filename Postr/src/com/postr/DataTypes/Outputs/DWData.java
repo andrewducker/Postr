@@ -1,8 +1,8 @@
 package com.postr.DataTypes.Outputs;
 
-import com.googlecode.objectify.annotation.EntitySubclass;
+import com.googlecode.objectify.annotation.Subclass;
 
-@EntitySubclass(index=true)
+@Subclass(index=true)
 public class DWData extends LJData {
 
 	@Override
