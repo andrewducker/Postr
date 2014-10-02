@@ -24,8 +24,6 @@ abstract class BaseOutputServlet extends BasePersonaSessionServlet {
 			return MakePost(parameters);
 		case SavePost:
 			return SavePost(parameters);
-		case SaveTemplate:
-			return SaveTemplate(parameters);
 		default:
 			throw new Exception("No such method found: " + method);
 		}
@@ -47,8 +45,6 @@ abstract class BaseOutputServlet extends BasePersonaSessionServlet {
 		post.result.data = new ResultData(post.getId(), state);
 		return post.result;
 	}
-
-	protected abstract Result SaveTemplate(Json parameters);
 
 	protected abstract Result UpdateData(Json parameters) throws Exception;
 

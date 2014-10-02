@@ -4,7 +4,6 @@ import com.googlecode.objectify.Key;
 import com.postr.DataTypes.Json;
 import com.postr.DataTypes.Outputs.DWData;
 import com.postr.DataTypes.Outputs.DWPost;
-import com.postr.DataTypes.Outputs.DWTemplate;
 import com.postr.Translators.DWTranslator;
 
 @SuppressWarnings("serial")
@@ -26,13 +25,6 @@ public class DreamwidthServlet extends BaseOutputServlet {
 		return new Result("Saved!",result.getId());
 	}
 	
-	@Override
-	protected Result SaveTemplate(Json parameters) {
-		DWTemplate template = parameters.FromJson(DWTemplate.class);
-		Key<DWTemplate> result = DAO.SaveThing(template,GetUserID());
-		return new Result("Saved!",result.getId());
-	}
-
 	@Override
 	protected DWPost CreatePost(Json parameters, long userID) {
 		DWPost post = parameters.FromJson(DWPost.class);

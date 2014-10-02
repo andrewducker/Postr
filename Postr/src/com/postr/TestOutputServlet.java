@@ -2,7 +2,6 @@ package com.postr;
 
 import com.googlecode.objectify.Key;
 import com.postr.DataTypes.Json;
-import com.postr.DataTypes.Outputs.LJTemplate;
 import com.postr.DataTypes.Outputs.TestData;
 import com.postr.DataTypes.Outputs.TestPost;
 
@@ -54,10 +53,4 @@ public class TestOutputServlet extends BaseOutputServlet {
 		return new Result("Saved!",result.getId());
 	}
 
-	@Override
-	protected Result SaveTemplate(Json parameters) {
-		LJTemplate template = parameters.FromJson(LJTemplate.class);
-		Key<LJTemplate> result = DAO.SaveThing(template,GetUserID());
-		return new Result("Saved!",result.getId());
-	}
 }

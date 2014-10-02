@@ -4,7 +4,6 @@ import com.googlecode.objectify.Key;
 import com.postr.DataTypes.Json;
 import com.postr.DataTypes.Outputs.LJData;
 import com.postr.DataTypes.Outputs.LJPost;
-import com.postr.DataTypes.Outputs.LJTemplate;
 import com.postr.Translators.LJTranslator;
 
 @SuppressWarnings("serial")
@@ -57,10 +56,4 @@ public class LivejournalServlet extends BaseOutputServlet {
 		return new Result("Saved!",result.getId());
 	}
 
-	@Override
-	protected Result SaveTemplate(Json parameters) {
-		LJTemplate template = parameters.FromJson(LJTemplate.class);
-		Key<LJTemplate> result = DAO.SaveThing(template,GetUserID());
-		return new Result("Saved!",result.getId());
-	}
 }
