@@ -20,6 +20,7 @@ import com.postr.DataTypes.Outputs.BaseOutput;
 import com.postr.DataTypes.Outputs.BasePost;
 import com.postr.DataTypes.Outputs.DWData;
 import com.postr.DataTypes.Outputs.DWPost;
+import com.postr.DataTypes.Outputs.Feed;
 import com.postr.DataTypes.Outputs.LJData;
 import com.postr.DataTypes.Outputs.LJPost;
 import com.postr.DataTypes.Outputs.TestData;
@@ -40,6 +41,7 @@ public class DAO {
 		ObjectifyService.register(LJPost.class);
 		ObjectifyService.register(TestPost.class);
 		ObjectifyService.register(TestData.class);
+		ObjectifyService.register(Feed.class);
 	}
 
 	public static <T extends BaseSaveable> Key<T> SaveThing(T thing, Long userID){

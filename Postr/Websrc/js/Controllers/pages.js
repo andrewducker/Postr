@@ -90,6 +90,34 @@ postrApp.controller('ExistingPostDataController',function($scope, $routeParams,u
 	};
 });
 
+postrApp.controller('NewFeedController',function ($scope, userData, postFunctions, $http, alerter, $location) {
+	$scope.userData = userData;
+	$scope.possibleTimes =  postFunctions.possibleTimes;
+	$scope.Cancel = function(){
+		$location.path("");
+	};
+	$scope.Save = function(){
+		var feed = {
+					nextPost: postFunctions.processTime($scope.postingDay, $scope.postingHour),
+					inputs:[],
+					output: $scope.selectedOutputs[0].id
+				};
+		angular.forEach($scope.selectedInputs,function(input){feed.inputs.push(input.id);});
+		feed.method = "SaveFeed";
+		$http.post('/DataManagement', feed)
+		.success(function(response) {
+			feed.id = response.data;
+			userData.feeds.push(feed);
+			alerter.alert(response.message);
+			$location.path("");
+		}).error(function(err) {
+			alerter.alert("Failure: " + err);
+			$location.path("");
+		});
+	};
+});
+
+
 postrApp.controller('NewPostOutputSelectionController',function ($scope, userData) {
 	$scope.userData = userData;
 	$scope.Cancel = function(){
@@ -256,6 +284,13 @@ postrApp.controller('UserDataCtrl', function postCtrl($scope, persona, userData)
 });
 
 postrApp.factory('postFunctions', function(){
+	var processTime = function(localTime, localHour){
+		serverTime = new Date();
+		serverTime.setUTCFullYear(localTime.getFullYear(), localTime.getMonth(), localTime.getDate());
+		serverTime.setUTCHours(localHour,0,0,0);
+		return serverTime;
+	};
+	
 	return {
 		possibleTimes : [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23],
 		postInFutureChanged : function(post){
@@ -271,14 +306,12 @@ postrApp.factory('postFunctions', function(){
 		},
 		processPostingTime : function(post){
 			if (post.postingInFuture) {
-				var localPostingTime = post.postingTime;
-				post.postingTime = new Date();
-				post.postingTime.setUTCFullYear(localPostingTime.getFullYear(), localPostingTime.getMonth(), localPostingTime.getDate());
-				post.postingTime.setUTCHours(post.postingHour,0,0,0);
+				post.postingTime = processTime(post.postingTime,post.postingHour);
 			}else{
 				delete post.postingTime;
 			}
-		}
+		},
+		processTime : processTime
 	};
 });
 

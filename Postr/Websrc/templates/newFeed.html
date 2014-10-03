@@ -1,0 +1,41 @@
+Inputs:
+<div     
+    multi-select
+    input-model="data.inputs"
+    button-label="siteName userName"
+    item-label="siteName userName"
+    tick-property="ticked"
+    output-model="selectedInputs"
+>
+</div>
+
+Output: <div     
+    multi-select
+    input-model="data.outputs"
+    button-label="siteName userName"
+    item-label="siteName userName"
+    tick-property="ticked"
+    output-model="selectedOutputs"
+    selection-mode="single"
+>
+</div>
+
+<label class="control-label" for="postingHour">Time:</label>
+<div class="controls">
+	<select 
+		ng-model="postingHour"
+		ng-options="possibleTime for possibleTime in possibleTimes"
+		>
+	</select>
+</div>
+<label class="control-label" for="postingDay">Day:</label>
+<div class="controls">
+	<input type="text" class="form-control"  ng-readonly="readOnly"
+		datepicker-popup="yyyy-MM-dd" ng-model="postingDay" />
+</div>
+
+<div>
+	<button class="btn btn-primary" ng-click="Save()">OK</button>
+	<button class="btn btn-warning" ng-click="Cancel()">Cancel</button>
+	<button class="btn btn-danger" ng-show="action=='Update'" ng-click="Delete()">Delete</button>
+</div>

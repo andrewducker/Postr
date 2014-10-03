@@ -9,6 +9,16 @@ postrApp.config(function($routeProvider){
 			}
 		}
 	})	
+	//New feed
+	.when ("/feed/new",{
+		templateUrl:  function(params){return "newFeed.html";}  ,
+		controller: "NewFeedController",
+		resolve : {
+			userDataLoaded : function(userData){
+				return userData.loaded;
+			}
+		}
+	})
 	//New object for a particular site (i.e. Delicious or LJ)
 	.when ("/site/new/:siteName",{
 		templateUrl:  function(params){return "sites/"+ params.siteName + "/details.html";}  ,

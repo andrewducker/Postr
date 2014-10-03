@@ -41,6 +41,22 @@
 		<A href="#/site/output/new">Add New Output</A>
 	</fieldset>
 	<fieldset>
+		<legend>Feeds</legend>
+		<A href="#/feed/new">Create New Feed</A>
+		<table id="existingFeedsTable" border=1>
+			<tr>
+				<th>Description</th>
+				<th>Next Post</th>
+				<th>Active</th>
+			</tr>
+			<tr ng-repeat="feed in data.feeds | orderBy:'nextPost'">
+				<td><A href="#/feed//{{feed.id}}">Placeholder</A></td>
+				<td>Placeholder</td>
+				<td>Placeholder</td>
+			</tr>
+		</table>
+	</fieldset>
+	<fieldset>
 		<legend>Posts</legend>
 		<A href="#/post/new">Create New Post</A>
 		<table id="existingPostsTable" border=1>
