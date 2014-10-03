@@ -2,9 +2,10 @@ postrApp.controller('LostController',function ($scope, $location) {
 	$scope.location = $location;
 });
 
-postrApp.controller('NewPostDataController',function($scope, $routeParams,userData, $http, alerter, $location, dates, postFunctions){
+postrApp.controller('NewPostDataController',function($scope, $routeParams,userData, $http, alerter, $location, dates, postFunctions,siteSpecific){
 	if($routeParams.cloneId == null){
 		$scope.post = {output: $routeParams.outputId, siteName: $routeParams.siteName};
+		siteSpecific.initialisePost($scope.post);
 	}
 	else{
 		var postToClone = userData.getPost($routeParams.cloneId); 
