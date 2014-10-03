@@ -11,6 +11,16 @@ postrApp.config(function($routeProvider){
 	})	
 	//New feed
 	.when ("/feed/new",{
+		templateUrl:  function(params){return "selectOutput.html";}  ,
+		controller: "NewFeedOutputSelectionController",
+		resolve : {
+			userDataLoaded : function(userData){
+				return userData.loaded;
+			}
+		}
+	})
+	//New feed
+	.when ("/feed/new/:siteName/:outputId",{
 		templateUrl:  function(params){return "newFeed.html";}  ,
 		controller: "NewFeedController",
 		resolve : {
@@ -51,7 +61,7 @@ postrApp.config(function($routeProvider){
 	})
 	//Specifying the Output for a new Post
 	.when("/post/new",{
-		templateUrl: "newPost.html",
+		templateUrl: "selectOutput.html",
 		controller: "NewPostOutputSelectionController",
 		resolve : {
 			userDataLoaded : function(userData){

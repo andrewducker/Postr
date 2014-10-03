@@ -91,17 +91,28 @@ postrApp.controller('ExistingPostDataController',function($scope, $routeParams,u
 	};
 });
 
-postrApp.controller('NewFeedController',function ($scope, userData, postFunctions, $http, alerter, $location) {
+postrApp.controller('NewFeedOutputSelectionController',function ($scope, userData) {
 	$scope.userData = userData;
+	$scope.nextUrl = function(output){return "#/feed/new/"+output.siteName+"/"+output.id;};
+	$scope.Cancel = function(){
+		$location.path("");
+	};
+});
+
+postrApp.controller('NewFeedController',function ($scope, userData, postFunctions, $http, alerter, $location,$routeParams) {
+	$scope.userData = userData;
+	var output = userData.getSiteItem($routeParams.outputId);
+	$scope.outputDescription = userData.describeSite(output);
 	$scope.possibleTimes =  postFunctions.possibleTimes;
 	$scope.Cancel = function(){
 		$location.path("");
 	};
+	$scope.feedDetailsTemplate = "sites/"+ $routeParams.siteName + "/FeedDetails.html";
 	$scope.Save = function(){
 		var feed = {
 					nextPost: postFunctions.processTime($scope.postingDay, $scope.postingHour),
 					inputs:[],
-					output: $scope.selectedOutputs[0].id
+					output: $routeParams.outputId
 				};
 		angular.forEach($scope.selectedInputs,function(input){feed.inputs.push(input.id);});
 		feed.method = "SaveFeed";
@@ -121,6 +132,7 @@ postrApp.controller('NewFeedController',function ($scope, userData, postFunction
 
 postrApp.controller('NewPostOutputSelectionController',function ($scope, userData) {
 	$scope.userData = userData;
+	$scope.nextUrl = function(output){return "#/post/new/"+output.siteName+"/"+output.id;};
 	$scope.Cancel = function(){
 		$location.path("");
 	};
