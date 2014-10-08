@@ -52,7 +52,7 @@ postrApp.controller('ExistingPostDataController',function($scope, $routeParams,u
 	
 	//Has it posted?
 	if ($scope.post.awaitingPostingTime) {
-		$scope.post.postingHour = $scope.post.postingTime.getHours();
+		$scope.post.postingHour = $scope.post.postingTime.getUTCHours();
 		$scope.post.postingInFuture = true;
 		
 	}else{

@@ -16,7 +16,8 @@ class DateTimeJsonAdapter extends TypeAdapter<DateTime>{
 	@Override
 	public DateTime read(JsonReader arg0) throws IOException {
 		DateTime dateTime =DateTime.parse(arg0.nextString());
-		return dateTime.withZoneRetainFields(ThreadStorage.getDateTimeZone()).withZone(DateTimeZone.UTC);
+		dateTime =dateTime.withZoneRetainFields(ThreadStorage.getDateTimeZone()); 
+		return dateTime;
 	}
 
 	@Override
@@ -25,8 +26,12 @@ class DateTimeJsonAdapter extends TypeAdapter<DateTime>{
 			writer.nullValue();
 			return;
 		}
-		DateTime convertedDateTime = dateTime.withZone(ThreadStorage.getDateTimeZone()).withZoneRetainFields(DateTimeZone.UTC);
+		
+		DateTimeZone timeZone = ThreadStorage.getDateTimeZone();
+		DateTime convertedDateTime = dateTime.withZone(timeZone);
+		convertedDateTime = convertedDateTime.withZoneRetainFields(DateTimeZone.UTC);
 		DateTimeFormatter fmt = ISODateTimeFormat.dateTime();
-		writer.value(fmt.print(convertedDateTime));
+		String result =fmt.print(convertedDateTime); 
+		writer.value(result);
 	}
 }

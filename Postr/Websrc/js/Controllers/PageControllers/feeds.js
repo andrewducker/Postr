@@ -50,7 +50,7 @@ postrApp.controller('ExistingFeedController',function ($scope, userData, postFun
 	var feed = userData.getFeed($routeParams.id);
 	var outputId = feed.output;
 	var siteName = feed.siteName;
-	feed.postingHour = feed.postingTime.getHours();
+	feed.postingHour = feed.postingTime.getUTCHours();
 	$scope.selectedInputs = [];
 	var possibleInputs = angular.copy(userData.inputs);
 	angular.forEach(possibleInputs, function(input){
