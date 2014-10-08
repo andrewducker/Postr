@@ -1,19 +1,19 @@
 <div class="control-group">
 	<label class="control-label" for="subject">Subject Line:</label>
 	<div class="controls">
-		<input type="text" id="subject" ng-readonly="readOnly" ng-model="post.subject">
+		<input type="text" id="subject" ng-readonly="readOnly" ng-model="feed.subject">
 	</div>
 </div>
 <div class="control-group">
 	<label class="control-label" for="contents">Text:</label>
 	<div class="controls">
-		<textarea rows=5 id="contents" ng-readonly="readOnly" ng-model="post.contents"></textarea>
+		<textarea rows=5 id="contents" ng-readonly="readOnly" ng-model="feed.contents"></textarea>
 	</div>
 </div>
 <div class="control-group">
 	<label class="control-label" for="visibility">Visibility</label>
 	<div class="controls">
-		<select id="visibility" ng-readonly="readOnly" ng-model="post.visibility"><option>Public</option>
+		<select id="visibility" ng-readonly="readOnly" ng-model="feed.visibility"><option>Public</option>
 			<option>FriendsOnly</option>
 			<option>Private</option>
 		</select>
@@ -22,6 +22,6 @@
 <div class="control-group">
 	<label class="control-label" for="format">Auto Format:</label>
 	<div class="controls">
-		<input type="checkbox" id="format" ng-disabled="readOnly" ng-model="post.autoFormat">
+		<input type="checkbox" id="format" ng-disabled="readOnly" ng-model="feed.autoFormat">
 	</div>
 </div>

@@ -1,9 +1,11 @@
 package com.postr.DataTypes;
 
 import com.googlecode.objectify.Key;
+import com.googlecode.objectify.Ref;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
+import com.googlecode.objectify.annotation.Load;
 
 @Entity
 public class BaseSaveable {
@@ -18,14 +20,14 @@ public class BaseSaveable {
 	}
 
 	public void setParent(long parentID) {
-		this.parent = Key.create(User.class, parentID);
+		this.parent = Ref.create(Key.create(User.class,parentID));
 	}
 	
 	public long getParent(){
-		return parent.getId();
+		return parent.get().getId();
 	}
 	
-	private @Index	transient Key<User> parent;
+	private @Index @Load transient Ref<User> parent;
 	
 	protected BaseSaveable(){}
 

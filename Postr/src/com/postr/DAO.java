@@ -19,11 +19,13 @@ import com.postr.DataTypes.Inputs.PinboardData;
 import com.postr.DataTypes.Outputs.BaseOutput;
 import com.postr.DataTypes.Outputs.BasePost;
 import com.postr.DataTypes.Outputs.DWData;
+import com.postr.DataTypes.Outputs.DWFeed;
 import com.postr.DataTypes.Outputs.DWPost;
-import com.postr.DataTypes.Outputs.Feed;
 import com.postr.DataTypes.Outputs.LJData;
+import com.postr.DataTypes.Outputs.LJFeed;
 import com.postr.DataTypes.Outputs.LJPost;
 import com.postr.DataTypes.Outputs.TestData;
+import com.postr.DataTypes.Outputs.TestFeed;
 import com.postr.DataTypes.Outputs.TestPost;
 
 public class DAO {
@@ -41,7 +43,9 @@ public class DAO {
 		ObjectifyService.register(LJPost.class);
 		ObjectifyService.register(TestPost.class);
 		ObjectifyService.register(TestData.class);
-		ObjectifyService.register(Feed.class);
+		ObjectifyService.register(LJFeed.class);
+		ObjectifyService.register(DWFeed.class);
+		ObjectifyService.register(TestFeed.class);
 	}
 
 	public static <T extends BaseSaveable> Key<T> SaveThing(T thing, Long userID){

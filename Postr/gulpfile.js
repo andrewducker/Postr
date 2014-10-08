@@ -30,7 +30,7 @@ gulp.task('delIndexHtml', function(cb){
 gulp.task('clean',['delWarJs','cleanBuild','delIndexHtml'],function(){});
 
 gulp.task('controllers',['clean'], function() {
-     return gulp.src(['Websrc/js/Controllers/init.js','Websrc/js/Controllers/*.js'])
+     return gulp.src(['Websrc/js/Controllers/init.js','Websrc/js/Controllers/*.js', 'Websrc/js/**/*.js'])
           .pipe(ngAnnotate())
           .pipe(concat('controllers.js'))
           .pipe(gulp.dest('build'));

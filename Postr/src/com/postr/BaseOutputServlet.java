@@ -24,17 +24,20 @@ abstract class BaseOutputServlet extends BasePersonaSessionServlet {
 			return MakePost(parameters);
 		case SavePost:
 			return SavePost(parameters);
+		case SaveFeed:
+			return SaveFeed(parameters);
 		default:
 			throw new Exception("No such method found: " + method);
 		}
 	}
 
 	private Result MakePost(Json parameters) throws Exception {
-		BasePost post = CreatePost(parameters, GetUserID());
+		long userID = GetUserID();
+		BasePost post = CreatePost(parameters);
+		post.setParent(userID);
 		
 		if (post.hasbeenSaved()) {
-			BasePost savedPost = DAO.LoadThing(BasePost.class, post.getId(),
-					GetUserID());
+			BasePost savedPost = DAO.LoadThing(BasePost.class, post.getId(), userID);
 			if (!savedPost.awaitingPostingTime) {
 				return Result
 						.Failure("This post has already been posted, and can no longer be updated.");
@@ -52,7 +55,9 @@ abstract class BaseOutputServlet extends BasePersonaSessionServlet {
 
 	protected abstract Result SaveData(Json parameters) throws Exception;
 
-	protected abstract BasePost CreatePost(Json parameters, long userID);
+	protected abstract BasePost CreatePost(Json parameters);
 
 	protected abstract Result SavePost(Json parameters) throws Exception;
+
+	protected abstract Result SaveFeed(Json parameters) throws Exception;
 }

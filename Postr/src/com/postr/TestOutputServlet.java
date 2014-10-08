@@ -3,6 +3,7 @@ package com.postr;
 import com.googlecode.objectify.Key;
 import com.postr.DataTypes.Json;
 import com.postr.DataTypes.Outputs.TestData;
+import com.postr.DataTypes.Outputs.TestFeed;
 import com.postr.DataTypes.Outputs.TestPost;
 
 @SuppressWarnings("serial")
@@ -21,18 +22,25 @@ public class TestOutputServlet extends BaseOutputServlet {
 		Key<TestData> result = DAO.SaveThing(ljData,GetUserID());
 		return new Result("Saved!",result.getId());
 	}
+	
+	@Override
+	protected Result SaveFeed(Json parameters) throws Exception {
+		TestFeed testFeed = parameters.FromJson(TestFeed.class);
+		
+		Key<TestFeed> result = DAO.SaveThing(testFeed,GetUserID());
+		return new Result("Saved!",result.getId());
+	}
 
 	@Override
-	protected TestPost CreatePost(Json parameters, long userID) {
+	protected TestPost CreatePost(Json parameters) {
 		TestPost post = parameters.FromJson(TestPost.class);
 		post.timeZone = GetTimeZone();
-		post.setParent(userID);
 		return post;
 	}
 	
 	@Override
 	protected Result SavePost(Json parameters) throws Exception {
-		TestPost post = CreatePost(parameters,GetUserID());
+		TestPost post = CreatePost(parameters);
 	
 		Key<TestPost> result = DAO.SaveThing(post, GetUserID());
 		

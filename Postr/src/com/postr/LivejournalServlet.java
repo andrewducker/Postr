@@ -3,6 +3,7 @@ package com.postr;
 import com.googlecode.objectify.Key;
 import com.postr.DataTypes.Json;
 import com.postr.DataTypes.Outputs.LJData;
+import com.postr.DataTypes.Outputs.LJFeed;
 import com.postr.DataTypes.Outputs.LJPost;
 import com.postr.Translators.LJTranslator;
 
@@ -26,16 +27,23 @@ public class LivejournalServlet extends BaseOutputServlet {
 	}
 
 	@Override
-	protected LJPost CreatePost(Json parameters, long userID) {
+	protected Result SaveFeed(Json parameters) throws Exception {
+		LJFeed ljFeed = parameters.FromJson(LJFeed.class);
+		
+		Key<LJFeed> result = DAO.SaveThing(ljFeed,GetUserID());
+		return new Result("Saved!",result.getId());
+	}
+	
+	@Override
+	protected LJPost CreatePost(Json parameters) {
 		LJPost post = parameters.FromJson(LJPost.class);
 		post.timeZone = GetTimeZone();
-		post.setParent(userID);
 		return post;
 	}
 	
 	@Override
 	protected Result SavePost(Json parameters) throws Exception {
-		LJPost post = CreatePost(parameters,GetUserID());
+		LJPost post = CreatePost(parameters);
 	
 		Key<LJPost> result = DAO.SaveThing(post, GetUserID());
 		

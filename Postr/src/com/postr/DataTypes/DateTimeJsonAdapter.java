@@ -21,6 +21,10 @@ class DateTimeJsonAdapter extends TypeAdapter<DateTime>{
 
 	@Override
 	public void write(JsonWriter writer, DateTime dateTime) throws IOException {
+		if(dateTime == null){
+			writer.nullValue();
+			return;
+		}
 		DateTime convertedDateTime = dateTime.withZone(ThreadStorage.getDateTimeZone()).withZoneRetainFields(DateTimeZone.UTC);
 		DateTimeFormatter fmt = ISODateTimeFormat.dateTime();
 		writer.value(fmt.print(convertedDateTime));

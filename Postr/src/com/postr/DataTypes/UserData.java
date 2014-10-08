@@ -7,7 +7,7 @@ import com.postr.DAO;
 import com.postr.DataTypes.Inputs.BaseInput;
 import com.postr.DataTypes.Outputs.BaseOutput;
 import com.postr.DataTypes.Outputs.BasePost;
-import com.postr.DataTypes.Outputs.Feed;
+import com.postr.DataTypes.Outputs.BaseFeed;
 
 
 public class UserData {
@@ -16,8 +16,8 @@ public class UserData {
 		this.persona = persona;
 		List<BaseSaveable> saveables = DAO.LoadThings(BaseSaveable.class, userID);
 		for (BaseSaveable baseSaveable : saveables) {
-			if (baseSaveable instanceof Feed) {
-				feeds.add((Feed) baseSaveable);
+			if (baseSaveable instanceof BaseFeed) {
+				feeds.add((BaseFeed) baseSaveable);
 				continue;
 			}
 			if (baseSaveable instanceof BaseOutput) {
@@ -58,7 +58,7 @@ public class UserData {
 	
 	private List<BasePost> posts = new Vector<BasePost>();
 	
-	private List<Feed> feeds = new Vector<Feed>();
+	private List<BaseFeed> feeds = new Vector<BaseFeed>();
 	
 	private List<String> possibleOutputs = new Vector<String>();
 	

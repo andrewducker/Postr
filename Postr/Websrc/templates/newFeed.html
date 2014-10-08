@@ -1,14 +1,14 @@
 <form class="form-horizontal">
 	<label class="control-label" for="outputDescription">Output:</label>
 	<div class="controls">
-		<input type="text" ng-readonly="true" value="{{outputDescription}}">
+		<input type="text" ng-readonly="true" value="{{feed.outputDescription}}">
 	</div>
 	
-	<label class="control-label" for="inputs">Output:</label>
+	<label class="control-label" for="inputs">Input:</label>
 	<div class="controls">
 	<span
 	    multi-select
-	    input-model="data.inputs"
+	    input-model="possibleInputs"
 	    button-label="siteName userName"
 	    item-label="siteName userName"
 	    tick-property="ticked"
@@ -20,7 +20,7 @@
 	<label class="control-label" for="postingHour">Time:</label>
 	<div class="controls">
 		<select 
-			ng-model="postingHour"
+			ng-model="feed.postingHour"
 			ng-options="possibleTime for possibleTime in possibleTimes"
 			>
 		</select>
@@ -28,7 +28,7 @@
 	<label class="control-label" for="postingDay">Day:</label>
 	<div class="controls">
 		<input type="text" class="form-control"  ng-readonly="readOnly"
-			datepicker-popup="yyyy-MM-dd" ng-model="postingDay" />
+			datepicker-popup="yyyy-MM-dd" ng-model="feed.postingTime" />
 	</div>
 	
 	<div ng-include ="feedDetailsTemplate"></div>

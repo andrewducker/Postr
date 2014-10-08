@@ -3,6 +3,7 @@ package com.postr;
 import com.googlecode.objectify.Key;
 import com.postr.DataTypes.Json;
 import com.postr.DataTypes.Outputs.DWData;
+import com.postr.DataTypes.Outputs.DWFeed;
 import com.postr.DataTypes.Outputs.DWPost;
 import com.postr.Translators.DWTranslator;
 
@@ -26,16 +27,23 @@ public class DreamwidthServlet extends BaseOutputServlet {
 	}
 	
 	@Override
-	protected DWPost CreatePost(Json parameters, long userID) {
+	protected Result SaveFeed(Json parameters) throws Exception {
+		DWFeed dwFeed = parameters.FromJson(DWFeed.class);
+		
+		Key<DWFeed> result = DAO.SaveThing(dwFeed,GetUserID());
+		return new Result("Saved!",result.getId());
+	}
+	
+	@Override
+	protected DWPost CreatePost(Json parameters) {
 		DWPost post = parameters.FromJson(DWPost.class);
 		post.timeZone = GetTimeZone();
-		post.setParent(userID);
 		return post;
 	}
 	
 	@Override
 	protected Result SavePost(Json parameters) throws Exception {
-		DWPost post = CreatePost(parameters, GetUserID());
+		DWPost post = CreatePost(parameters);
 		
 		Key<DWPost> result = DAO.SaveThing(post, GetUserID());
 		

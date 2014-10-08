@@ -46,17 +46,25 @@ postrApp.factory('userData', function(persona, $http,orderByFilter, $filter, ale
 				}
 				return null;
 			},
+			getFeed : function(id){
+				var search = {id:parseInt(id)};
+				var found;
+				found = $filter('filter')(this.feeds, search, true);
+				if(found && found.length){
+					return found[0];
+				}
+				return null;
+			},
 			postingTimeAsText : function(post){
 				return post.postingTime.toUTCString().replace(" GMT","");
 			},
 			populate : function(result) {
 				angular.extend(this,result.data);
-				this.currentInput = this.inputs[0];
-				this.currentOutput = this.outputs[0];
-				this.currentPossibleOutput = this.possibleOutputs[0];
-				this.currentPossibleInput = this.possibleInputs[0];
 				this.posts.forEach(function(post){
 					post.postingTime = new Date(post.postingTime);
+				});
+				this.feeds.forEach(function(feed){
+					feed.postingTime = new Date(feed.postingTime);
 				});
 				this.loggedOut = false;
 				this.loggedIn = true;

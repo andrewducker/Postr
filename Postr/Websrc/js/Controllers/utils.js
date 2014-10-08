@@ -64,3 +64,35 @@ postrApp.factory('dates',function(){
 	};
 	return dateUtilities;
 });
+
+postrApp.factory('postFunctions', function(){
+	var processTime = function(localTime, localHour){
+		serverTime = new Date();
+		serverTime.setUTCFullYear(localTime.getFullYear(), localTime.getMonth(), localTime.getDate());
+		serverTime.setUTCHours(localHour,0,0,0);
+		return serverTime;
+	};
+	
+	return {
+		possibleTimes : [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23],
+		postInFutureChanged : function(post){
+			if(post.postingInFuture){
+				var newTime = new Date();
+				post.postingTime = new Date(newTime.getFullYear(), newTime.getMonth(),newTime.getDate());
+				post.postingHour = newTime.getHours();
+			}
+			else{
+				delete post.postingHour;
+				delete post.postingTime;
+			}
+		},
+		processPostingTime : function(post){
+			if (post.postingInFuture) {
+				post.postingTime = processTime(post.postingTime,post.postingHour);
+			}else{
+				delete post.postingTime;
+			}
+		},
+		processTime : processTime
+	};
+});

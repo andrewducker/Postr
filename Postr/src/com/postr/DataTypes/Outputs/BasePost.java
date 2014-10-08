@@ -26,7 +26,7 @@ public abstract class BasePost extends BaseSaveable {
 			result = Result.Success("Saved for later");
 			state = ResultStateEnum.saved;
 		}
-		DAO.SaveThing(this, this.getParent());
+		DAO.SaveThing(this, getParent());
 		return state;
 	}
 
