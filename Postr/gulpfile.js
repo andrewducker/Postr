@@ -75,14 +75,27 @@ gulp.task('alljs',['controllers','miscjs', 'templates'],function(){
 		.pipe(gulp.dest('build'));
 });
 
-gulp.task('cachebust',['alljs'],function(){
-	var oldFileName = 'build/alljs.js';
-	var resultHash = hashFile(oldFileName);
-	var newFileName = 'alljs-'+resultHash+'.js';
-	fs.renameSync(oldFileName,'war/'+newFileName);
+gulp.task('allcss',function(){
+	return gulp.src(['Websrc/css/*.css'])
+		.pipe(concat('allcss.css'))
+		.pipe(gulp.dest('build'));
+});
 
+function cacheBust(fileName,extension){
+	var oldFileName = 'build/'+fileName+"."+extension;
+	var resultHash = hashFile(oldFileName);
+	var newFileName = fileName+'-'+resultHash+'.'+extension;
+	fs.renameSync(oldFileName,'war/'+newFileName);
+	return newFileName;
+}
+
+gulp.task('cachebust',['alljs','allcss'],function(){
+	var newJsFileName = cacheBust("alljs", "js");
+	var newCssFileName = cacheBust("allcss","css");
+	
 	return gulp.src('Websrc/index.html')
-		.pipe(replace('alljs\.js',newFileName))
+		.pipe(replace('alljs\.js',newJsFileName))
+		.pipe(replace('allcss\.css',newCssFileName))
 		.pipe(gulp.dest('war'));
 });
 
