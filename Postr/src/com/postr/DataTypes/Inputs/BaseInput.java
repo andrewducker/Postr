@@ -1,11 +1,17 @@
 package com.postr.DataTypes.Inputs;
 
+import com.google.appengine.api.urlfetch.HTTPResponse;
+import com.google.common.util.concurrent.Futures;
+import com.google.common.util.concurrent.ListenableFuture;
 import com.googlecode.objectify.annotation.Subclass;
+import com.postr.BaseFeedParser;
+import com.postr.FeedReader;
 import com.postr.DataTypes.BaseSaveable;
+import com.postr.DataTypes.LinkSet;
 
 @Subclass(index=true)
 public abstract class BaseInput extends BaseSaveable {
-	private String userName;
+	protected String userName;
 	
 	protected BaseInput(){this.siteName = getSiteName();}
 
@@ -21,7 +27,20 @@ public abstract class BaseInput extends BaseSaveable {
 
 	public abstract String getSiteName();
 	
-	public String getUserName() {
-		return userName;
+	public ListenableFuture<LinkSet> Read() throws Exception {
+
+		ListenableFuture<HTTPResponse> feedContents = FeedReader.Read(GetFeedURL());
+		
+		return Futures.transform(feedContents, GetParser());
 	}
+		
+	abstract BaseFeedParser GetParser();
+	
+
+	protected String GetURLForTag(String tag) {
+		return null;
+	}
+	
+	abstract String GetFeedURL();
+
 }
