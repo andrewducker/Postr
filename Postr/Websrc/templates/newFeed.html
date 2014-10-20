@@ -16,7 +16,18 @@
 	>
 	</span>
 	</div>
-	
+	<div class="control-group">
+		<label class="control-label" for="subject">Subject Line:</label>
+		<div class="controls">
+			<input type="text" id="subject" ng-readonly="readOnly" ng-model="feed.subject">
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="contents">Text:</label>
+		<div class="controls">
+			<textarea rows=5 id="contents" ng-readonly="readOnly" ng-model="feed.contents"></textarea>
+		</div>
+	</div>
 	<label class="control-label" for="postingHour">Time:</label>
 	<div class="controls">
 		<select 
