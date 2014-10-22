@@ -15,6 +15,20 @@ var setupForm = function($scope, outputId, feed, siteName, userData, inputs, pos
 	$scope.Cancel = function(){
 		$location.path("");
 	};
+	$scope.resetSubject=function(){
+		$scope.feed.subject="Interesting Links for $date.format(\"dd-MM-yyyy\",$postingTime)";
+	};
+	$scope.resetContents=function()
+	{
+		$scope.feed.contents= ['<ul class="links">',
+		               		'#foreach($link in $links)',
+		            		'<li class="link"><A href="$link.URL">$link.Title</A>',
+		            		'#if($link.Description)<BR/><span class="link-description">$link.Description</span>#end', 
+		            		'<BR/><span class="link-tags">(tags:#foreach($tag in $link.Tags) <A href="$tag.TagURL">$tag.Tag</A>#end )</span>',
+		            		'</li>',
+		            		'#end',
+		            		'</ul>'].join("\n");
+	};
 	$scope.feedDetailsTemplate = "sites/"+ siteName + "/FeedDetails.html";
 	$scope.Save = function(){
 		feed.postingTime = postFunctions.processTime(feed.postingTime, feed.postingHour);
