@@ -11,8 +11,8 @@ import com.postr.DataTypes.BaseSaveable;
 
 @Subclass(index = true)
 public abstract class BasePost extends BaseSaveable {
-	abstract void MakePost();
-	public ResultStateEnum PostOrSave(){
+	abstract void MakePost() throws Exception;
+	public ResultStateEnum PostOrSave() throws Exception{
 		ResultStateEnum state;
 		if (postingTime == null
 				|| postingTime.isBefore(DateTime.now())) {

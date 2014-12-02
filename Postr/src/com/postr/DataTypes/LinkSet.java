@@ -1,14 +1,14 @@
 package com.postr.DataTypes;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Vector;
 
 @SuppressWarnings("serial")
-public class LinkSet extends Vector<LinkEntry> {
+public class LinkSet extends ArrayList<LinkEntry> {
 
 	public List<String> getTagNames() {
-		List<String> tags = new Vector<String>();
+		List<String> tags = new ArrayList<String>();
 
 		for (LinkEntry entry : this) {
 			for (LinkTag linkTag : entry.getTags()) {
