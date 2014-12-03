@@ -36,7 +36,16 @@ postrApp.factory('userData', function(persona, $http,orderByFilter, $filter, ale
 					return found[0];
 				}
 				return null;
-			},			
+			},
+			describeFeed : 	function(feed){
+				var inputDescriptions = feed.inputs.map(
+						function(input){
+							return this.describeSite(this.getSiteItem(input));},this 
+						);
+				
+				
+				return  inputDescriptions.join() + "->" + feed.siteName;
+			},
 			getPost : function(id){
 				var search = {id:parseInt(id)};
 				var found;

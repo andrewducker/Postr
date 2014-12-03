@@ -23,7 +23,6 @@ postrApp.controller('SummaryController',function summaryController($scope,userDa
 			alerter.alertAndReload("Failed to update data: " + data);
 		});
 	};
-	
 });
 
 postrApp.controller('UserDataCtrl', function postCtrl($scope, persona, userData) {

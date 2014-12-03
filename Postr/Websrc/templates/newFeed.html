@@ -43,12 +43,35 @@
 		<input type="text" class="form-control"  ng-readonly="readOnly"
 			datepicker-popup="yyyy-MM-dd" ng-model="feed.postingTime" />
 	</div>
-	
+
+	<div class="control-group">
+		<label class="control-label" for="contents">Post with Tags:</label>
+		<div class="controls">
+			<input type="checkbox" id="postWithTags" ng-readonly="readOnly" ng-model="feed.postWithTags">
+		</div>
+	</div>
+
+	<div class="control-group">
+		<label class="control-label" for="contents">Default Tags:</label>
+		<div class="controls">
+			<input type="text" id="defaultTags" ng-readonly="readOnly" ng-model="feed.defaultTags">
+		</div>
+	</div>
+
+	<div class="control-group">
+		<label class="control-label" for="contents">Days to include:</label>
+		<div class="controls">
+			<input type="numeric" id="daysToInclude" ng-readonly="readOnly" ng-model="feed.daysToInclude">
+		</div>
+	</div>
+
   	<div ng-include ="feedDetailsTemplate"></div>
   	
 	<div class="controls">
 		<button class="btn btn-primary" ng-click="Save()">OK</button>
+		<button class="btn btn-primary" ng-show="feed.Active==false" ng-click="Activate()">Activate</button>
 		<button class="btn btn-warning" ng-click="Cancel()">Cancel</button>
+		<button class="btn btn-warning" ng-show="action=='Update' && feed.Active" ng-click="Deactivate()">Deactivate</button>
 		<button class="btn btn-danger" ng-show="action=='Update'" ng-click="Delete()">Delete</button>
 	</div>
 </form>
