@@ -24,6 +24,17 @@ postrApp.factory('userData', function(persona, $http,orderByFilter, $filter, ale
 					alerter.alert("Failure: " + err);
 				});
 			},
+			deleteFeed : function(feed){
+				feed.method = "RemoveData";
+				var self = this;
+				$http.post('/DataManagement', feed)
+				.success(function(response) {
+					removeFromArray(feed, self.feeds);
+					alerter.alert(response.message);
+				}).error(function(err) {
+					alerter.alert("Failure: " + err);
+				});
+			},
 			getSiteItem : function(id){
 				var search = {id:parseInt(id)};
 				var found;
@@ -38,12 +49,7 @@ postrApp.factory('userData', function(persona, $http,orderByFilter, $filter, ale
 				return null;
 			},
 			describeFeed : 	function(feed){
-				var inputDescriptions = feed.inputs.map(
-						function(input){
-							return this.describeSite(this.getSiteItem(input));},this 
-						);
-				
-				
+				var inputDescriptions = feed.inputs.map(function(input){return this.describeSite(this.getSiteItem(input));},this);
 				return  inputDescriptions.join() + "->" + feed.siteName;
 			},
 			getPost : function(id){

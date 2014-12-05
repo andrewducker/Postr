@@ -16,12 +16,20 @@
 	<url-pattern>/Livejournal</url-pattern>
 </servlet-mapping>
 <servlet>
-	<servlet-name>PostSingleFeed</servlet-name>
-	<servlet-class>com.postr.PostSingleFeedServlet</servlet-class>
+	<servlet-name>MakeSinglePost</servlet-name>
+	<servlet-class>com.postr.MakeSinglePostServlet</servlet-class>
 </servlet>
 <servlet-mapping>
-	<servlet-name>PostSingleFeed</servlet-name>
-	<url-pattern>/PostSingleFeed</url-pattern>
+	<servlet-name>MakeSinglePost</servlet-name>
+	<url-pattern>/MakeSinglePost</url-pattern>
+</servlet-mapping>
+<servlet>
+	<servlet-name>ProcessFeed</servlet-name>
+	<servlet-class>com.postr.ProcessFeedServlet</servlet-class>
+</servlet>
+<servlet-mapping>
+	<servlet-name>ProcessFeed</servlet-name>
+	<url-pattern>/ProcessFeed</url-pattern>
 </servlet-mapping>
 <servlet>
 	<servlet-name>PostBacklog</servlet-name>
@@ -38,6 +46,14 @@
 <servlet-mapping>
 	<servlet-name>TestOutput</servlet-name>
 	<url-pattern>/TestOutput</url-pattern>
+</servlet-mapping>
+<servlet>
+	<servlet-name>TestInput</servlet-name>
+	<servlet-class>com.postr.TestInputServlet</servlet-class>
+</servlet>
+<servlet-mapping>
+	<servlet-name>TestInput</servlet-name>
+	<url-pattern>/TestInput</url-pattern>
 </servlet-mapping>
 <servlet>
 	<servlet-name>Delicious</servlet-name>
@@ -86,14 +102,6 @@
 <servlet-mapping>
 	<servlet-name>PersonaLogout</servlet-name>
 	<url-pattern>/personalogout</url-pattern>
-</servlet-mapping>
-<servlet>
-  <servlet-name>PipelineServlet</servlet-name>
-  <servlet-class>com.google.appengine.tools.pipeline.impl.servlets.PipelineServlet</servlet-class>
-</servlet>
-<servlet-mapping>
-  <servlet-name>PipelineServlet</servlet-name>
-  <url-pattern>/_ah/pipeline/*</url-pattern>
 </servlet-mapping>
 <welcome-file-list>
 	<welcome-file>index.html</welcome-file>

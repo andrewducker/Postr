@@ -44,6 +44,7 @@ public class UserData {
 		
 		possibleInputs.add("Delicious");
 		possibleInputs.add("Pinboard");
+		possibleInputs.add("TestInput");
 	}
 	
 	@SuppressWarnings("unused")

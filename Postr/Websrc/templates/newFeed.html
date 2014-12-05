@@ -67,11 +67,16 @@
 
   	<div ng-include ="feedDetailsTemplate"></div>
   	
+	<div class="control-group">
+		<label class="control-label" for="contents">Active:</label>
+		<div class="controls">
+			<input type="checkbox" id="postWithTags" ng-readonly="readOnly" ng-model="feed.active">
+		</div>
+	</div>
+
 	<div class="controls">
 		<button class="btn btn-primary" ng-click="Save()">OK</button>
-		<button class="btn btn-primary" ng-show="feed.Active==false" ng-click="Activate()">Activate</button>
 		<button class="btn btn-warning" ng-click="Cancel()">Cancel</button>
-		<button class="btn btn-warning" ng-show="action=='Update' && feed.Active" ng-click="Deactivate()">Deactivate</button>
 		<button class="btn btn-danger" ng-show="action=='Update'" ng-click="Delete()">Delete</button>
 	</div>
 </form>

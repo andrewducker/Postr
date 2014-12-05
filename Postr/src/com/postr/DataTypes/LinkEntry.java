@@ -1,8 +1,9 @@
 package com.postr.DataTypes;
 
-import java.util.Calendar;
 import java.util.List;
 import java.util.Vector;
+
+import org.joda.time.DateTime;
 
 
 public class LinkEntry implements Comparable<LinkEntry> {
@@ -11,7 +12,7 @@ public class LinkEntry implements Comparable<LinkEntry> {
 	public List<LinkTag> Tags = new Vector<LinkTag>();
 	public String Title;
 	public String Description;
-	public Calendar PostedDate;
+	public DateTime PostedDate;
 	@Override
 	public int compareTo(LinkEntry arg0) {
 		return PostedDate.compareTo(arg0.PostedDate);
@@ -29,7 +30,7 @@ public class LinkEntry implements Comparable<LinkEntry> {
 	public String getDescription() {
 		return Description;
 	}
-	public Calendar getPostedDate() {
+	public DateTime getPostedDate() {
 		return PostedDate;
 	}
 	

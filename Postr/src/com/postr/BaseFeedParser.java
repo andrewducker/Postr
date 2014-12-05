@@ -1,9 +1,10 @@
 package com.postr;
 
-import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
+
+import org.joda.time.DateTime;
 
 import uk.org.catnip.eddie.Category;
 import uk.org.catnip.eddie.Detail;
@@ -53,8 +54,7 @@ public abstract class BaseFeedParser implements Function<HTTPResponse, LinkSet> 
 				}
 			}
 			
-			linkEntry.PostedDate = Calendar.getInstance();
-			linkEntry.PostedDate.setTime(entry.getModified());			
+			linkEntry.PostedDate = new DateTime(entry.getModified());			
 
 			for(Iterator<Link> linkIterator = entry.links();linkIterator.hasNext();)
 			{

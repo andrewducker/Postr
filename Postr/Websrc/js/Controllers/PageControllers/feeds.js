@@ -62,6 +62,7 @@ postrApp.controller('NewFeedController',function ($scope, userData, postFunction
 
 postrApp.controller('ExistingFeedController',function ($scope, userData, postFunctions, $http, alerter, $location,$routeParams) {
 	var feed = userData.getFeed($routeParams.id);
+	$scope.action = "Update";
 	var outputId = feed.output;
 	var siteName = feed.siteName;
 	feed.postingHour = feed.postingTime.getUTCHours();
@@ -73,6 +74,12 @@ postrApp.controller('ExistingFeedController',function ($scope, userData, postFun
 	});
 	
 	setupForm($scope, outputId, feed, siteName,userData, possibleInputs, postFunctions,  $http, alerter, $location);
+	
+	$scope.Delete = function(){
+		userData.deleteFeed(feed);
+		$location.path("");
+	};
+
 	
 
 });

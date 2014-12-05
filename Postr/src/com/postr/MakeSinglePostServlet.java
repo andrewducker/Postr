@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.postr.DataTypes.Outputs.BasePost;
 
 @SuppressWarnings("serial")
-public class PostSingleFeedServlet extends HttpServlet {
+public class MakeSinglePostServlet extends HttpServlet {
 	public void doPost(HttpServletRequest req, HttpServletResponse resp)
 	throws IOException {
 		long key = Long.parseLong(req.getParameter("key"));
@@ -20,7 +20,7 @@ public class PostSingleFeedServlet extends HttpServlet {
 		try {
 			toPost = DAO.LoadThing(BasePost.class, key);
 		} catch (Exception e1) {
-			Logger log = Logger.getLogger(PostSingleFeedServlet.class.getName());
+			Logger log = Logger.getLogger(MakeSinglePostServlet.class.getName());
 			StringWriter sw = new StringWriter();
 			PrintWriter pw = new PrintWriter(sw);
 			e1.printStackTrace(pw);
@@ -30,7 +30,7 @@ public class PostSingleFeedServlet extends HttpServlet {
 		try {
 			toPost.PostOrSave();
 		} catch (Exception e) {
-			Logger log = Logger.getLogger(PostSingleFeedServlet.class.getName());
+			Logger log = Logger.getLogger(MakeSinglePostServlet.class.getName());
 			StringWriter sw = new StringWriter();
 			PrintWriter pw = new PrintWriter(sw);
 			e.printStackTrace(pw);

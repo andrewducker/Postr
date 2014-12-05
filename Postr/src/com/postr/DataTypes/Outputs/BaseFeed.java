@@ -8,6 +8,7 @@ import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
 import org.apache.velocity.tools.generic.DateTool;
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 
 import com.google.appengine.api.taskqueue.Queue;
 import com.google.appengine.api.taskqueue.QueueFactory;
@@ -33,6 +34,20 @@ public abstract class BaseFeed extends BasePost {
 	boolean postWithTags;
 
 	abstract BasePost generatePost(String postSubject, String postContents, List<String> tags) throws Exception;
+	
+	@Override
+	public ResultStateEnum PostOrSave() throws Exception{
+		if (active && postingTime.isBefore(DateTime.now())) {
+			MakePost();
+			postingTime = postingTime.plusDays(daysToInclude);
+			result.postingTime = DateTime.now(DateTimeZone.UTC).getMillis();
+			DAO.SaveThing(this, getParent());
+			return ResultStateEnum.posted;
+		}
+		return ResultStateEnum.ignored;
+	}
+
+	
 	
 	@Override
 	void MakePost() throws Exception {
@@ -100,8 +115,8 @@ public abstract class BaseFeed extends BasePost {
 	private static LinkSet FilterLinksByDate(LinkSet links, DateTime startTime, DateTime endTime) {
 		LinkSet filteredList = new LinkSet();
 		for (LinkEntry linkEntry : links) {
-			if (linkEntry.PostedDate.before(endTime)
-					&& linkEntry.PostedDate.after(startTime)) {
+			if (linkEntry.PostedDate.isBefore(endTime)
+					&& linkEntry.PostedDate.isAfter(startTime)) {
 				filteredList.add(linkEntry);
 			}
 		}

@@ -16,6 +16,7 @@ import com.postr.DataTypes.User;
 import com.postr.DataTypes.UserEmail;
 import com.postr.DataTypes.Inputs.DeliciousData;
 import com.postr.DataTypes.Inputs.PinboardData;
+import com.postr.DataTypes.Inputs.TestInputData;
 import com.postr.DataTypes.Outputs.BaseOutput;
 import com.postr.DataTypes.Outputs.BasePost;
 import com.postr.DataTypes.Outputs.DWData;
@@ -37,6 +38,7 @@ public class DAO {
 		ObjectifyService.register(DWData.class);
 		ObjectifyService.register(DeliciousData.class);
 		ObjectifyService.register(PinboardData.class);
+		ObjectifyService.register(TestInputData.class);
 		ObjectifyService.register(UserEmail.class);
 		ObjectifyService.register(User.class);
 		ObjectifyService.register(DWPost.class);
