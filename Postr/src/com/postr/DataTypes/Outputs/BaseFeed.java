@@ -23,8 +23,6 @@ import com.postr.DataTypes.LinkEntry;
 import com.postr.DataTypes.LinkSet;
 import com.postr.DataTypes.Inputs.BaseInput;
 
-import static com.google.appengine.api.taskqueue.TaskOptions.Builder.*;
-
 @Subclass(index=true)
 public abstract class BaseFeed extends BasePost {
 	public List<Long> inputs;
@@ -47,12 +45,10 @@ public abstract class BaseFeed extends BasePost {
 		return ResultStateEnum.ignored;
 	}
 
-	
-	
 	@Override
 	void MakePost() throws Exception {
 		LinkSet links = getLinks();
-		links = FilterLinksByDate(links, postingTime, postingTime.minusDays(daysToInclude));
+		links = FilterLinksByDate(links, postingTime.minusDays(daysToInclude), postingTime);
 		if (links.size() == 0) {
 			result = Result.Success("No entries found");
 		} else {
@@ -71,9 +67,10 @@ public abstract class BaseFeed extends BasePost {
 	private long WritePost(String postSubject, String postContents,
 			List<String> tags) throws Exception {
 		BasePost post = generatePost(postSubject, postContents, tags);
-		Key<BasePost> postKey = DAO.SaveThing(post);
+		post.postingTime = DateTime.now();
+		Key<BasePost> postKey = DAO.SaveThing(post, this.getParent());
 		Queue queue = QueueFactory.getDefaultQueue();
-		queue.add(withUrl("/postsinglefeed").param("key", postKey.toString()));			
+		//queue.add(withUrl("/MakeSinglePost").param("key", postKey.toString()));			
 		return postKey.getId();
 	}
 
@@ -140,7 +137,7 @@ public abstract class BaseFeed extends BasePost {
 		StringWriter writer = new StringWriter();
 		DateTool dateTool = new DateTool();
 		context.put("date", dateTool);
-		context.put("postingTime",endTime);
+		context.put("postingTime",endTime.toGregorianCalendar());
 		Velocity.evaluate(context, writer, "", subjectTemplate);
 		return writer.toString();
 	}

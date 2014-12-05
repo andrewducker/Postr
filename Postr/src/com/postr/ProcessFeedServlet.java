@@ -36,7 +36,11 @@ public class ProcessFeedServlet extends HttpServlet {
 			e.printStackTrace(pw);
 			log.severe("Uncaught Exception: " + sw.toString());
 			toPost.result = Result.Failure("An error occurred.  Please let andrew@ducker.org.uk know" + e.getMessage());
-			DAO.SaveThing(toPost);
+			try {
+				DAO.SaveThing(toPost);
+			} catch (Exception e1) {
+				e1.printStackTrace();
+			}
 		}
 	}
 

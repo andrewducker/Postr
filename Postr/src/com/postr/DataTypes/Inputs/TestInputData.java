@@ -42,7 +42,7 @@ public class TestInputData extends BaseInput {
 		LinkSet linkSet = new LinkSet();
 		LinkEntry linkEntry = new LinkEntry();
 		linkEntry.PostedDate = DateTime.now();
-		linkEntry.Description = "This is the description for the test input for " + userName;
+		linkEntry.Description = "This is the description for today's test input for " + userName;
 		linkEntry.Title = "Test " + userName + " 1";
 		linkEntry.URL = "http://test.com/testInput1";
 		LinkTag linkTag = new LinkTag();
@@ -50,6 +50,19 @@ public class TestInputData extends BaseInput {
 		linkTag.TagURL = "http://test.com/test1";
 		linkEntry.Tags.add(linkTag);
 		linkSet.add(linkEntry);
+		
+		linkEntry = new LinkEntry();
+		linkEntry.PostedDate = DateTime.now().minusDays(1);
+		linkEntry.Description = "This is the description for yesterday's test input for " + userName;
+		linkEntry.Title = "Test " + userName + " 2";
+		linkEntry.URL = "http://test.com/testInput2";
+		
+		linkTag = new LinkTag();
+		linkTag.Tag = "Test1";
+		linkTag.TagURL = "http://test.com/test2";
+		linkEntry.Tags.add(linkTag);
+		linkSet.add(linkEntry);
+		
 		linkSetFuture.set(linkSet);
 		
 		return linkSetFuture;

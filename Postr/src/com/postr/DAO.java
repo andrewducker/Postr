@@ -55,7 +55,10 @@ public class DAO {
 		return ofy().save().entity(thing).now();
 	}
 
-	public static <T extends BaseSaveable> Key<T> SaveThing(T thing){
+	public static <T extends BaseSaveable> Key<T> SaveThing(T thing) throws Exception{
+		if(!thing.hasParent()){
+			throw new Exception("Tried to save an object that doesn't have a parent.");
+		}
 		return ofy().save().entity(thing).now();
 	}
 	public static <T extends BaseSaveable> T LoadThing(Class<T> clazz, Long id, Long userID) throws Exception{

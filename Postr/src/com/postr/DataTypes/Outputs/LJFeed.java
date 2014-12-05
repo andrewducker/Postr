@@ -22,6 +22,7 @@ public class LJFeed extends BaseFeed {
 		post.contents = postContents;
 		post.siteName = "Livejournal";
 		post.subject = postSubject;
+		post.output = output;
 		
 	    String tagsToUse = "";
 	    for (String tag : tags) {

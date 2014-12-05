@@ -27,6 +27,10 @@ public class BaseSaveable {
 		return parent.get().getId();
 	}
 	
+	public boolean hasParent(){
+		return parent != null;
+	}
+	
 	private @Index @Load transient Ref<User> parent;
 	
 	protected BaseSaveable(){}

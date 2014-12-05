@@ -17,6 +17,7 @@ public class DWFeed extends LJFeed {
 		post.contents = postContents;
 		post.siteName = "Livejournal";
 		post.subject = postSubject;
+		post.output = output;
 		
 	    String tagsToUse = "";
 	    for (String tag : tags) {
