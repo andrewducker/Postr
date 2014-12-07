@@ -11,7 +11,12 @@ postrApp.factory('userData', function(persona, $http,orderByFilter, $filter, ale
 	var data = {
 			loggedOut : false,
 			loggedIn : false,
-			describeSite : function(site){return  site.userName + "@" + site.siteName;},
+			describeSite : function(site){
+				if (typeof(site) == "number"){
+					site = this.getSiteItem(site);
+				}
+				return  site.userName + "@" + site.siteName;
+				},
 			deleteSiteItem : function(item){
 				item.method = "RemoveData";
 				var self = this;
@@ -49,8 +54,9 @@ postrApp.factory('userData', function(persona, $http,orderByFilter, $filter, ale
 				return null;
 			},
 			describeFeed : 	function(feed){
-				var inputDescriptions = feed.inputs.map(function(input){return this.describeSite(this.getSiteItem(input));},this);
-				return  inputDescriptions.join() + "->" + feed.siteName;
+				var inputDescriptions = feed.inputs.map(function(input){return this.describeSite(input);},this);
+				var outputDescriptor = this.describeSite(feed.output);
+				return  inputDescriptions.join() + "->" + outputDescriptor;
 			},
 			getPost : function(id){
 				var search = {id:parseInt(id)};
