@@ -12,6 +12,7 @@ import org.joda.time.DateTimeZone;
 
 import com.google.appengine.api.taskqueue.Queue;
 import com.google.appengine.api.taskqueue.QueueFactory;
+import static com.google.appengine.api.taskqueue.TaskOptions.Builder.*;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.googlecode.objectify.Key;
@@ -67,10 +68,10 @@ public abstract class BaseFeed extends BasePost {
 	private long WritePost(String postSubject, String postContents,
 			List<String> tags) throws Exception {
 		BasePost post = generatePost(postSubject, postContents, tags);
-		post.postingTime = DateTime.now();
+		post.postingTime = postingTime;
 		Key<BasePost> postKey = DAO.SaveThing(post, this.getParent());
 		Queue queue = QueueFactory.getDefaultQueue();
-		//queue.add(withUrl("/MakeSinglePost").param("key", postKey.toString()));			
+		queue.add(withUrl("/MakeSinglePost").param("key", String.valueOf(postKey.getId())));			
 		return postKey.getId();
 	}
 
