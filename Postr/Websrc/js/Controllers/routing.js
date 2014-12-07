@@ -21,7 +21,7 @@ postrApp.config(function($routeProvider){
 	})
 	//New feed
 	.when ("/feed/new/:siteName/:outputId",{
-		templateUrl:  function(params){return "newFeed.html";}  ,
+		templateUrl:  function(params){return "feedDetails.html";}  ,
 		controller: "NewFeedController",
 		resolve : {
 			userDataLoaded : function(userData){
@@ -31,7 +31,7 @@ postrApp.config(function($routeProvider){
 	})
 	//New feed
 	.when ("/feed/:siteName/:id",{
-		templateUrl:  function(params){return "newFeed.html";}  ,
+		templateUrl:  function(params){return "feedDetails.html";}  ,
 		controller: "ExistingFeedController",
 		resolve : {
 			userDataLoaded : function(userData){
