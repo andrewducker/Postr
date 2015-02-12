@@ -1,6 +1,9 @@
 package com.postr;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -16,14 +19,20 @@ abstract class BaseJSONServlet extends HttpServlet {
 	protected HttpSession session;
 	protected String serverName;
 	
+	private static final Logger log = Logger.getLogger(BaseJSONServlet.class.getName());
+
+	
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 			try {
 				handleRequest(req, resp);
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				StringWriter sw = new StringWriter();
+				PrintWriter pw = new PrintWriter(sw);
+
+				e.printStackTrace(pw);
+				log.severe("Uncaught Exception: " + sw.toString());
 			}
 	}
 	
@@ -34,7 +43,12 @@ abstract class BaseJSONServlet extends HttpServlet {
 			handleRequest(req, resp);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			StringWriter sw = new StringWriter();
+			PrintWriter pw = new PrintWriter(sw);
+
+			e.printStackTrace(pw);
+			log.severe("Uncaught Exception: " + sw.toString());
+
 		}
 	}
 
@@ -52,6 +66,8 @@ abstract class BaseJSONServlet extends HttpServlet {
 		    sb.append(line);
 		    }
 		    
+		    log.warning("Request - " + sb.toString());
+		    
 		    InitialiseProcessing();
 		    
 			Result result = ProcessRequest(new Json(sb.toString()));
@@ -60,7 +76,10 @@ abstract class BaseJSONServlet extends HttpServlet {
 		} catch (Exception e) {
 			resp.setStatus(500);
 			resp.getWriter().print(e.getMessage());
-			e.printStackTrace();
+			StringWriter sw = new StringWriter();
+			PrintWriter pw = new PrintWriter(sw);
+			e.printStackTrace(pw);
+			log.severe("Uncaught Exception: " + sw.toString());
 		} finally {
 			ThreadStorage.ClearAll();
 		}
