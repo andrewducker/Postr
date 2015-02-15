@@ -12,7 +12,9 @@ import org.joda.time.DateTimeZone;
 
 import com.google.appengine.api.taskqueue.Queue;
 import com.google.appengine.api.taskqueue.QueueFactory;
+
 import static com.google.appengine.api.taskqueue.TaskOptions.Builder.*;
+
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.googlecode.objectify.Key;
@@ -24,6 +26,7 @@ import com.postr.DataTypes.LinkEntry;
 import com.postr.DataTypes.LinkSet;
 import com.postr.DataTypes.Inputs.BaseInput;
 
+@SuppressWarnings("serial")
 @Subclass(index=true)
 public abstract class BaseFeed extends BasePost {
 	public List<Long> inputs;

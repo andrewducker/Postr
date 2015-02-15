@@ -29,7 +29,7 @@ public class DreamwidthServlet extends BaseOutputServlet {
 	@Override
 	protected Result SaveFeed(Json parameters) throws Exception {
 		DWFeed dwFeed = parameters.FromJson(DWFeed.class);
-		
+		dwFeed.awaitingPostingTime = dwFeed.active;
 		Key<DWFeed> result = DAO.SaveThing(dwFeed,GetUserID());
 		return new Result("Saved!",result.getId());
 	}

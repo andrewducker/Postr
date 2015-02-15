@@ -26,7 +26,7 @@ public class TestOutputServlet extends BaseOutputServlet {
 	@Override
 	protected Result SaveFeed(Json parameters) throws Exception {
 		TestFeed testFeed = parameters.FromJson(TestFeed.class);
-		
+		testFeed.awaitingPostingTime = testFeed.active;
 		Key<TestFeed> result = DAO.SaveThing(testFeed,GetUserID());
 		return new Result("Saved!",result.getId());
 	}

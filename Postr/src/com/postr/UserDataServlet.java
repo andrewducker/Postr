@@ -1,10 +1,14 @@
 package com.postr;
 
+import java.util.logging.Logger;
+
 import com.postr.DataTypes.Json;
 import com.postr.DataTypes.User;
 
 @SuppressWarnings("serial")
 public class UserDataServlet extends BasePersonaSessionServlet {
+
+	private static final Logger log = Logger.getLogger(UserDataServlet.class.getName());
 
 	@Override
 	protected Result ProcessRequest(Json parameters) throws Exception {
@@ -31,6 +35,7 @@ public class UserDataServlet extends BasePersonaSessionServlet {
 
 	private Result GetData(Json parameters) throws Exception {
 		if (LoggedIn()) {
+			log.info("Logged in");
 			Long userID = GetUserID();
 			String persona = GetPersona();
 

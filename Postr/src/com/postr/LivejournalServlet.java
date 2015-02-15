@@ -29,7 +29,7 @@ public class LivejournalServlet extends BaseOutputServlet {
 	@Override
 	protected Result SaveFeed(Json parameters) throws Exception {
 		LJFeed ljFeed = parameters.FromJson(LJFeed.class);
-		
+		ljFeed.awaitingPostingTime = ljFeed.active;
 		Key<LJFeed> result = DAO.SaveThing(ljFeed,GetUserID());
 		return new Result("Saved!",result.getId());
 	}

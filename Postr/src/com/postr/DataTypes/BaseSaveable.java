@@ -7,8 +7,9 @@ import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
 import com.googlecode.objectify.annotation.Load;
 
+@SuppressWarnings("serial")
 @Entity
-public class BaseSaveable {
+public class BaseSaveable implements java.io.Serializable {
 	//Must be Long, not long, otherwise not auto-generated.
 	private @Id Long id;
 	public long getId() {

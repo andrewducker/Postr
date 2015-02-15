@@ -7,6 +7,7 @@ import com.postr.DAO;
 import com.postr.LivejournalVisibilityTypes;
 import com.postr.DataTypes.User;
 
+@SuppressWarnings("serial")
 @Subclass(index = true)
 public class LJFeed extends BaseFeed {
 

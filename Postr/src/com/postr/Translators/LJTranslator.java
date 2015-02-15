@@ -1,5 +1,7 @@
 package com.postr.Translators;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.NoSuchAlgorithmException;
@@ -9,11 +11,13 @@ import java.util.Map;
 import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.client.XmlRpcClient;
 import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
+import org.apache.xmlrpc.client.XmlRpcHttpTransportException;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.chrono.GregorianChronology;
 
 import com.postr.LivejournalVisibilityTypes;
+import com.postr.LogHandler;
 import com.postr.MessageLogger;
 import com.postr.Result;
 import com.postr.DataTypes.PasswordEncryptor;
@@ -21,7 +25,7 @@ import com.postr.DataTypes.Outputs.LJData;
 
 
 public class LJTranslator {
-
+	
 		protected String serverURL = "http://www.livejournal.com/interface/xmlrpc";
 		
 		@SuppressWarnings("unchecked")
@@ -33,12 +37,29 @@ public class LJTranslator {
 		    
 		    XmlRpcClient client = getClient();
 		    password = EncryptPassword(password);
-		    HashMap<String, Object> loginParams = getInitialisedCallParams(client, userName, password);
+		    HashMap<String, Object> loginParams;
+		    try{
+			    loginParams = getInitialisedCallParams(client, userName, password);
+		    } catch (XmlRpcHttpTransportException e){
+		        URL url = new URL("http://www.realip.info/api/p/realip.php");
+		        BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
+		        String line;
+		        StringBuilder sb = new StringBuilder();
+		        while ((line = reader.readLine()) != null) {
+		        	sb.append(line);
+		        }
+		        reader.close();
+
+    	        LogHandler.info("Current address is " + sb.toString());
+		    	LogHandler.logException(this.getClass(), e, "Exception while gathering initialised call params - " + e.getStatusCode() + " - " + e.getStatusMessage());
+		    	return Result.Failure(e.getMessage());
+		    }
 		    Object[] params = new Object[]{loginParams};
 		    Map<String, String> postResult;
 		    try{
 		    	postResult =  (Map<String, String>) client.execute("LJ.XMLRPC.login", params);
 		    } catch (XmlRpcException e){
+		    	LogHandler.logException("LJTranslator", e, "Exception while logging in " + userName);
 		    	return Result.Failure(e.getMessage());
 		    }
 		    
@@ -148,6 +169,7 @@ public class LJTranslator {
 		private XmlRpcClient getClient() throws MalformedURLException {
 			XmlRpcClientConfigImpl config = new XmlRpcClientConfigImpl();
 			config.setServerURL(new URL(serverURL));
+			config.setUserAgent("Daily Link Poster; Hosted on Google App Engine; contact andrew@ducker.org.uk; v1");
 		    XmlRpcClient client = new XmlRpcClient();
 		    client.setConfig(config);
 			return client;

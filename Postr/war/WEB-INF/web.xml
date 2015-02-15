@@ -24,12 +24,12 @@
 	<url-pattern>/MakeSinglePost</url-pattern>
 </servlet-mapping>
 <servlet>
-	<servlet-name>ProcessFeed</servlet-name>
-	<servlet-class>com.postr.ProcessFeedServlet</servlet-class>
+	<servlet-name>ProcessSinglePostOrFeed</servlet-name>
+	<servlet-class>com.postr.ProcessSinglePostOrFeedServlet</servlet-class>
 </servlet>
 <servlet-mapping>
-	<servlet-name>ProcessFeed</servlet-name>
-	<url-pattern>/ProcessFeed</url-pattern>
+	<servlet-name>ProcessSinglePostOrFeed</servlet-name>
+	<url-pattern>/ProcessSinglePostOrFeed</url-pattern>
 </servlet-mapping>
 <servlet>
 	<servlet-name>PostBacklog</servlet-name>

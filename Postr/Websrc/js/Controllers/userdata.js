@@ -12,7 +12,7 @@ postrApp.factory('userData', function(persona, $http,orderByFilter, $filter, ale
 			loggedOut : false,
 			loggedIn : false,
 			describeSite : function(site){
-				if (typeof(site) == "number"){
+				if (typeof(site) == "number" || typeof(site) == "string"){
 					site = this.getSiteItem(site);
 				}
 				return  site.userName + "@" + site.siteName;
@@ -56,7 +56,7 @@ postrApp.factory('userData', function(persona, $http,orderByFilter, $filter, ale
 			describeFeed : 	function(feed){
 				var inputDescriptions = feed.inputs.map(function(input){return this.describeSite(input);},this);
 				var outputDescriptor = this.describeSite(feed.output);
-				return  inputDescriptions.join() + "->" + outputDescriptor;
+				return  inputDescriptions.join("+") + "->" + outputDescriptor;
 			},
 			getPost : function(id){
 				var search = {id:parseInt(id)};

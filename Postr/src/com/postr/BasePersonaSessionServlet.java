@@ -1,11 +1,14 @@
 package com.postr;
 
+import java.util.logging.Logger;
+
 import com.postr.DataTypes.ThreadStorage;
 import com.postr.DataTypes.User;
 
 @SuppressWarnings("serial")
 abstract class BasePersonaSessionServlet extends BaseJSONServlet {
 
+	private static final Logger log = Logger.getLogger(BasePersonaSessionServlet.class.getName());
 
 	protected String GetPersona()
 	{
@@ -16,10 +19,12 @@ abstract class BasePersonaSessionServlet extends BaseJSONServlet {
 		return session.getAttribute("User") != null;
 	}
 	
-	
 	protected Long GetUserID()
 	{
-		return ((User) session.getAttribute("User")).getId();
+		User user =(User) session.getAttribute("User");
+		log.info("Retrieved User - with Timezone " +  user.timeZone);
+		log.info("Retrieved User - with ID " +  user.getId());
+		return user.getId();
 	}
 	
 	protected String GetTimeZone()
@@ -42,6 +47,7 @@ abstract class BasePersonaSessionServlet extends BaseJSONServlet {
 			session.setAttribute("User",null);
 		}else{
 			User user = DAO.GetUser(persona);
+			
 			ThreadStorage.setDateTimeZone(user.timeZone);
 			session.setAttribute("User",user);
 		}

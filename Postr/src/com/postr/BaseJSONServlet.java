@@ -20,7 +20,6 @@ abstract class BaseJSONServlet extends HttpServlet {
 	protected String serverName;
 	
 	private static final Logger log = Logger.getLogger(BaseJSONServlet.class.getName());
-
 	
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
@@ -42,7 +41,6 @@ abstract class BaseJSONServlet extends HttpServlet {
 		try {
 			handleRequest(req, resp);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			StringWriter sw = new StringWriter();
 			PrintWriter pw = new PrintWriter(sw);
 
@@ -66,7 +64,7 @@ abstract class BaseJSONServlet extends HttpServlet {
 		    sb.append(line);
 		    }
 		    
-		    log.warning("Request - " + sb.toString());
+		    log.info("Request - " + sb.toString());
 		    
 		    InitialiseProcessing();
 		    
