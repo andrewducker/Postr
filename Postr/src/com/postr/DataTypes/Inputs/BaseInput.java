@@ -1,14 +1,16 @@
 package com.postr.DataTypes.Inputs;
 
+import java.util.concurrent.Future;
+
 import com.google.appengine.api.urlfetch.HTTPResponse;
 import com.google.common.util.concurrent.Futures;
-import com.google.common.util.concurrent.ListenableFuture;
 import com.googlecode.objectify.annotation.Subclass;
 import com.postr.BaseFeedParser;
 import com.postr.FeedReader;
 import com.postr.DataTypes.BaseSaveable;
 import com.postr.DataTypes.LinkSet;
 
+@SuppressWarnings("serial")
 @Subclass(index=true)
 public abstract class BaseInput extends BaseSaveable {
 	protected String userName;
@@ -27,11 +29,11 @@ public abstract class BaseInput extends BaseSaveable {
 
 	public abstract String getSiteName();
 	
-	public ListenableFuture<LinkSet> Read() throws Exception {
+	public Future<LinkSet> Read() throws Exception {
 
-		ListenableFuture<HTTPResponse> feedContents = FeedReader.Read(GetFeedURL());
+		Future<HTTPResponse> feedContents = FeedReader.Read(GetFeedURL());
 		
-		return Futures.transform(feedContents, GetParser());
+		return Futures.lazyTransform(feedContents, GetParser());
 	}
 		
 	abstract BaseFeedParser GetParser();

@@ -9,12 +9,10 @@ import com.google.appengine.api.urlfetch.HTTPRequest;
 import com.google.appengine.api.urlfetch.HTTPResponse;
 import com.google.appengine.api.urlfetch.URLFetchService;
 import com.google.appengine.api.urlfetch.URLFetchServiceFactory;
-import com.google.common.util.concurrent.JdkFutureAdapters;
-import com.google.common.util.concurrent.ListenableFuture;
 
 public class FeedReader {
 
-	public static ListenableFuture<HTTPResponse> Read(String feedURL) throws MalformedURLException
+	public static Future<HTTPResponse> Read(String feedURL) throws MalformedURLException
 	{
 		URL url = new URL(feedURL);
 		HTTPRequest httpRequest = new HTTPRequest(url);
@@ -23,7 +21,6 @@ public class FeedReader {
 		
 		URLFetchService fetchService = URLFetchServiceFactory.getURLFetchService();
 		
-		Future<HTTPResponse> response =  fetchService.fetchAsync(httpRequest);
-		return JdkFutureAdapters.listenInPoolThread(response);
+		return  fetchService.fetchAsync(httpRequest);
 	}
 }

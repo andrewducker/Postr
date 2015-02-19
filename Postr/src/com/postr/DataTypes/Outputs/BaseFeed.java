@@ -1,8 +1,12 @@
 package com.postr.DataTypes.Outputs;
 
+import static com.google.appengine.api.taskqueue.TaskOptions.Builder.withUrl;
+
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.Future;
 
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
@@ -12,9 +16,6 @@ import org.joda.time.DateTimeZone;
 
 import com.google.appengine.api.taskqueue.Queue;
 import com.google.appengine.api.taskqueue.QueueFactory;
-
-import static com.google.appengine.api.taskqueue.TaskOptions.Builder.*;
-
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.googlecode.objectify.Key;
@@ -96,20 +97,18 @@ public abstract class BaseFeed extends BasePost {
 	}
 
 	private LinkSet getLinks() throws Exception {
-		ArrayList<ListenableFuture<LinkSet>> futureLinks = new ArrayList<ListenableFuture<LinkSet>>(); 
+		ArrayList<Future<LinkSet>> futureLinks = new ArrayList<Future<LinkSet>>(); 
 		for (Long inputID : inputs) {
 			BaseInput input = DAO.LoadThing(BaseInput.class,inputID);
 			futureLinks.add(input.Read());
 		}
-		ListenableFuture<List<LinkSet>> linksFuture = Futures.successfulAsList(futureLinks);
-		List<LinkSet> links = linksFuture.get();
-		
+
 		LinkSet masterLinkSet = new LinkSet(); 
-		
-		for (LinkSet linkSet : links) {
-			//Combine them together for now.
-			masterLinkSet.addAll(linkSet);
+
+		for (Future<LinkSet> future : futureLinks) {
+			masterLinkSet.addAll(future.get());
 		}
+		
 		return masterLinkSet;
 	}
 	
