@@ -5,6 +5,9 @@ import static com.googlecode.objectify.ObjectifyService.ofy;
 import java.util.List;
 import java.util.Vector;
 
+import javax.crypto.KeyGenerator;
+
+import org.apache.ws.commons.util.Base64;
 import org.joda.time.DateTime;
 
 import com.googlecode.objectify.Key;
@@ -48,6 +51,7 @@ public class DAO {
 		ObjectifyService.register(LJFeed.class);
 		ObjectifyService.register(DWFeed.class);
 		ObjectifyService.register(TestFeed.class);
+		ObjectifyService.register(SiteData.class);
 	}
 
 	public static <T extends BaseSaveable> Key<T> SaveThing(T thing, Long userID){
@@ -78,7 +82,6 @@ public class DAO {
 	public static <T extends BaseSaveable> T LoadThing(Class<T> clazz, Long id) throws Exception{
 		return ofy().load().type(clazz).id(id).now();
 	}
-
 	
 	public static <T extends BaseSaveable> List<T> LoadThings(Class<T> clazz, Long userID){
 		return ofy().load().type(clazz).filter("parent", userKey(userID)).list();
@@ -134,7 +137,6 @@ public class DAO {
 		}
 		return outputList;
 	}
-
 	
 	static User GetUser(String persona) throws Exception{
 		long userID = GetUserID(persona);
@@ -142,6 +144,28 @@ public class DAO {
 		User user = LoadThing(User.class, userID, userID);
 		LogHandler.info("User loader - " + user.getId());
 		return user;
+	}
+	
+	private static SiteData siteData;
+	
+	public static SiteData GetSiteData() throws Exception{
+		if (siteData == null) {
+			List<SiteData> siteDataList = ofy().load().type(SiteData.class).list();
+			if(siteDataList.size() == 1){
+				siteData = siteDataList.get(0);
+			}
+			else if (siteDataList.isEmpty()) {
+				siteData = new SiteData();
+				siteData.HMACKey = Base64.encode(KeyGenerator.getInstance("HmacSHA1").generateKey().getEncoded());
+				siteData.Administrator = "Andrew@Ducker.org.uk";
+				siteData.CookieTimeout = 60*60*24*28; //28 days
+				ofy().save().entity(siteData).now();
+			}
+			else{
+				throw new Exception("Multiple Site Data entries found.  WTF?");
+			}
+		}
+		return siteData;
 	}
 	
 	public static void SaveUser(User user) {

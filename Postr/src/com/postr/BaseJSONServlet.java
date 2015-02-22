@@ -1,11 +1,9 @@
 package com.postr;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -16,22 +14,43 @@ import com.postr.DataTypes.ThreadStorage;
 
 @SuppressWarnings("serial")
 abstract class BaseJSONServlet extends HttpServlet {
-	protected HttpSession session;
 	protected String serverName;
 	
-	private static final Logger log = Logger.getLogger(BaseJSONServlet.class.getName());
+	private ThreadLocal<HttpSession> session = new ThreadLocal<HttpSession>();
+	private ThreadLocal<HttpServletRequest> request = new ThreadLocal<HttpServletRequest>();
+	private ThreadLocal<HttpServletResponse> response = new ThreadLocal<HttpServletResponse>();
 	
+	protected HttpSession getSession() {
+		return session.get();
+	}
+
+	private void setSession(HttpSession value) {
+		session.set(value);
+	}
+
+	protected HttpServletRequest getRequest() {
+		return request.get();
+	}
+
+	private void setRequest(HttpServletRequest value) {
+		request.set(value);
+	}
+
+	protected HttpServletResponse getResponse() {
+		return response.get();
+	}
+
+	private void setResponse(HttpServletResponse value) {
+		response.set(value);
+	}
+
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 			try {
 				handleRequest(req, resp);
 			} catch (Exception e) {
-				StringWriter sw = new StringWriter();
-				PrintWriter pw = new PrintWriter(sw);
-
-				e.printStackTrace(pw);
-				log.severe("Uncaught Exception: " + sw.toString());
+				LogHandler.logException(this.getClass(), e, "Uncaught Exception");
 			}
 	}
 	
@@ -41,20 +60,16 @@ abstract class BaseJSONServlet extends HttpServlet {
 		try {
 			handleRequest(req, resp);
 		} catch (Exception e) {
-			StringWriter sw = new StringWriter();
-			PrintWriter pw = new PrintWriter(sw);
-
-			e.printStackTrace(pw);
-			log.severe("Uncaught Exception: " + sw.toString());
-
+			LogHandler.logException(this.getClass(), e, "Uncaught Exception");
 		}
 	}
 
-	
 	protected void handleRequest(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		try {
-			session = req.getSession();
+			setSession(req.getSession());
+			setRequest(req);
+			setResponse(resp);
 			serverName = req.getServerName();
 
 			resp.setContentType("application/json");
@@ -64,7 +79,7 @@ abstract class BaseJSONServlet extends HttpServlet {
 		    sb.append(line);
 		    }
 		    
-		    log.info("Request - " + sb.toString());
+		    LogHandler.info("Request - " + sb.toString());
 		    
 		    InitialiseProcessing();
 		    
@@ -74,16 +89,22 @@ abstract class BaseJSONServlet extends HttpServlet {
 		} catch (Exception e) {
 			resp.setStatus(500);
 			resp.getWriter().print(e.getMessage());
-			StringWriter sw = new StringWriter();
-			PrintWriter pw = new PrintWriter(sw);
-			e.printStackTrace(pw);
-			log.severe("Uncaught Exception: " + sw.toString());
+			LogHandler.logException(this.getClass(), e, "Uncaught Exception");
 		} finally {
 			ThreadStorage.ClearAll();
+			session.remove();
 		}
 	}
 	
-	void InitialiseProcessing(){
+	void InitialiseProcessing() throws Exception{
+	}
+	
+	protected void AddCookie(Cookie cookie){
+		getResponse().addCookie(cookie);
+	}
+	
+	protected Cookie[] GetCookies(){
+		return getRequest().getCookies();
 	}
 
 

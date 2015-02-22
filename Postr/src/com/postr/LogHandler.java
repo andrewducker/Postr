@@ -20,6 +20,11 @@ public class LogHandler {
 	{
 		logException(clazz.getName(), e, message);
 	}
+	
+	public static <T> void logWarning(Class<T> clazz, String message){
+		Logger log = Logger.getLogger(clazz.getName());
+		log.warning(message);
+	}
 
 	
 	static Logger infoLogger = Logger.getLogger("info");

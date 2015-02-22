@@ -1,6 +1,6 @@
 package com.postr;
 
-import java.util.logging.Logger;
+import javax.servlet.http.Cookie;
 
 import com.postr.DataTypes.ThreadStorage;
 import com.postr.DataTypes.User;
@@ -8,55 +8,78 @@ import com.postr.DataTypes.User;
 @SuppressWarnings("serial")
 abstract class BasePersonaSessionServlet extends BaseJSONServlet {
 
-	private static final Logger log = Logger.getLogger(BasePersonaSessionServlet.class.getName());
-
 	protected String GetPersona()
 	{
-		return (String) session.getAttribute("Persona");
+		return (String) getSession().getAttribute("Persona");
 	}
 	
 	protected boolean LoggedIn(){
-		return session.getAttribute("User") != null;
+		if(getSession().getAttribute("User") != null){
+			return true;
+		}
+		return false;
 	}
 	
 	protected Long GetUserID()
 	{
-		User user =(User) session.getAttribute("User");
-		log.info("Retrieved User - with Timezone " +  user.timeZone);
-		log.info("Retrieved User - with ID " +  user.getId());
+		User user =(User) getSession().getAttribute("User");
+		
+		LogHandler.info("Retrieved User - with Timezone " +  user.timeZone);
+		LogHandler.info("Retrieved User - with ID " +  user.getId());
 		return user.getId();
 	}
 	
 	protected String GetTimeZone()
 	{
-		return ((User) session.getAttribute("User")).timeZone;
+		return ((User) getSession().getAttribute("User")).timeZone;
 	}
 	
 	protected void SetTimeZone(String timeZone){
-		((User) session.getAttribute("User")).timeZone = timeZone;
+		((User) getSession().getAttribute("User")).timeZone = timeZone;
 	}
 	
 	protected void SaveUserData(){
-		DAO.SaveUser(((User) session.getAttribute("User")));
+		DAO.SaveUser(((User) getSession().getAttribute("User")));
 	}
 
 	protected void SetPersona(String persona) throws Exception
 	{
-		session.setAttribute("Persona", persona);
+		getSession().setAttribute("Persona", persona);
 		if (persona == null) {
-			session.setAttribute("User",null);
+			getSession().setAttribute("User",null);
+			Cookie removal = new Cookie("PostrID","");
+			removal.setMaxAge(0);
+			AddCookie(removal);
 		}else{
 			User user = DAO.GetUser(persona);
-			
+			Cookie idCookie = CookieHandler.GenerateCookie(persona);
+			AddCookie(idCookie);
 			ThreadStorage.setDateTimeZone(user.timeZone);
-			session.setAttribute("User",user);
+			getSession().setAttribute("User",user);
 		}
 	}
 	
 	@Override
-	void InitialiseProcessing(){
+	void InitialiseProcessing() throws Exception{
+		//Are we logged in already?
 		if (LoggedIn()) {
 			ThreadStorage.setDateTimeZone(GetTimeZone());
+		}else{
+			//Is there an ID cookie set?
+			Cookie[] cookies = GetCookies();
+			Cookie idCookie = null;
+			for (Cookie cookie : cookies) {
+				if (cookie.getName().equals("PostrID")) {
+					idCookie = cookie;
+					break;
+				}
+			}
+ 			if (idCookie != null) {
+				String email = CookieHandler.ParseCookie(idCookie.getValue());
+				if(email != null){
+					SetPersona(email);
+				}
+			}
 		}
 	}
 }
