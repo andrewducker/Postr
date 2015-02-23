@@ -61,7 +61,7 @@ public class CookieHandler {
 	public static String computeHmac(String baseString)
 			throws Exception
 			{
-		Mac mac = Mac.getInstance("HmacSHA1");
+		Mac mac = Mac.getInstance("HmacSHA256");
 		SecretKeySpec secret = new SecretKeySpec(key.getBytes(), mac.getAlgorithm());
 		mac.init(secret);
 		byte[] digest = mac.doFinal(baseString.getBytes());
