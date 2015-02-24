@@ -5,9 +5,6 @@ import static com.googlecode.objectify.ObjectifyService.ofy;
 import java.util.List;
 import java.util.Vector;
 
-import javax.crypto.KeyGenerator;
-
-import org.apache.ws.commons.util.Base64;
 import org.joda.time.DateTime;
 
 import com.googlecode.objectify.Key;
@@ -155,10 +152,7 @@ public class DAO {
 				siteData = siteDataList.get(0);
 			}
 			else if (siteDataList.isEmpty()) {
-				siteData = new SiteData();
-				siteData.HMACKey = Base64.encode(KeyGenerator.getInstance("HmacSHA1").generateKey().getEncoded());
-				siteData.Administrator = "Andrew@Ducker.org.uk";
-				siteData.CookieTimeout = 60*60*24*28; //28 days
+				siteData = SiteData.CreateDefault();
 				ofy().save().entity(siteData).now();
 			}
 			else{
