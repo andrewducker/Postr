@@ -45,7 +45,7 @@ abstract class BasePersonaSessionServlet extends BaseJSONServlet {
 	protected void SetPersona(String persona) throws Exception
 	{
 		String oldPersona = GetPersona();
-		if(oldPersona.equals(persona)){
+		if(oldPersona != null && oldPersona.equals(persona)){
 			return;
 		}
 		getSession().setAttribute("Persona", persona);
