@@ -7,6 +7,7 @@ postrApp.controller('NewFeedOutputSelectionController',function ($scope, userDat
 });
 
 var setupForm = function($scope, outputId, feed, siteName, userData, inputs, postFunctions, $http, alerter, $location){
+	feed = angular.copy(feed);
 	var output = userData.getSiteItem(outputId);
 	$scope.possibleInputs = inputs;
 	$scope.feed = feed;
@@ -38,8 +39,11 @@ var setupForm = function($scope, outputId, feed, siteName, userData, inputs, pos
 		$http.post('/' + siteName, feed)
 		.success(function(response) {
 			feed.id = response.data;
-			if(userData.feeds.indexOf(feed) == -1){
+			var originalFeed = userData.getFeed(feed.id);
+			if(originalFeed == null){
 				userData.feeds.push(feed);
+			}else{
+				angular.copy(feed,originalFeed);
 			};
 			alerter.alert(response.message);
 			$location.path("");
@@ -58,6 +62,8 @@ postrApp.controller('NewFeedController',function ($scope, userData, postFunction
 	var outputId = $routeParams.outputId;
 	var siteName = $routeParams.siteName;
 	setupForm($scope, outputId, feed, siteName, userData, angular.copy(userData.inputs), postFunctions, $http, alerter, $location);
+	$scope.resetSubject();
+	$scope.resetContents();
 });
 
 postrApp.controller('ExistingFeedController',function ($scope, userData, postFunctions, $http, alerter, $location,$routeParams) {
