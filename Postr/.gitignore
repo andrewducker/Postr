@@ -1,6 +1,0 @@
-*.bin
-war/WEB-INF/classes/
-build/
-war/alljs*.js
-war/allcss*.css
-war/index.html

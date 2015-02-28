@@ -1,0 +1,8 @@
+.metadata/
+RemoteSystemsTempFiles/
+*.bin
+Postr/war/WEB-INF/classes/
+Postr/build/
+Postr/war/alljs*.js
+Postr/war/allcss*.css
+Postr/war/index.html
