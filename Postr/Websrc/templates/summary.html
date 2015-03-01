@@ -11,21 +11,6 @@
 			</div>
 		</div>
 	</fieldset>
-
-	<fieldset>
-		<legend>Inputs</legend>
-		<div ng-show="data.inputs.length > 0">
-			<table id="existingInputsTable" border=1>
-				<tr>
-					<th>Input</th>
-				</tr>
-				<tr ng-repeat="input in data.inputs | orderBy:'userName'">
-					<td><A href="#/site/{{input.siteName}}/{{input.id}}">{{data.describeSite(input)}}</A></td>
-				</tr>
-			</table>
-		</div>
-		<A href="#/site/input/new">Add New Input</A>
-	</fieldset>
 	<fieldset>
 		<legend>Outputs</legend>
 		<div class="control-group" ng-show="data.outputs.length > 0">
@@ -40,7 +25,21 @@
 		</div>
 		<A href="#/site/output/new">Add New Output</A>
 	</fieldset>
-	<fieldset>
+	<fieldset  ng-show="data.outputs.length > 0">
+		<legend>Inputs</legend>
+		<div ng-show="data.inputs.length > 0">
+			<table id="existingInputsTable" border=1>
+				<tr>
+					<th>Input</th>
+				</tr>
+				<tr ng-repeat="input in data.inputs | orderBy:'userName'">
+					<td><A href="#/site/{{input.siteName}}/{{input.id}}">{{data.describeSite(input)}}</A></td>
+				</tr>
+			</table>
+		</div>
+		<A href="#/site/input/new">Add New Input</A>
+	</fieldset>
+	<fieldset  ng-show="data.outputs.length > 0 && data.inputs.length > 0">
 		<legend>Feeds</legend>
 		<A href="#/feed/new">Create New Feed</A>
 		<table id="existingFeedsTable" border=1>
@@ -56,10 +55,10 @@
 			</tr>
 		</table>
 	</fieldset>
-	<fieldset>
+	<fieldset  ng-show="data.outputs.length > 0">
 		<legend>Posts</legend>
 		<A href="#/post/new">Create New Post</A>
-		<table id="existingPostsTable" border=1>
+		<table id="existingPostsTable" border=1 ng-show="data.posts.length > 0">
 			<tr>
 				<th>Posted</th>
 				<th>Subject</th>
