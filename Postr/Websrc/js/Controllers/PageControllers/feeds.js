@@ -10,6 +10,9 @@ var setupForm = function($scope, outputId, feed, siteName, userData, inputs, pos
 	feed = angular.copy(feed);
 	var output = userData.getSiteItem(outputId);
 	$scope.possibleInputs = inputs;
+	if(inputs.length == 1){
+		inputs[0].ticked = true;
+	}
 	$scope.feed = feed;
 	feed.outputDescription = userData.describeSite(output);
 	$scope.possibleTimes =  postFunctions.possibleTimes;
@@ -71,6 +74,7 @@ postrApp.controller('NewFeedController',function ($scope, userData, postFunction
 	setupForm($scope, outputId, feed, siteName, userData, angular.copy(userData.inputs), postFunctions, $http, alerter, $location);
 	$scope.resetSubject();
 	$scope.resetContents();
+	$scope.feed.daysToInclude = 1;
 });
 
 postrApp.controller('ExistingFeedController',function ($scope, userData, postFunctions, $http, alerter, $location,$routeParams) {
