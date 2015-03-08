@@ -5,14 +5,14 @@
 	<div>
 		<form class="form-horizontal">
 			<div class="control-group">
-				<label class="control-label" for="userName">User Name:</label>
+				<label class="control-label" for="userName" name="inputDetails">User Name:</label>
 				<div class="controls">
 					<input ng-readonly="action=='Update'" ng-model="item.userName" name="userName">
 				</div>
 			</div>
 			<div class="control-group">
 				<div class="controls">
-					<button class="btn" ng-hide="action=='Update'" ng-click="verify()">Verify</button>
+					<button class="btn" ng-hide="action=='Update' ng-disabled='inputDetails.$invalid'"" ng-click="verify()">Verify</button>
 				</div>
 			</div>
 			<div>{{verificationMessage}}</div>

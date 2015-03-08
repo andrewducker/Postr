@@ -31,6 +31,13 @@ var setupForm = function($scope, outputId, feed, siteName, userData, inputs, pos
 		            		'</ul>'].join("\n");
 	};
 	$scope.feedDetailsTemplate = "sites/"+ siteName + "/FeedDetails.html";
+	$scope.validation = function(){
+		if($scope.feed.selectedInputs && $scope.feed.selectedInputs.length > 0){
+			return true;
+		}else{
+			return false;
+		}
+	}
 	$scope.Save = function(){
 		feed.postingTime = postFunctions.processTime(feed.postingTime, feed.postingHour);
 		feed.inputs = [];
