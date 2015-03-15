@@ -1,6 +1,18 @@
+
+<fieldset>
+	<legend>Introduction</legend>
+	<div>This site will read from a variety of inputs (currently
+		Delicious and Pinboard), collect the most recent links from them, and
+		then post the results to a variety of outputs (currently Livejournal
+		and Dreamwidth).</div>
+	<div>You will need to tell it (in order) where you want your
+		posts to go, where you want your links to come from, and then how you
+		want to link them together.</div>
+		<div>You can also use it to post to your blog - including posts in the future.</div>
+</fieldset>
 <form class="form-horizontal">
 	<fieldset>
-		<legend>User ({{data.persona}})</legend>
+		<legend>You ({{data.persona}})</legend>
 		<div class="control-group">
 			<a href=# class="persona-button orange" ng-click="logout()"><span>sign
 					out</span></a>
@@ -15,7 +27,7 @@
 		</div>
 	</fieldset>
 	<fieldset>
-		<legend>Outputs</legend>
+		<legend>Your blogs</legend>
 		<div ng-show="data.outputs.length > 0">
 			<div ng-repeat="output in data.outputs | orderBy:'userName'">
 				<A href="#/site/{{output.siteName}}/{{output.id}}">{{data.describeSite(output)}}</A>
@@ -24,7 +36,7 @@
 		<A href="#/site/output/new" class="btn">New</A>
 	</fieldset>
 	<fieldset ng-show="data.outputs.length > 0">
-		<legend>Inputs</legend>
+		<legend>Your links</legend>
 		<div ng-show="data.inputs.length > 0">
 			<div ng-repeat="input in data.inputs | orderBy:'userName'">
 				<A href="#/site/{{input.siteName}}/{{input.id}}">{{data.describeSite(input)}}</A>
@@ -33,7 +45,7 @@
 		<A href="#/site/input/new" class="btn">New</A>
 	</fieldset>
 	<fieldset ng-show="data.outputs.length > 0 && data.inputs.length > 0">
-		<legend>Feeds</legend>
+		<legend>Your feeds (from links to blogs)</legend>
 		<A href="#/feed/new" class="btn">New</A>
 		<table id="existingFeedsTable" border=1
 			ng-show="data.feeds.length > 0">
@@ -50,7 +62,7 @@
 		</table>
 	</fieldset>
 	<fieldset ng-show="data.outputs.length > 0">
-		<legend>Posts</legend>
+		<legend>Your posts</legend>
 		<A href="#/post/new" class="btn">New</A>
 		<table id="existingPostsTable" border=1
 			ng-show="data.posts.length > 0">

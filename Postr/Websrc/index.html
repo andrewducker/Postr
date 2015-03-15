@@ -3,31 +3,42 @@
 <html lang="en" ng-app="postrApp">
 <head>
 <meta charset="utf-8">
-<title>My HTML File</title>
+<title>Daily Link Poster</title>
 <!--  <link rel="stylesheet" href ="styles.css"> -->
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular-route.min.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular-messages.min.js"></script>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular-route.min.js"></script>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular-messages.min.js"></script>
 <script src="//login.persona.org/include.js"></script>
 <script src="alljs.js"></script>
-<link rel="stylesheet" href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css">
-<script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.6.0/ui-bootstrap-tpls.min.js"></script>
+<link rel="stylesheet"
+	href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css">
+<script
+	src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.6.0/ui-bootstrap-tpls.min.js"></script>
 
 <link rel="stylesheet" href="allcss.css" />
 
 </head>
 <body ng-controller="UserDataCtrl">
 
-<noscript>WARNING: This site is utterly dependent on Javascript.  If you have it turned off, then it will not do, well, anything.</noscript>
-<div class="container">
-<div>Welcome to the Daily Link Poster.</div>
-<div>This site will read from a variety of inputs (currently Delicious and Pinboard), collect the most recent links from them, and then post the results to a variety of outputs (currently Livejournal and Dreamwidth).</div>
-
-	<div ng-show="data.loggedOut"><a class="persona-button orange"
-		ng-click="login()"><span>Sign in</span></a></div>
-	<div ng-show="data.loggedIn">
-	<div ng-view></div>
+	<noscript>WARNING: This site is utterly dependent on
+		Javascript. If you have it turned off, then it will not do, well,
+		anything.</noscript>
+	<div class="container">
+		<div ng-show="data.loggedOut">
+			<div>Welcome to the Daily Link Poster.</div>
+			<div>This site will read from a variety of inputs (currently
+				Delicious and Pinboard), collect the most recent links from them,
+				and then post the results to a variety of outputs (currently
+				Livejournal and Dreamwidth).</div>
+			<a class="persona-button orange" ng-click="login()"><span>Sign
+					in</span></a>
+		</div>
+		<div ng-show="data.loggedIn">
+			<div ng-view></div>
+		</div>
 	</div>
-</div>
 </body>
 </html>
