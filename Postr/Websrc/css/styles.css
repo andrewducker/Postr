@@ -1,6 +1,19 @@
-label {
-    float: left;
-    /*min-width: 33%;*/
-    padding: 0 20px 0 0;
-    text-align: right
+legend {
+    width:inherit; /* Or auto */
+    padding:0 10px; /* To give a bit of padding on the left and right */
+    border-bottom:none;
+    font-size: 130%;
+	margin-bottom: 0px;
+}
+
+fieldset{
+	background-color: #f0fcff;
+	border:solid 1px;
+	border-color: #467E8D;
+	border-radius:10px;
+
+}
+
+@-moz-document url-prefix() {
+  fieldset { display: table-cell; }
 }

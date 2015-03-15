@@ -19,11 +19,15 @@
 <body ng-controller="UserDataCtrl">
 
 <noscript>WARNING: This site is utterly dependent on Javascript.  If you have it turned off, then it will not do, well, anything.</noscript>
+<div class="container">
+<div>Welcome to the Daily Link Poster.</div>
+<div>This site will read from a variety of inputs (currently Delicious and Pinboard), collect the most recent links from them, and then post the results to a variety of outputs (currently Livejournal and Dreamwidth).</div>
 
 	<div ng-show="data.loggedOut"><a class="persona-button orange"
 		ng-click="login()"><span>Sign in</span></a></div>
 	<div ng-show="data.loggedIn">
 	<div ng-view></div>
 	</div>
+</div>
 </body>
 </html>
