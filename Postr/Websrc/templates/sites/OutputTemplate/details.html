@@ -1,40 +1,43 @@
 <div>
 	<div>
-		<h3>SITENAME details</h3>
+		<h3>SITENAME</h3>
 	</div>
 	<div>
 		<form class="form-horizontal" name="outputDetails">
-			<div class="control-group">
-				<label class="control-label" for="userName">User Name:</label>
-				<div class="controls">
-					<input ng-readonly="action=='Update'" ng-model="item.userName"
-						name="userName" required>
-				</div>
-				<div ng-messages="outputDetails.userName.$error"
-					style="color: maroon">
-					<div ng-message="required">User name is mandatory</div>
-				</div>
-
-			</div>
-			<div class="control-group">
-				<label class="control-label" for="password">Password:</label>
-				<div class="controls">
-					<input ng-model="item.password" type="password" autocomplete="off"
-						name="password" required>
-					<div ng-messages="outputDetails.password.$error"
+			<fieldset>
+				<legend>Details</legend>
+				<div class="control-group">
+					<label class="control-label" for="userName">User Name:</label>
+					<div class="controls">
+						<input ng-readonly="action=='Update'" ng-model="item.userName"
+							name="userName" required>
+					</div>
+					<div ng-messages="outputDetails.userName.$error"
 						style="color: maroon">
-						<div ng-message="required">Password is mandatory</div>
+						<div ng-message="required">User name is mandatory</div>
 					</div>
 
 				</div>
-			</div>
-			<div class="control-group">
-				<div class="controls">
-					<button class="btn" ng-click="verify()"
-						ng-disabled="outputDetails.$invalid">Verify</button>
+				<div class="control-group">
+					<label class="control-label" for="password">Password:</label>
+					<div class="controls">
+						<input ng-model="item.password" type="password" autocomplete="off"
+							name="password" required>
+						<div ng-messages="outputDetails.password.$error"
+							style="color: maroon">
+							<div ng-message="required">Password is mandatory</div>
+						</div>
+
+					</div>
 				</div>
-			</div>
-			<div>{{verificationMessage}}</div>
+				<div class="control-group">
+					<div class="controls">
+						<button class="btn" ng-click="verify()"
+							ng-disabled="outputDetails.$invalid">Verify</button>
+					</div>
+				</div>
+				<div>{{verificationMessage}}</div>
+			</fieldset>
 		</form>
 	</div>
 	<div>

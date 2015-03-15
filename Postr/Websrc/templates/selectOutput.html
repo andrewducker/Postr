@@ -1,2 +1,6 @@
-Please select a site to post to:<BR>
-<div ng-repeat="output in userData.outputs | orderBy:'userName'"><a ng-href="{{nextUrl(output)}}">{{userData.describeSite(output)}}</a></div>
+<fieldset>
+	<legend>Which output should the links go to?</legend>
+	<div ng-repeat="output in userData.outputs | orderBy:'userName'">
+		<a ng-href="{{nextUrl(output)}}">{{userData.describeSite(output)}}</a>
+	</div>
+</fieldset>

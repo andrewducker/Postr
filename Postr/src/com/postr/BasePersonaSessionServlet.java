@@ -23,9 +23,6 @@ abstract class BasePersonaSessionServlet extends BaseJSONServlet {
 	protected Long GetUserID()
 	{
 		User user =(User) getSession().getAttribute("User");
-		
-		LogHandler.info("Retrieved User - with Timezone " +  user.timeZone);
-		LogHandler.info("Retrieved User - with ID " +  user.getId());
 		return user.getId();
 	}
 	

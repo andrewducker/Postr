@@ -2,7 +2,8 @@
 	<fieldset>
 		<legend>User ({{data.persona}})</legend>
 		<div class="control-group">
-			<a href=# class="persona-button orange" ng-click="logout()"><span>sign out</span></a>
+			<a href=# class="persona-button orange" ng-click="logout()"><span>sign
+					out</span></a>
 		</div>
 		<div class="control-groupp">
 			<label class="control-labell" for="timeZone">Time Zone:</label>
@@ -20,21 +21,22 @@
 				<A href="#/site/{{output.siteName}}/{{output.id}}">{{data.describeSite(output)}}</A>
 			</div>
 		</div>
-		<A href="#/site/output/new">(Add New Output)</A>
+		<A href="#/site/output/new" class="btn">New</A>
 	</fieldset>
-	<fieldset  ng-show="data.outputs.length > 0">
+	<fieldset ng-show="data.outputs.length > 0">
 		<legend>Inputs</legend>
 		<div ng-show="data.inputs.length > 0">
 			<div ng-repeat="input in data.inputs | orderBy:'userName'">
 				<A href="#/site/{{input.siteName}}/{{input.id}}">{{data.describeSite(input)}}</A>
 			</div>
 		</div>
-		<A href="#/site/input/new">(Add New Input)</A>
+		<A href="#/site/input/new" class="btn">New</A>
 	</fieldset>
-	<fieldset  ng-show="data.outputs.length > 0 && data.inputs.length > 0">
+	<fieldset ng-show="data.outputs.length > 0 && data.inputs.length > 0">
 		<legend>Feeds</legend>
-		<A href="#/feed/new">Create New Feed</A>
-		<table id="existingFeedsTable" border=1 ng-show="data.feeds.length > 0">
+		<A href="#/feed/new" class="btn">New</A>
+		<table id="existingFeedsTable" border=1
+			ng-show="data.feeds.length > 0">
 			<tr>
 				<th>Description</th>
 				<th>Next Post</th>
@@ -47,10 +49,11 @@
 			</tr>
 		</table>
 	</fieldset>
-	<fieldset  ng-show="data.outputs.length > 0">
+	<fieldset ng-show="data.outputs.length > 0">
 		<legend>Posts</legend>
-		<A href="#/post/new">Create New Post</A>
-		<table id="existingPostsTable" border=1 ng-show="data.posts.length > 0">
+		<A href="#/post/new" class="btn">New</A>
+		<table id="existingPostsTable" border=1
+			ng-show="data.posts.length > 0">
 			<tr>
 				<th>Posted</th>
 				<th>Subject</th>

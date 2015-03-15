@@ -1,2 +1,6 @@
-Please select a site:<BR>
-<div ng-repeat="site in siteList()  | orderBy:'toString()'"><a ng-href="#/site/new/{{site}}">{{site}}</a></div>
+<fieldset>
+	<legend>Please select a site</legend>
+	<div ng-repeat="site in siteList()  | orderBy:'toString()'">
+		<a ng-href="#/site/new/{{site}}">{{site}}</a>
+	</div>
+</fieldset>

@@ -1,4 +1,6 @@
 <form class="form-horizontal" name="feedForm">
+<fieldset>
+<legend>Source/Destination</legend>
 	<label class="control-label" for="outputDescription">Output:</label>
 	<div class="controls">
 		<input type="text" ng-readonly="true"
@@ -17,6 +19,9 @@
 			<div ng-message="validator">You must select an input</div>
 		</div>
 	</div>
+	</fieldset>
+<fieldset>
+<legend>Contents</legend>
 	<div class="control-group">
 		<label class="control-label" for="subject">Subject Line:</label>
 		<div class="controls">
@@ -39,6 +44,10 @@
 			</div>
 		</div>
 	</div>
+	</fieldset>
+	<fieldset>
+<legend>Timing</legend>
+	
 	<label class="control-label" for="postingHour">Time:</label>
 	<div class="controls">
 		<select ng-model="feed.postingHour" name="postingHour"
@@ -57,7 +66,21 @@
 			<div ng-message="required">Posting day is mandatory</div>
 		</div>
 	</div>
-
+	<div class="control-group">
+		<label class="control-label" for="contents">Number of days to include:</label>
+		<div class="controls">
+			<input type="numeric" id="daysToInclude" name="daysToInclude"
+				ng-readonly="readOnly" ng-model="feed.daysToInclude" required>
+			<div ng-messages="feedForm.daysToInclude.$error"
+				style="color: maroon">
+				<div ng-message="required">Number of days to include is
+					mandatory</div>
+			</div>
+		</div>
+	</div>
+</fieldset>
+<fieldset>
+<legend>Tags</legend>
 	<div class="control-group">
 		<label class="control-label" for="contents">Post with Tags:</label>
 		<div class="controls">
@@ -73,35 +96,23 @@
 				ng-model="feed.defaultTags">
 		</div>
 	</div>
-
-	<div class="control-group">
-		<label class="control-label" for="contents">Number of days to include:</label>
-		<div class="controls">
-			<input type="numeric" id="daysToInclude" name="daysToInclude"
-				ng-readonly="readOnly" ng-model="feed.daysToInclude" required>
-			<div ng-messages="feedForm.daysToInclude.$error"
-				style="color: maroon">
-				<div ng-message="required">Number of days to include is
-					mandatory</div>
+</fieldset>
+	<div ng-include="feedDetailsTemplate"></div>
+	<fieldset>
+		<legend>Active</legend>
+		<div class="control-group">
+			<label class="control-label" for="contents">Active:</label>
+			<div class="controls">
+				<input type="checkbox" id="postWithTags" ng-readonly="readOnly"
+					ng-model="feed.active">
 			</div>
 		</div>
-	</div>
-
-	<div ng-include="feedDetailsTemplate"></div>
-
-	<div class="control-group">
-		<label class="control-label" for="contents">Active:</label>
-		<div class="controls">
-			<input type="checkbox" id="postWithTags" ng-readonly="readOnly"
-				ng-model="feed.active">
-		</div>
-	</div>
-
-	<div class="controls">
+	</fieldset>
+</form>
+	<div class="controlss">
 		<button class="btn btn-primary" ng-click="Save()"
 			ng-disabled='feedForm.$invalid'>OK</button>
 		<button class="btn btn-warning" ng-click="Cancel()">Cancel</button>
 		<button class="btn btn-danger" ng-show="action=='Update'"
 			ng-click="Delete()">Delete</button>
 	</div>
-</form>

@@ -1,18 +1,23 @@
-<div class="control-group">
-	<label class="control-label" for="visibility">Visibility</label>
-	<div class="controls">
-		<select id="visibility" name="visibility" ng-readonly="readOnly" ng-model="feed.visibility" required><option>Public</option>
-			<option>FriendsOnly</option>
-			<option>Private</option>
-		</select>
-		<div ng-messages="feedForm.visibility.$error" style="color: maroon">
-			<div ng-message="required">Visibility is mandatory</div>
+<fieldset>
+	<legend>Misc</legend>
+	<div class="control-group">
+		<label class="control-label" for="visibility">Visibility</label>
+		<div class="controls">
+			<select id="visibility" name="visibility" ng-readonly="readOnly"
+				ng-model="feed.visibility" required><option>Public</option>
+				<option>FriendsOnly</option>
+				<option>Private</option>
+			</select>
+			<div ng-messages="feedForm.visibility.$error" style="color: maroon">
+				<div ng-message="required">Visibility is mandatory</div>
+			</div>
 		</div>
 	</div>
-</div>
-<div class="control-group">
-	<label class="control-label" for="format">Auto Format:</label>
-	<div class="controls">
-		<input type="checkbox" id="format" ng-disabled="readOnly" ng-model="feed.autoFormat">
+	<div class="control-group">
+		<label class="control-label" for="format">Auto Format:</label>
+		<div class="controls">
+			<input type="checkbox" id="format" ng-disabled="readOnly"
+				ng-model="feed.autoFormat">
+		</div>
 	</div>
-</div>
+</fieldset>
