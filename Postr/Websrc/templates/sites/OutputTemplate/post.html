@@ -31,14 +31,13 @@
 				<label class="control-label" for="visibility">Visibility</label>
 				<div class="controls">
 					<select id="visibility" name="visibility" ng-readonly="readOnly"
-						ng-model="post.visibility"><option>Public</option>
+						ng-model="post.visibility" required><option>Public</option>
 						<option>FriendsOnly</option>
-						<option>Private</option> required
+						<option>Private</option>
 					</select>
 					<div ng-messages="postDetailsForm.visibility.$error"
 						style="color: maroon">
 						<div ng-message="required">Visibility is mandatory</div>
-
 					</div>
 				</div>
 			</div>
@@ -93,12 +92,13 @@
 					</div>
 				</div>
 			</div>
-	</div>
-	</form>
-	<div>
-		<button class="btn btn-primary" ng-show="!readOnly" ng-disabled='postDetailsForm.$invalid' ng-click="Save()">OK</button>
-		<button class="btn btn-warning" ng-click="Cancel()">Cancel</button>
-		<button class="btn btn-inverse" ng-show="action=='Update'"
-			ng-click="Clone()">Clone</button>
+		</form>
+		<div>
+			<button class="btn btn-primary" ng-show="!readOnly"
+				ng-disabled='postDetailsForm.$invalid' ng-click="Save()">OK</button>
+			<button class="btn btn-warning" ng-click="Cancel()">Cancel</button>
+			<button class="btn btn-inverse" ng-show="action=='Update'"
+				ng-click="Clone()">Clone</button>
+		</div>
 	</div>
 </div>

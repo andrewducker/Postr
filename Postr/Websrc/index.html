@@ -18,11 +18,10 @@
 </head>
 <body ng-controller="UserDataCtrl">
 
-	<span ng-show="data.loggedOut"><a class="persona-button orange"
-		ng-click="login()"><span>Sign in</span></a></span>
-	<span ng-show="data.loggedIn">
-	<div ng-view></div> 
-
-	</span>
+	<div ng-show="data.loggedOut"><a class="persona-button orange"
+		ng-click="login()"><span>Sign in</span></a></div>
+	<div ng-show="data.loggedIn">
+	<div ng-view></div>
+	</div>
 </body>
 </html>
