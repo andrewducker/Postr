@@ -6,16 +6,16 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.postr.DataTypes.Outputs.BaseFeed;
+import com.postr.DataTypes.Outputs.BasePost;
 
 @SuppressWarnings("serial")
 public class ProcessSinglePostOrFeedServlet extends HttpServlet {
 	public void doPost(HttpServletRequest req, HttpServletResponse resp)
 	throws IOException {
 		long key = Long.parseLong(req.getParameter("key"));
-		BaseFeed toPost;
+		BasePost toPost;
 		try {
-			toPost = DAO.LoadThing(BaseFeed.class, key);
+			toPost = DAO.LoadThing(BasePost.class, key);
 		} catch (Exception e) {
 			LogHandler.logException(this.getClass(), e, "Uncaught Exception trying to load feed " + key);
 			return;
