@@ -4,6 +4,7 @@ import static com.google.appengine.api.taskqueue.TaskOptions.Builder.withUrl;
 
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Future;
 
@@ -59,6 +60,7 @@ public abstract class BaseFeed extends BasePost {
 	}
 
 	private Result postLinks(LinkSet links) throws Exception {
+		Collections.sort(links);
 		String postSubject = FormatTitle(postingTime, subject);
 		String postContents = Format(links, contents);
 		List<String> tags = getTags(links);
