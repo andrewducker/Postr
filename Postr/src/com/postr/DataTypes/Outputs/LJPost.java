@@ -7,6 +7,7 @@ import com.postr.MessageLogger;
 import com.postr.Result;
 import com.postr.Translators.LJTranslator;
 
+@SuppressWarnings("serial")
 @Subclass(index=true)
 public class LJPost extends BasePost {
 

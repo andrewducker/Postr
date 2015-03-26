@@ -16,6 +16,14 @@
 	<url-pattern>/Livejournal</url-pattern>
 </servlet-mapping>
 <servlet>
+	<servlet-name>WordPress</servlet-name>
+	<servlet-class>com.postr.WordpressServlet</servlet-class>
+</servlet>
+<servlet-mapping>
+	<servlet-name>WordPress</servlet-name>
+	<url-pattern>/WordPress</url-pattern>
+</servlet-mapping>
+<servlet>
 	<servlet-name>MakeSinglePost</servlet-name>
 	<servlet-class>com.postr.MakeSinglePostServlet</servlet-class>
 </servlet>

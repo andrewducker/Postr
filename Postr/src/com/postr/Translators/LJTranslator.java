@@ -31,10 +31,6 @@ public class LJTranslator {
 		@SuppressWarnings("unchecked")
 		public Result Login(String userName, String password) throws Exception
 		{
-			if (userName.equals("test") && password.equals("test")) {
-				return  Result.Success("Logged in as Test User");	
-			}
-		    
 		    XmlRpcClient client = getClient();
 		    password = EncryptPassword(password);
 		    HashMap<String, Object> loginParams;
@@ -77,10 +73,6 @@ public class LJTranslator {
 			} catch (MalformedURLException e1) {
 				MessageLogger.Severe(this,e1.getMessage());
 				return Result.Failure("Malformed URL");
-			}
-		    
-		    if (ljData.userName.equalsIgnoreCase("test")) {
-				return Result.Success("Test data, successfully not saved");
 			}
 		    
 		    HashMap<String, Object> postParams;

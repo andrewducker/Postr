@@ -28,6 +28,9 @@ import com.postr.DataTypes.Outputs.LJPost;
 import com.postr.DataTypes.Outputs.TestData;
 import com.postr.DataTypes.Outputs.TestFeed;
 import com.postr.DataTypes.Outputs.TestPost;
+import com.postr.DataTypes.Outputs.WordPressData;
+import com.postr.DataTypes.Outputs.WordPressFeed;
+import com.postr.DataTypes.Outputs.WordPressPost;
 
 public class DAO {
 	static {
@@ -36,6 +39,7 @@ public class DAO {
 		ObjectifyService.register(BaseOutput.class);
 		ObjectifyService.register(LJData.class);
 		ObjectifyService.register(DWData.class);
+		ObjectifyService.register(WordPressData.class);
 		ObjectifyService.register(DeliciousData.class);
 		ObjectifyService.register(PinboardData.class);
 		ObjectifyService.register(TestInputData.class);
@@ -44,10 +48,12 @@ public class DAO {
 		ObjectifyService.register(DWPost.class);
 		ObjectifyService.register(LJPost.class);
 		ObjectifyService.register(TestPost.class);
+		ObjectifyService.register(WordPressPost.class);
 		ObjectifyService.register(TestData.class);
 		ObjectifyService.register(LJFeed.class);
 		ObjectifyService.register(DWFeed.class);
 		ObjectifyService.register(TestFeed.class);
+		ObjectifyService.register(WordPressFeed.class);
 		ObjectifyService.register(SiteData.class);
 	}
 

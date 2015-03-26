@@ -9,6 +9,7 @@ import com.postr.DAO;
 import com.postr.Result;
 import com.postr.DataTypes.BaseSaveable;
 
+@SuppressWarnings("serial")
 @Subclass(index = true)
 public abstract class BasePost extends BaseSaveable {
 	abstract void MakePost() throws Exception;

@@ -1,0 +1,113 @@
+<div>
+	<div>
+		<h3>WordPress post</h3>
+	</div>
+	<div>
+		<form class="form-horizontal" name="postDetailsForm">
+			<fieldset>
+				<legend>Contents</legend>
+				<div class="control-group">
+					<label class="control-label" for="subject">Subject Line:</label>
+					<div class="controls">
+						<input type="text" id="subject" name="subject"
+							ng-readonly="readOnly" ng-model="post.subject" required>
+						<div ng-messages="postDetailsForm.subject.$error"
+							style="color: maroon">
+							<div ng-message="required">Subject is mandatory</div>
+						</div>
+
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label" for="contents">Text:</label>
+					<div class="controls">
+						<textarea rows=5 id="contents" name="contents"
+							ng-readonly="readOnly" ng-model="post.contents" required></textarea>
+						<div ng-messages="postDetailsForm.contents.$error"
+							style="color: maroon">
+							<div ng-message="required">Text is mandatory</div>
+						</div>
+					</div>
+				</div>
+			</fieldset>
+			<fieldset>
+				<legend>Misc</legend>
+				<div class="control-group">
+					<label class="control-label" for="visibility">Visibility</label>
+					<div class="controls">
+						<select id="visibility" name="visibility" ng-readonly="readOnly"
+							ng-model="post.visibility" required><option>Public</option>
+							<option>FriendsOnly</option>
+							<option>Private</option>
+						</select>
+						<div ng-messages="postDetailsForm.visibility.$error"
+							style="color: maroon">
+							<div ng-message="required">Visibility is mandatory</div>
+						</div>
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label" for="format">Auto Format:</label>
+					<div class="controls">
+						<input type="checkbox" id="format" ng-disabled="readOnly"
+							ng-model="post.autoFormat">
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label" for="tags">Tags:</label>
+					<div class="controls">
+						<input type="text" id="tags" ng-readonly="readOnly"
+							ng-model="post.tags">
+					</div>
+				</div>
+			</fieldset>
+			<fieldset>
+				<legend>Timing</legend>
+				<div class="control-group">
+					<label class="control-label" for="postInFuture">Post in
+						future?</label>
+					<div class="controls">
+						<input type="checkbox" id=postInFuture
+							ng-model=post.postingInFuture ng-disabled="readOnly"
+							ng-change="postInFutureChanged()">
+					</div>
+				</div>
+				<div ng-show="post.postingInFuture">
+					<div class="control-group">
+						<label class="control-label" for="postingHour">Time:</label>
+						<div class="controls">
+							<select ng-model="post.postingHour" id="postingHour"
+								ng-readonly="readOnly"
+								ng-options="possibleTime for possibleTime in possibleTimes"
+								ng-required="post.postingInFuture" name="postingHour">
+							</select>
+							<div ng-messages="postDetailsForm.postingHour.$error"
+								style="color: maroon">
+								<div ng-message="required">Posting hour is mandatory</div>
+							</div>
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label" for="postingDay">Day:</label>
+						<div class="controls">
+							<input type="text" class="form-control" ng-readonly="readOnly"
+								datepicker-popup="yyyy-MM-dd" ng-model="post.postingTime"
+								ng-required="post.postingInFuture" name="postingDay" />
+							<div ng-messages="postDetailsForm.postingDay.$error"
+								style="color: maroon">
+								<div ng-message="required">Posting Day is mandatory</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</fieldset>
+		</form>
+		<div>
+			<button class="btn btn-primary" ng-show="!readOnly"
+				ng-disabled='postDetailsForm.$invalid' ng-click="Save()">OK</button>
+			<button class="btn btn-warning" ng-click="Cancel()">Cancel</button>
+			<button class="btn btn-inverse" ng-show="action=='Update'"
+				ng-click="Clone()">Clone</button>
+		</div>
+	</div>
+</div>

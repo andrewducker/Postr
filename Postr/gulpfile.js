@@ -23,11 +23,15 @@ gulp.task('delWarJs', function(cb){
 	del('war/alljs*.js', cb);
 });
 
+gulp.task('delWarCss', function(cb){
+	del('war/allcss*.css', cb);
+});
+
 gulp.task('delIndexHtml', function(cb){
 	del('war/index.html', cb);
 });
 
-gulp.task('clean',['delWarJs','cleanBuild','delIndexHtml'],function(){});
+gulp.task('clean',['delWarCss','delWarJs','cleanBuild','delIndexHtml'],function(){});
 
 gulp.task('controllers',['clean'], function() {
      return gulp.src(['Websrc/js/Controllers/init.js','Websrc/js/Controllers/*.js', 'Websrc/js/**/*.js'])
@@ -58,7 +62,7 @@ gulp.task('templateUnpack',['copyTemplates'], function(){
 	var createLivejournalOutput= gulp.src('build/templates/sites/OutputTemplate/*')
 	.pipe(replace('SITENAME',"Livejournal"))
 	.pipe(gulp.dest('build/templates/sites/Livejournal'));
-	
+
 	return merge(createTestOutput, createDreamwidthOutput,createLivejournalOutput);
 });
 

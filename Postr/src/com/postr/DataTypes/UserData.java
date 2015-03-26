@@ -40,6 +40,7 @@ public class UserData {
 		
 		possibleOutputs.add("Dreamwidth");
 		possibleOutputs.add("Livejournal");
+		possibleOutputs.add("WordPress");
 		possibleOutputs.add("TestOutput");
 		
 		possibleInputs.add("Delicious");

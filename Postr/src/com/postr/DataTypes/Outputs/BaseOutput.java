@@ -3,6 +3,7 @@ package com.postr.DataTypes.Outputs;
 import com.googlecode.objectify.annotation.Subclass;
 import com.postr.DataTypes.BaseSaveable;
 
+@SuppressWarnings("serial")
 @Subclass(index=true)
 public abstract class BaseOutput extends BaseSaveable {
 

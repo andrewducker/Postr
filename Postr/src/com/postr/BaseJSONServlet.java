@@ -72,7 +72,6 @@ abstract class BaseJSONServlet extends HttpServlet {
 			setResponse(resp);
 			serverName = req.getServerName();
 
-			resp.setContentType("application/json");
 		    StringBuilder sb = new StringBuilder();
 		    String line;
 		    while ((line = req.getReader().readLine()) != null) {
@@ -115,6 +114,7 @@ abstract class BaseJSONServlet extends HttpServlet {
 			resp.getWriter().print(result.message);
 		}else
 		{
+			resp.setContentType("application/json");
 			resp.getWriter().print(new Json(result).getJson());	
 		}
 	}

@@ -10,16 +10,20 @@ import com.postr.Translators.LJTranslator;
 @SuppressWarnings("serial")
 public class LivejournalServlet extends BaseOutputServlet {
 
+	Class<LJData> dataClass = LJData.class;
+	Class<LJFeed> feedClass = LJFeed.class;
+	Class<LJPost> postClass = LJPost.class;
+	
 	@Override
 	protected Result VerifyPassword(Json parameters) throws Exception {
-		LJData data = parameters.FromJson(LJData.class);
+		LJData data = parameters.FromJson(dataClass);
 		LJTranslator writer = new LJTranslator();
 		return writer.Login(data.userName, data.password);
 	}
 
 	@Override
 	protected Result SaveData(Json parameters) throws Exception {
-		LJData ljData = parameters.FromJson(LJData.class);
+		LJData ljData = parameters.FromJson(dataClass);
 		ljData.EncryptPassword();
 		
 		Key<LJData> result = DAO.SaveThing(ljData,GetUserID());
@@ -28,7 +32,7 @@ public class LivejournalServlet extends BaseOutputServlet {
 
 	@Override
 	protected Result SaveFeed(Json parameters) throws Exception {
-		LJFeed ljFeed = parameters.FromJson(LJFeed.class);
+		LJFeed ljFeed = parameters.FromJson(feedClass);
 		ljFeed.awaitingPostingTime = ljFeed.active;
 		Key<LJFeed> result = DAO.SaveThing(ljFeed,GetUserID());
 		return new Result("Saved!",result.getId());
@@ -36,7 +40,7 @@ public class LivejournalServlet extends BaseOutputServlet {
 	
 	@Override
 	protected LJPost CreatePost(Json parameters) {
-		LJPost post = parameters.FromJson(LJPost.class);
+		LJPost post = parameters.FromJson(postClass);
 		post.timeZone = GetTimeZone();
 		return post;
 	}
@@ -53,9 +57,8 @@ public class LivejournalServlet extends BaseOutputServlet {
 	
 	@Override
 	protected Result UpdateData(Json parameters) throws Exception {
-		LJData newData = parameters.FromJson(LJData.class);
-		LJData existingLJData = DAO.LoadThing(LJData.class, newData.getId(), GetUserID());
-		
+		LJData newData = parameters.FromJson(dataClass);
+		LJData existingLJData = DAO.LoadThing(dataClass, newData.getId(), GetUserID());
 		
 		existingLJData.password = newData.password;
 		existingLJData.EncryptPassword();

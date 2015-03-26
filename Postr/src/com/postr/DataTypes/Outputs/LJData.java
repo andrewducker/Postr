@@ -3,6 +3,7 @@ package com.postr.DataTypes.Outputs;
 import com.googlecode.objectify.annotation.Subclass;
 import com.postr.DataTypes.PasswordEncryptor;
 
+@SuppressWarnings("serial")
 @Subclass(index=true)
 public class LJData extends BaseOutput{
 	public void EncryptPassword(){
