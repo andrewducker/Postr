@@ -10,18 +10,21 @@ import com.postr.Translators.MetaWebLogTranslator;
 @Subclass(index=true)
 public class WordPressPost extends BasePost {
 
+	String tags;
+
+	
 	@Override
 	public void MakePost() throws Exception {
-		WordPressData ljData;
+		WordPressData data;
 		try {
-			ljData = DAO.LoadThing(WordPressData.class, output, getParent());
+			data = DAO.LoadThing(WordPressData.class, output, getParent());
 		} catch (Exception e) {
 			MessageLogger.Severe(this,e.getMessage());
 			result = Result.Failure("Failed to load Output.");
 			return;
 		}
 		
-		MetaWebLogTranslator translator = new MetaWebLogTranslator(ljData.url);
-		result = translator.MakePost(ljData, contents, subject);
+		MetaWebLogTranslator translator = new MetaWebLogTranslator(data.url);
+		result = translator.MakePost(data, contents, subject, tags.split(","));
 	}
 }

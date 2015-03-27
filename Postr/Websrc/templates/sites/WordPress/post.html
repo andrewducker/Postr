@@ -33,27 +33,6 @@
 			<fieldset>
 				<legend>Misc</legend>
 				<div class="control-group">
-					<label class="control-label" for="visibility">Visibility</label>
-					<div class="controls">
-						<select id="visibility" name="visibility" ng-readonly="readOnly"
-							ng-model="post.visibility" required><option>Public</option>
-							<option>FriendsOnly</option>
-							<option>Private</option>
-						</select>
-						<div ng-messages="postDetailsForm.visibility.$error"
-							style="color: maroon">
-							<div ng-message="required">Visibility is mandatory</div>
-						</div>
-					</div>
-				</div>
-				<div class="control-group">
-					<label class="control-label" for="format">Auto Format:</label>
-					<div class="controls">
-						<input type="checkbox" id="format" ng-disabled="readOnly"
-							ng-model="post.autoFormat">
-					</div>
-				</div>
-				<div class="control-group">
 					<label class="control-label" for="tags">Tags:</label>
 					<div class="controls">
 						<input type="text" id="tags" ng-readonly="readOnly"

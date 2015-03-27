@@ -58,16 +58,19 @@ public class MetaWebLogTranslator {
 		    return Result.Success("Logged in.");
 		}
 		
-		public Result MakePost(WordPressData data, String contents, String header) throws Exception{
+		public Result MakePost(WordPressData data, String contents, String header, String[] tags) throws Exception{
 			try {
 			    XmlRpcClient client = getClient();
 				HashMap<String,Object> postParams = new HashMap<String,Object>();
 				postParams.put("title", header);
 				postParams.put("description",contents);
+				postParams.put("mt_keywords",tags);
 				Object[] params = new Object[]{"NotUsedByWordPress",data.userName,data.GetDecryptedPassword(),postParams,true};
-				Object ret = client.execute("metaWeblog.newPost", params);
+				String ret = (String) client.execute("metaWeblog.newPost", params);
 
-				return Result.Success("<A href=" + "url" + ">Link posted</A>");
+				URL resultUrl = new URL(new URL(serverURL),"?p="+ret); 
+				
+				return Result.Success(resultUrl.toString());
 			} catch (MalformedURLException e1) {
 				MessageLogger.Severe(this,e1.getMessage());
 				return Result.Failure("Malformed URL");
