@@ -76,7 +76,7 @@
 				<td><A href="#/post/{{post.siteName}}/{{post.id}}">{{data.postingTimeAsText(post)}}</A></td>
 				<td>{{post.subject}}</td>
 				<td>{{postDestination(post)}}</td>
-				<td>{{post.result.message}}</td>
+				<td ng-bind-html="post.result.message | linky:'_blank'"></td>
 			</tr>
 		</table>
 	</fieldset>
