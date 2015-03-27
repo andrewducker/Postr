@@ -135,7 +135,7 @@ public class LJTranslator {
 		    if (postResult.get("success")=="FAIL"){
 		    	return Result.Failure(postResult.get("errmsg"));
 		    }
-		    return Result.Success("<A href=" + postResult.get("url")+ ">Link posted</A>");
+		    return Result.Success(postResult.get("url"));
 		}
 
 		@SuppressWarnings("unchecked")
