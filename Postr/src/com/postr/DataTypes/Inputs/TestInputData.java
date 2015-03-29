@@ -10,6 +10,7 @@ import com.postr.DataTypes.LinkEntry;
 import com.postr.DataTypes.LinkSet;
 import com.postr.DataTypes.LinkTag;
 
+@SuppressWarnings("serial")
 @Subclass(index=true)
 public class TestInputData extends BaseInput {
 

@@ -6,6 +6,7 @@ import com.googlecode.objectify.annotation.Subclass;
 import com.postr.DAO;
 import com.postr.DataTypes.User;
 
+@SuppressWarnings("serial")
 @Subclass(index = true)
 public class DWFeed extends LJFeed {
 

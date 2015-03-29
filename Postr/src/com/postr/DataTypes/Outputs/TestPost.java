@@ -6,6 +6,7 @@ import com.postr.LivejournalVisibilityTypes;
 import com.postr.MessageLogger;
 import com.postr.Result;
 
+@SuppressWarnings("serial")
 @Subclass(index=true)
 public class TestPost extends BasePost {
 

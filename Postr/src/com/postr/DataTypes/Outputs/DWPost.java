@@ -6,6 +6,7 @@ import com.postr.MessageLogger;
 import com.postr.Result;
 import com.postr.Translators.DWTranslator;
 
+@SuppressWarnings("serial")
 @Subclass(index=true)
 public class DWPost extends LJPost {
 

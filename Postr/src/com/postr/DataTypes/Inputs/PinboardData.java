@@ -4,6 +4,7 @@ import com.googlecode.objectify.annotation.Subclass;
 import com.postr.BaseFeedParser;
 import com.postr.PinboardFeedParser;
 
+@SuppressWarnings("serial")
 @Subclass(index=true)
 public class PinboardData extends BaseInput {
 
