@@ -16,6 +16,7 @@ import com.postr.DataTypes.User;
 import com.postr.DataTypes.UserEmail;
 import com.postr.DataTypes.Inputs.DeliciousData;
 import com.postr.DataTypes.Inputs.PinboardData;
+import com.postr.DataTypes.Inputs.PinterestData;
 import com.postr.DataTypes.Inputs.TestInputData;
 import com.postr.DataTypes.Outputs.BaseOutput;
 import com.postr.DataTypes.Outputs.BasePost;
@@ -42,6 +43,7 @@ public class DAO {
 		ObjectifyService.register(WordPressData.class);
 		ObjectifyService.register(DeliciousData.class);
 		ObjectifyService.register(PinboardData.class);
+		ObjectifyService.register(PinterestData.class);
 		ObjectifyService.register(TestInputData.class);
 		ObjectifyService.register(UserEmail.class);
 		ObjectifyService.register(User.class);

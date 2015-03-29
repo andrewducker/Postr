@@ -80,6 +80,14 @@
 	<url-pattern>/Pinboard</url-pattern>
 </servlet-mapping>
 <servlet>
+	<servlet-name>Pinterest</servlet-name>
+	<servlet-class>com.postr.PinterestServlet</servlet-class>
+</servlet>
+<servlet-mapping>
+	<servlet-name>Pinterest</servlet-name>
+	<url-pattern>/Pinterest</url-pattern>
+</servlet-mapping>
+<servlet>
 	<servlet-name>DataManagement</servlet-name>
 	<servlet-class>com.postr.DataManagementServlet</servlet-class>
 </servlet>

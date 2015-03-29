@@ -45,6 +45,7 @@ public class UserData {
 		
 		possibleInputs.add("Delicious");
 		possibleInputs.add("Pinboard");
+		possibleInputs.add("Pinterest");
 		possibleInputs.add("TestInput");
 	}
 	

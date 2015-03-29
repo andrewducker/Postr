@@ -1,0 +1,34 @@
+<div>
+	<div>
+		<h3>Pinterest</h3>
+	</div>
+	<div>
+		<form class="form-horizontal" name="inputDetails">
+			<fieldset>
+				<legend>Details</legend>
+
+				<div class="control-group">
+					<label class="control-label" for="userName">User Name:</label>
+					<div class="controls">
+						<input ng-readonly="action=='Update'" ng-model="item.userName"
+							name="userName" required>
+					</div>
+				</div>
+				<div class="control-group">
+					<div class="controls">
+						<button class="btn" ng-hide="action=='Update'"
+							ng-disabled='inputDetails.$invalid' ng-click="verify()">Verify</button>
+					</div>
+				</div>
+				<div>{{verificationMessage}}</div>
+			</fieldset>
+		</form>
+	</div>
+	<div>
+		<button class="btn btn-primary" ng-hide="action=='Update'"
+			ng-click="Save()">OK</button>
+		<button class="btn btn-warning" ng-click="Cancel()">Cancel</button>
+		<button class="btn btn-danger" ng-show="action=='Update'"
+			ng-click="Delete()">Delete</button>
+	</div>
+</div>
