@@ -29,13 +29,23 @@ public abstract class BaseInput extends BaseSaveable {
 
 	public abstract String getSiteName();
 	
-	public Future<LinkSet> Read() throws Exception {
+	public LinkSet Read() throws Exception {
 
-		Future<HTTPResponse> feedContents = FeedReader.Read(GetFeedURL());
+		HTTPResponse feedContents = FeedReader.Read(GetFeedURL());
+		
+		BaseFeedParser parser = GetParser();
+		
+		return parser.apply(feedContents);
+	}
+		
+	public Future<LinkSet> ReadAsync() throws Exception {
+
+		Future<HTTPResponse> feedContents = FeedReader.ReadAsync(GetFeedURL());
 		
 		return Futures.lazyTransform(feedContents, GetParser());
 	}
-		
+
+	
 	abstract BaseFeedParser GetParser();
 	
 

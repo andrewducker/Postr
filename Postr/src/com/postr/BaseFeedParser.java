@@ -34,7 +34,11 @@ public abstract class BaseFeedParser implements Function<HTTPResponse, LinkSet> 
 	public LinkSet apply(HTTPResponse response) {
 		Parser parser = new Parser();
 		FeedData feedData = null;
-		feedData = parser.parse(response.getContent());
+		byte[] content = response.getContent();
+		LogHandler.info(new String(content));
+		
+		feedData = parser.parse(content);
+		
 		
 		LinkSet links = new LinkSet();
 		

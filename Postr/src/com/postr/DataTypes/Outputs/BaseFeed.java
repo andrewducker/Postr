@@ -96,10 +96,28 @@ public abstract class BaseFeed extends BasePost {
 	}
 
 	private LinkSet getLinks() throws Exception {
-		ArrayList<Future<LinkSet>> futureLinks = new ArrayList<Future<LinkSet>>(); 
+		ArrayList<LinkSet> futureLinks = new ArrayList<LinkSet>(); 
 		for (Long inputID : inputs) {
 			BaseInput input = DAO.LoadThing(BaseInput.class,inputID);
 			futureLinks.add(input.Read());
+		}
+
+		LinkSet masterLinkSet = new LinkSet(); 
+
+		for (LinkSet links : futureLinks) {
+			masterLinkSet.addAll(links);
+		}
+		
+		return masterLinkSet;
+	}
+	
+	@SuppressWarnings("unused")
+	//Switching to the Sync version, to see if it solves the problem with missing data.
+	private LinkSet getLinksAsync() throws Exception {
+		ArrayList<Future<LinkSet>> futureLinks = new ArrayList<Future<LinkSet>>(); 
+		for (Long inputID : inputs) {
+			BaseInput input = DAO.LoadThing(BaseInput.class,inputID);
+			futureLinks.add(input.ReadAsync());
 		}
 
 		LinkSet masterLinkSet = new LinkSet(); 
@@ -110,7 +128,7 @@ public abstract class BaseFeed extends BasePost {
 		
 		return masterLinkSet;
 	}
-	
+
 	private static LinkSet FilterLinksByDate(LinkSet links, DateTime startTime, DateTime endTime) {
 		LinkSet filteredList = new LinkSet();
 		for (LinkEntry linkEntry : links) {

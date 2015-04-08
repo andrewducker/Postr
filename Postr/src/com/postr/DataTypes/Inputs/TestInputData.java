@@ -2,7 +2,6 @@ package com.postr.DataTypes.Inputs;
 
 import org.joda.time.DateTime;
 
-import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.SettableFuture;
 import com.googlecode.objectify.annotation.Subclass;
 import com.postr.BaseFeedParser;
@@ -37,7 +36,7 @@ public class TestInputData extends BaseInput {
 	}
 	
 	@Override
-	public ListenableFuture<LinkSet> Read() throws Exception {
+	public LinkSet Read() throws Exception {
 
 		SettableFuture<LinkSet> linkSetFuture = SettableFuture.create();
 		LinkSet linkSet = new LinkSet();
@@ -66,7 +65,7 @@ public class TestInputData extends BaseInput {
 		
 		linkSetFuture.set(linkSet);
 		
-		return linkSetFuture;
+		return linkSet;
 	}
 
 
