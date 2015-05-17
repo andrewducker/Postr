@@ -24,14 +24,14 @@ var setupForm = function($scope, outputId, feed, siteName, userData, inputs, pos
 	};
 	$scope.resetContents=function()
 	{
-		$scope.feed.contents= ['<ul class="links">',
+		$scope.feed.contents= ['<dl class="links">',
 		               		'#foreach($link in $links)',
-		            		'<li style="margin-bottom: 0.5em;" class="link"><A href="$link.URL">$link.Title</A>',
-		            		'#if($link.Description)<BR/><span class="link-description">$link.Description</span>#end', 
-		            		'<BR/><span class="link-tags">(tags:#foreach($tag in $link.Tags) <A href="$tag.TagURL">$tag.Tag</A>#end )</span>',
-		            		'</li>',
+		            		'<dt class="link"><a href="$link.URL" rel="nofollow">$link.Title</a></dt>',
+		            		'<dd>#if($link.Description)<span class="link-description">$link.Description</span><BR/>#end', 
+		            		'<small class="link-tags">(tags:#foreach($tag in $link.Tags) <A href="$tag.TagURL">$tag.Tag</A>#end )</small>',
+		            		'</dd>',
 		            		'#end',
-		            		'</ul>'].join("\n");
+		            		'</dl>'].join("\n");
 	};
 	$scope.feedDetailsTemplate = "sites/"+ siteName + "/FeedDetails.html";
 	$scope.validation = function(){

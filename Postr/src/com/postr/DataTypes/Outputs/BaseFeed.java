@@ -82,9 +82,11 @@ public abstract class BaseFeed extends BasePost {
 		List<String> tagsForPosting;
 		if (postWithTags) {
 			tagsForPosting = links.getTagNames();
-			String[] extraTags = defaultTags.split(",");
-			for (int i = 0; i < extraTags.length; i++) {
-				tagsForPosting.add(extraTags[i]);
+			if(defaultTags != null){
+				String[] extraTags = defaultTags.split(",");
+				for (int i = 0; i < extraTags.length; i++) {
+					tagsForPosting.add(extraTags[i]);
+				}
 			}
 		}
 		else{

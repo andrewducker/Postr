@@ -116,7 +116,7 @@ public class LJTranslator {
 				tagsToUse +=tag; 
 			}
 		    options.put("taglist", tagsToUse);
-		    options.put("opt_preformatted", !autoFormat);
+		    options.put("opt_preformatted", (autoFormat == null || autoFormat == false));
 		    postParams.put("props",options);
 		    
 		    Object[] params = new Object[]{postParams};
