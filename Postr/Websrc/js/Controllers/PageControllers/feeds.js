@@ -27,7 +27,7 @@ var setupForm = function($scope, outputId, feed, siteName, userData, inputs, pos
 		$scope.feed.contents= ['<dl class="links">',
 		               		'#foreach($link in $links)',
 		            		'<dt class="link"><a href="$link.URL" rel="nofollow">$link.Title</a></dt>',
-		            		'<dd>#if($link.Description)<span class="link-description">$link.Description</span><BR/>#end', 
+		            		'<dd style="margin-bottom: 0.5em;">#if($link.Description)<span class="link-description">$link.Description</span><BR/>#end', 
 		            		'<small class="link-tags">(tags:#foreach($tag in $link.Tags) <A href="$tag.TagURL">$tag.Tag</A>#end )</small>',
 		            		'</dd>',
 		            		'#end',
