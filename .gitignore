@@ -6,3 +6,4 @@ Postr/build/
 Postr/war/alljs*.js
 Postr/war/allcss*.css
 Postr/war/index.html
+Postr/node_modules/
