@@ -37,16 +37,8 @@ public class LJTranslator {
 		    try{
 			    loginParams = getInitialisedCallParams(client, userName, password);
 		    } catch (XmlRpcHttpTransportException e){
-		        URL url = new URL("http://www.realip.info/api/p/realip.php");
-		        BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
-		        String line;
-		        StringBuilder sb = new StringBuilder();
-		        while ((line = reader.readLine()) != null) {
-		        	sb.append(line);
-		        }
-		        reader.close();
-
-    	        LogHandler.info("Current address is " + sb.toString());
+		    	
+    	        LogHandler.info("Current address is " + LogHandler.CurrentIP());
 		    	LogHandler.logException(this.getClass(), e, "Exception while gathering initialised call params - " + e.getStatusCode() + " - " + e.getStatusMessage());
 		    	return Result.Failure(e.getMessage());
 		    }

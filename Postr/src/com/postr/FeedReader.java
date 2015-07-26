@@ -17,7 +17,7 @@ public class FeedReader {
 	{
 		URL url = new URL(feedURL);
 		HTTPRequest httpRequest = new HTTPRequest(url);
-		HTTPHeader header = new HTTPHeader("Cache-Control", "max-age=300");
+		HTTPHeader header = new HTTPHeader("Cache-Control", "max-age=0, no-cache, no-store");
 		httpRequest.setHeader(header);
 		
 		URLFetchService fetchService = URLFetchServiceFactory.getURLFetchService();

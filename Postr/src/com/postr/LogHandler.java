@@ -1,11 +1,30 @@
 package com.postr;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.logging.Logger;
 
 public class LogHandler {
 
+	public static String CurrentIP() throws Exception{
+		
+        URL url = new URL("http://www.realip.info/api/p/realip.php");
+        BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
+        String line;
+        StringBuilder sb = new StringBuilder();
+        while ((line = reader.readLine()) != null) {
+        	sb.append(line);
+        }
+        reader.close();
+        String currentIP = sb.toString();
+		return currentIP;
+	}
+	
+	
 	public static void logException(String location, Exception e, String message)
 	{
 		Logger log = Logger.getLogger(location);
