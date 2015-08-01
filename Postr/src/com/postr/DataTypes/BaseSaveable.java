@@ -25,7 +25,7 @@ public class BaseSaveable implements java.io.Serializable {
 	}
 	
 	public long getParent(){
-		return parent.get().getId();
+		return this.parent.getKey().getId();
 	}
 	
 	public boolean hasParent(){
@@ -35,6 +35,4 @@ public class BaseSaveable implements java.io.Serializable {
 	private @Index @Load transient Ref<User> parent;
 	
 	protected BaseSaveable(){}
-
-	
 }

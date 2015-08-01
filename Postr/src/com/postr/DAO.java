@@ -59,6 +59,11 @@ public class DAO {
 		ObjectifyService.register(SiteData.class);
 	}
 
+	public static void EnsureRegistration(){
+		//Does nothing.
+		//But the class should now have executed its static constructor, ensuring registration has taken place!
+	}
+	
 	public static <T extends BaseSaveable> Key<T> SaveThing(T thing, Long userID){
 		thing.setParent(userID);
 		return ofy().save().entity(thing).now();

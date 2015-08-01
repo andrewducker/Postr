@@ -16,6 +16,10 @@ import com.postr.DataTypes.ThreadStorage;
 abstract class BaseJSONServlet extends HttpServlet {
 	protected String serverName;
 	
+	static {
+		DAO.EnsureRegistration();
+	}
+	
 	private ThreadLocal<HttpSession> session = new ThreadLocal<HttpSession>();
 	private ThreadLocal<HttpServletRequest> request = new ThreadLocal<HttpServletRequest>();
 	private ThreadLocal<HttpServletResponse> response = new ThreadLocal<HttpServletResponse>();

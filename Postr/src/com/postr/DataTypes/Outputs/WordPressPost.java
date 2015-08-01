@@ -24,6 +24,10 @@ public class WordPressPost extends BasePost {
 			return;
 		}
 		
+		if (tags == null) {
+			tags = "";
+		}
+		
 		MetaWebLogTranslator translator = new MetaWebLogTranslator(data.url);
 		result = translator.MakePost(data, contents, subject, tags.split(","));
 	}
