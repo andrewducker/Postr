@@ -21,7 +21,7 @@ public class DeliciousData extends BaseInput {
 
 	@Override
 	String GetFeedURL() {
-		return "http://feeds.delicious.com/v2/rss/"+userName+"?count=30";
+		return "http://premium-feeds-preview.delicious.com/v2/rss/"+userName+"?count=30";
 	}
 
 	@Override
