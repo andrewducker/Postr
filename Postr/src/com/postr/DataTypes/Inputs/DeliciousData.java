@@ -16,7 +16,7 @@ public class DeliciousData extends BaseInput {
 	
 	@Override
 	public String getSiteName() {
-			return "Delicious";
+			return "Delicious"; 
 	}
 
 	@Override
