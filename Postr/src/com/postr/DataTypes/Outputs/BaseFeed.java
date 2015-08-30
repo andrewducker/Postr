@@ -51,6 +51,9 @@ public abstract class BaseFeed extends BasePost {
 	@Override
 	void MakePost() throws Exception {
 		LinkSet links = getLinks();
+		if (links.size() == 1 && links.get(0).Title.equalsIgnoreCase("something went wrong")) {
+			throw new Exception ("Delicious done messed up.  Crash out here");
+		}
 		links = FilterLinksByDate(links, postingTime.minusDays(daysToInclude), postingTime);
 		if (links.size() == 0) {
 			result = Result.Success("No entries found");
