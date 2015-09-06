@@ -104,6 +104,14 @@
 	<url-pattern>/userdata</url-pattern>
 </servlet-mapping>
 <servlet>
+	<servlet-name>AppData</servlet-name>
+	<servlet-class>com.postr.AppDataServlet</servlet-class>
+</servlet>
+<servlet-mapping>
+	<servlet-name>AppData</servlet-name>
+	<url-pattern>/appdata</url-pattern>
+</servlet-mapping>
+<servlet>
 	<servlet-name>PersonaVerification</servlet-name>
 	<servlet-class>com.postr.PersonaVerificationServlet</servlet-class>
 </servlet>

@@ -1,0 +1,23 @@
+<div>
+	<div>
+		<h3>Application Details</h3>
+	</div>
+	<div>
+		<form class="form-horizontal" name="siteDetails">
+			<fieldset>
+				<legend>Details</legend>
+
+				<div class="control-group">
+					<label class="control-label" for="wordPressClientId">WordPress Client ID:</label>
+					<div class="controls">
+						<input ng-model="item.wordPressClientId" name="wordPressAppId" required>
+					</div>
+				</div>
+			</fieldset>
+		</form>
+	</div>
+	<div>
+		<button class="btn btn-primary" ng-click="Save()">OK</button>
+		<button class="btn btn-warning" ng-click="Cancel()">Cancel</button>
+	</div>
+</div>

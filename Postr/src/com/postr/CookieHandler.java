@@ -11,7 +11,7 @@ public class CookieHandler {
 
 	public static Cookie GenerateCookie(String email) throws Exception {
 		long now = DateTime.now().getMillis();
-		long cookieTimeOut = SiteData.Current().CookieTimeout;
+		long cookieTimeOut = AppData.Current().CookieTimeout;
 		Long timeOutMillis = (long) (cookieTimeOut * 1000);
 		Long expires = now + (timeOutMillis);
 		String concatenated = email + "|" + expires + "|";
@@ -49,7 +49,7 @@ public class CookieHandler {
 
 	public static String computeHmac(String baseString) throws Exception {
 		Mac mac = Mac.getInstance("HmacSHA256");
-		String key = SiteData.Current().HMACKey;
+		String key = AppData.Current().HMACKey;
 		SecretKeySpec secret = new SecretKeySpec(key.getBytes(),
 				mac.getAlgorithm());
 		mac.init(secret);

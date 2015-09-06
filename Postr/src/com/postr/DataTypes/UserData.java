@@ -3,11 +3,12 @@ package com.postr.DataTypes;
 import java.util.List;
 import java.util.Vector;
 
+import com.postr.AppData;
 import com.postr.DAO;
 import com.postr.DataTypes.Inputs.BaseInput;
+import com.postr.DataTypes.Outputs.BaseFeed;
 import com.postr.DataTypes.Outputs.BaseOutput;
 import com.postr.DataTypes.Outputs.BasePost;
-import com.postr.DataTypes.Outputs.BaseFeed;
 
 
 public class UserData {
@@ -38,6 +39,11 @@ public class UserData {
 		
 		timeZone = DAO.LoadThing(User.class, userID, userID).timeZone;
 		
+		AppData appData = DAO.getAppData();
+		
+		isAdmin = appData.Administrator.toLowerCase().equalsIgnoreCase(persona);
+		wordPressClientId = appData.wordPressClientId;
+		
 		possibleOutputs.add("Dreamwidth");
 		possibleOutputs.add("Livejournal");
 		possibleOutputs.add("WordPress");
@@ -54,7 +60,13 @@ public class UserData {
 	
 	@SuppressWarnings("unused")
 	private String timeZone;
+
+	@SuppressWarnings("unused")
+	private String wordPressClientId;
 	
+	@SuppressWarnings("unused")
+	private boolean isAdmin;
+
 	private List<BaseInput> inputs = new Vector<BaseInput>();
 	
 	private List<BaseOutput> outputs = new Vector<BaseOutput>();
@@ -66,5 +78,4 @@ public class UserData {
 	private List<String> possibleOutputs = new Vector<String>();
 	
 	private List<String> possibleInputs = new Vector<String>();
-	
 }

@@ -9,6 +9,16 @@ postrApp.config(function($routeProvider){
 			}
 		}
 	})	
+	//Appdata
+	.when ("/appdata",{
+		templateUrl:  function(params){return "appData.html";}  ,
+		controller: "EditAppDataController",
+		resolve : {
+			userDataLoaded : function(userData){
+				return userData.loaded;
+			}
+		}
+	})
 	//New feed
 	.when ("/feed/new",{
 		templateUrl:  function(params){return "selectOutput.html";}  ,
@@ -19,7 +29,7 @@ postrApp.config(function($routeProvider){
 			}
 		}
 	})
-	//New feed
+	//New feed for a specific output
 	.when ("/feed/new/:siteName/:outputId",{
 		templateUrl:  function(params){return "feedDetails.html";}  ,
 		controller: "NewFeedController",

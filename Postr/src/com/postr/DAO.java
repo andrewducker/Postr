@@ -56,7 +56,7 @@ public class DAO {
 		ObjectifyService.register(DWFeed.class);
 		ObjectifyService.register(TestFeed.class);
 		ObjectifyService.register(WordPressFeed.class);
-		ObjectifyService.register(SiteData.class);
+		ObjectifyService.register(AppData.class);
 	}
 
 	public static void EnsureRegistration(){
@@ -156,23 +156,27 @@ public class DAO {
 		return user;
 	}
 	
-	private static SiteData siteData;
+	private static AppData appData;
 	
-	public static SiteData GetSiteData() throws Exception{
-		if (siteData == null) {
-			List<SiteData> siteDataList = ofy().load().type(SiteData.class).list();
+	public static AppData getAppData() throws Exception{
+		if (appData == null) {
+			List<AppData> siteDataList = ofy().load().type(AppData.class).list();
 			if(siteDataList.size() == 1){
-				siteData = siteDataList.get(0);
+				appData = siteDataList.get(0);
 			}
 			else if (siteDataList.isEmpty()) {
-				siteData = SiteData.CreateDefault();
-				ofy().save().entity(siteData).now();
+				appData = AppData.CreateDefault();
+				ofy().save().entity(appData).now();
 			}
 			else{
 				throw new Exception("Multiple Site Data entries found.  WTF?");
 			}
 		}
-		return siteData;
+		return appData;
+	}
+	
+	public static void setAppData(AppData appData) throws Exception{
+		ofy().save().entity(appData).now();
 	}
 	
 	public static void SaveUser(User user) {

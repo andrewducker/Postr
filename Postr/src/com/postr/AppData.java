@@ -11,25 +11,27 @@ import com.postr.DataTypes.BaseSaveable;
 
 @SuppressWarnings("serial")
 @Subclass(index = true)
-public class SiteData extends BaseSaveable {
+public class AppData extends BaseSaveable {
 	public String HMACKey;
 	public String Administrator;
 	public int CookieTimeout;
+	public String wordPressClientId;
 
-	static SiteData CreateDefault() throws NoSuchAlgorithmException {
-		SiteData siteData = new SiteData();
+	static AppData CreateDefault() throws NoSuchAlgorithmException {
+		AppData siteData = new AppData();
 		siteData.HMACKey = Base64.encode(KeyGenerator.getInstance("HmacSHA256")
 				.generateKey().getEncoded());
 		siteData.Administrator = "Andrew@Ducker.org.uk";
 		siteData.CookieTimeout = 60 * 60 * 24 * 28; // 28 days
+		siteData.wordPressClientId = "";
 		return siteData;
 	}
 
-	private static SiteData currentSiteData;
+	private static AppData currentSiteData;
 
-	public static SiteData Current() throws Exception {
+	public static AppData Current() throws Exception {
 		if (currentSiteData == null) {
-			currentSiteData = DAO.GetSiteData();
+			currentSiteData = DAO.getAppData();
 		}
 		return currentSiteData;
 	}
