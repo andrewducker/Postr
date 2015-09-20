@@ -12,11 +12,12 @@ postrApp.controller('NewSiteDataSelectionController',function ($routeParams, $sc
 	};
 });
 
-postrApp.controller('NewSiteDataController', function($routeParams, $scope, alerter, $location, $http, userData){
+postrApp.controller('NewSiteDataController', function($routeParams, $scope, alerter, $location, $http, userData,siteSpecific){
 	var siteName = $routeParams.siteName;
 	$scope.item = {
 			siteName : siteName 
 			};
+	siteSpecific.initialiseSiteData($scope.item);
 	$scope.verify = function(){
 		$scope.verificationSuccess = false;
 		$scope.item.method = "Verify";
@@ -62,7 +63,7 @@ postrApp.controller('NewSiteDataController', function($routeParams, $scope, aler
 	};
 });
 
-postrApp.controller('EditSiteDataController', function($routeParams, $scope, alerter, $location, $http, userData, $filter){
+postrApp.controller('EditSiteDataController', function($routeParams, $scope, alerter, $location, $http, userData,siteSpecific){
 	var siteName = $routeParams.siteName;
 	var item = userData.getSiteItem($routeParams.id);
 	
@@ -73,7 +74,9 @@ postrApp.controller('EditSiteDataController', function($routeParams, $scope, ale
 		$location.path("");
 		return;
 	}
-	
+
+	siteSpecific.initialiseSiteData($scope.item);
+
 	$scope.action = "Update";
 	
 	$scope.verify = function(){

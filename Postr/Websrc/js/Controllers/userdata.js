@@ -1,4 +1,4 @@
-postrApp.factory('userData', function(persona, $http,orderByFilter, $filter, alerter,$q){
+postrApp.factory('userData', function(persona, $http,orderByFilter, $filter, alerter,$q,$location){
 	var removeFromArray = function(object, array){
 		var index = array.indexOf(object);
 		if (index > -1) {
@@ -87,6 +87,12 @@ postrApp.factory('userData', function(persona, $http,orderByFilter, $filter, ale
 				this.feeds.forEach(function(feed){
 					feed.postingTime = new Date(feed.postingTime);
 				});
+				var redirect = $location.protocol()+"://"+$location.host();
+				if($location.port() != 80){
+					redirect += ":"+$location.port();
+				}
+				redirect += "/WordPressAuthorisationComplete";
+				this.wordPressValidationURL = "https://public-api.wordpress.com/oauth2/authorize?client_id="+this.wordPressClientId + "&redirect_uri="+redirect + "&response_type=code";
 				this.loggedOut = false;
 				this.loggedIn = true;
 				loadedDeferral.resolve();
