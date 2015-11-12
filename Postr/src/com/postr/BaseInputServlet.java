@@ -3,7 +3,7 @@ package com.postr;
 import com.postr.DataTypes.Json;
 
 @SuppressWarnings("serial")
-abstract class BaseInputServlet extends BasePersonaSessionServlet {
+abstract class BaseInputServlet extends BaseJSONServlet {
 
 	@Override
 	protected Result ProcessRequest(Json parameters) throws Exception {

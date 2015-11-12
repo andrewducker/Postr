@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?><web-app xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.5" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
 <servlet>
+	<servlet-name>WordPressAuthorisationComplete</servlet-name>
+	<servlet-class>com.postr.WordPressAuthorisationComplete</servlet-class>
+</servlet>
+<servlet-mapping>
+	<servlet-name>WordPressAuthorisationComplete</servlet-name>
+	<url-pattern>/WordPressAuthorisationComplete</url-pattern>
+</servlet-mapping>
+<servlet>
+	<servlet-name>TestServlet</servlet-name>
+	<servlet-class>com.postr.TestServlet</servlet-class>
+</servlet>
+<servlet-mapping>
+	<servlet-name>TestServlet</servlet-name>
+	<url-pattern>/TestServlet</url-pattern>
+</servlet-mapping>
+<servlet>
 	<servlet-name>Dreamwidth</servlet-name>
 	<servlet-class>com.postr.DreamwidthServlet</servlet-class>
 </servlet>

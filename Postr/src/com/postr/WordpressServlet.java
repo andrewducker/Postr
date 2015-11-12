@@ -5,7 +5,6 @@ import com.postr.DataTypes.Json;
 import com.postr.DataTypes.Outputs.WordPressData;
 import com.postr.DataTypes.Outputs.WordPressFeed;
 import com.postr.DataTypes.Outputs.WordPressPost;
-import com.postr.Translators.MetaWebLogTranslator;
 
 @SuppressWarnings("serial")
 public class WordpressServlet extends BaseOutputServlet {
@@ -16,15 +15,12 @@ public class WordpressServlet extends BaseOutputServlet {
 	
 	@Override
 	protected Result VerifyPassword(Json parameters) throws Exception {
-		WordPressData data = parameters.FromJson(dataClass);
-		MetaWebLogTranslator writer = new MetaWebLogTranslator(data.url);
-		return writer.Login(data.userName, data.password);
+		throw new Exception("Wordpress passwords are verified by OAuth");
 	}
 
 	@Override
 	protected Result SaveData(Json parameters) throws Exception {
 		WordPressData data = parameters.FromJson(dataClass);
-		data.EncryptPassword();
 		
 		Key<WordPressData> result = DAO.SaveThing(data,GetUserID());
 		return new Result("Saved!",result.getId());
@@ -55,13 +51,6 @@ public class WordpressServlet extends BaseOutputServlet {
 
 	@Override
 	protected Result UpdateData(Json parameters) throws Exception {
-		WordPressData newData = parameters.FromJson(dataClass);
-		WordPressData existingData = DAO.LoadThing(dataClass, newData.getId(), GetUserID());
-		
-		existingData.password = newData.password;
-		existingData.EncryptPassword();
-		
-		Key<WordPressData> result = DAO.SaveThing(existingData,GetUserID());
-		return new Result("Saved!",result.getId());
+		throw new Exception("Can't Update a Wordpress site.");
 	}
 }

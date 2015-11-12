@@ -6,7 +6,7 @@ import com.postr.DataTypes.Outputs.ResultData;
 import com.postr.DataTypes.Outputs.ResultStateEnum;
 
 @SuppressWarnings("serial")
-abstract class BaseOutputServlet extends BasePersonaSessionServlet {
+abstract class BaseOutputServlet extends BaseJSONServlet {
 
 	@Override
 	protected Result ProcessRequest(Json parameters) throws Exception {

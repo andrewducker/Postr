@@ -6,7 +6,7 @@ import com.postr.DataTypes.Json;
 import com.postr.DataTypes.User;
 
 @SuppressWarnings("serial")
-public class UserDataServlet extends BasePersonaSessionServlet {
+public class UserDataServlet extends BaseJSONServlet {
 
 	private static final Logger log = Logger.getLogger(UserDataServlet.class.getName());
 

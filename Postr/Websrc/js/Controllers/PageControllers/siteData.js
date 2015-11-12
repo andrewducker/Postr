@@ -1,13 +1,45 @@
 postrApp.controller('NewSiteDataSelectionController',function ($routeParams, $scope, userData) {
-	$scope.siteList = function(){
-		if($routeParams.itemType == "input"){
-			return userData.possibleInputs;
-		}
-		else{
-			return userData.possibleOutputs;
-		}
-	};
-	$scope.Cancel = function(){
+//	$scope.siteList = function(){
+//		if($routeParams.itemType == "input"){
+//			var inputs = [];
+//			angular.forEach(userData.possibleInputs,function(item){
+//				inputs.push({name:item,url:"#/site/new/"+item});
+//			});
+//			return inputs;
+//		}
+//		else{
+//			var outputs = [];
+//			angular.forEach(userData.possibleOutputs,function(item){
+//				if(item=="WordPress"){
+//					outputs.push({name:"WordPress",url:userData.wordPressValidationURL});
+//				}else{
+//					outputs.push({name:item,url:"#/site/new/"+item});	
+//				}
+//			});
+//			return outputs;
+//		}
+//	};
+	
+	if($routeParams.itemType == "input"){
+		var inputs = [];
+		angular.forEach(userData.possibleInputs,function(item){
+			inputs.push({name:item,url:"#/site/new/"+item});
+		});
+		$scope.siteList = inputs;
+	}
+	else{
+		var outputs = [];
+		angular.forEach(userData.possibleOutputs,function(item){
+			if(item=="WordPress"){
+				outputs.push({name:"WordPress",url:userData.wordPressValidationURL});
+			}else{
+				outputs.push({name:item,url:"#/site/new/"+item});	
+			}
+		});
+		$scope.siteList = outputs;
+	}
+
+		$scope.Cancel = function(){
 		$location.path("");
 	};
 });

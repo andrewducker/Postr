@@ -14,7 +14,7 @@ import com.postr.DataTypes.PersonaAssertion;
 import com.postr.DataTypes.UserData;
 
 @SuppressWarnings("serial")
-public class PersonaVerificationServlet extends BasePersonaSessionServlet {
+public class PersonaVerificationServlet extends BaseJSONServlet {
 
 	@Override
 	protected Result ProcessRequest(Json parameters) throws Exception {

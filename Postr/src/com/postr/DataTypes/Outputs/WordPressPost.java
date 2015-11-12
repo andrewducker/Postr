@@ -4,7 +4,7 @@ import com.googlecode.objectify.annotation.Subclass;
 import com.postr.DAO;
 import com.postr.MessageLogger;
 import com.postr.Result;
-import com.postr.Translators.MetaWebLogTranslator;
+import com.postr.Translators.WordPressTranslator;
 
 @SuppressWarnings("serial")
 @Subclass(index=true)
@@ -28,7 +28,7 @@ public class WordPressPost extends BasePost {
 			tags = "";
 		}
 		
-		MetaWebLogTranslator translator = new MetaWebLogTranslator(data.url);
+		WordPressTranslator translator = new WordPressTranslator();
 		result = translator.MakePost(data, contents, subject, tags.split(","));
 	}
 }

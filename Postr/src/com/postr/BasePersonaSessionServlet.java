@@ -6,7 +6,7 @@ import com.postr.DataTypes.ThreadStorage;
 import com.postr.DataTypes.User;
 
 @SuppressWarnings("serial")
-abstract class BasePersonaSessionServlet extends BaseJSONServlet {
+abstract class BasePersonaSessionServlet extends BaseServlet {
 
 	protected String GetPersona() {
 		return (String) getSession().getAttribute("Persona");

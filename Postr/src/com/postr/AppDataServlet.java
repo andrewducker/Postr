@@ -5,7 +5,7 @@ import java.util.logging.Logger;
 import com.postr.DataTypes.Json;
 
 @SuppressWarnings("serial")
-public class AppDataServlet extends BasePersonaSessionServlet {
+public class AppDataServlet extends BaseJSONServlet {
 
 	private static final Logger log = Logger.getLogger(AppDataServlet.class.getName());
 
