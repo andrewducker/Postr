@@ -61,7 +61,7 @@ public abstract class BaseServlet extends HttpServlet {
 			try {
 				handleRequest(req, resp);
 			} catch (Exception e) {
-				LogHandler.logException(this.getClass(), e, "Uncaught Exception");
+				LogHandler.logException(this, e, "Uncaught Exception");
 			}
 	}
 	
@@ -71,7 +71,7 @@ public abstract class BaseServlet extends HttpServlet {
 		try {
 			handleRequest(req, resp);
 		} catch (Exception e) {
-			LogHandler.logException(this.getClass(), e, "Uncaught Exception");
+			LogHandler.logException(this, e, "Uncaught Exception");
 		}
 	}
 	protected void handleRequest(HttpServletRequest req, HttpServletResponse resp)
@@ -89,7 +89,7 @@ public abstract class BaseServlet extends HttpServlet {
 		} catch (Exception e) {
 			resp.setStatus(500);
 			resp.getWriter().print(e.getMessage());
-			LogHandler.logException(this.getClass(), e, "Uncaught Exception");
+			LogHandler.logException(this, e, "Uncaught Exception");
 		} finally {
 			ThreadStorage.ClearAll();
 			session.remove();

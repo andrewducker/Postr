@@ -16,7 +16,6 @@ import org.joda.time.chrono.GregorianChronology;
 
 import com.postr.LivejournalVisibilityTypes;
 import com.postr.LogHandler;
-import com.postr.MessageLogger;
 import com.postr.Result;
 import com.postr.DataTypes.PasswordEncryptor;
 import com.postr.DataTypes.Outputs.LJData;
@@ -36,8 +35,8 @@ public class LJTranslator {
 			    loginParams = getInitialisedCallParams(client, userName, password);
 		    } catch (XmlRpcHttpTransportException e){
 		    	
-    	        LogHandler.info("Current address is " + LogHandler.CurrentIP());
-		    	LogHandler.logException(this.getClass(), e, "Exception while gathering initialised call params - " + e.getStatusCode() + " - " + e.getStatusMessage());
+    	        LogHandler.logInfo(this,"Current address is " + LogHandler.CurrentIP());
+		    	LogHandler.logException(this, e, "Exception while gathering initialised call params - " + e.getStatusCode() + " - " + e.getStatusMessage());
 		    	return Result.Failure(e.getMessage());
 		    }
 		    Object[] params = new Object[]{loginParams};
@@ -45,7 +44,7 @@ public class LJTranslator {
 		    try{
 		    	postResult =  (Map<String, String>) client.execute("LJ.XMLRPC.login", params);
 		    } catch (XmlRpcException e){
-		    	LogHandler.logException("LJTranslator", e, "Exception while logging in " + userName);
+		    	LogHandler.logException(this, e, "Exception while logging in " + userName);
 		    	return Result.Failure(e.getMessage());
 		    }
 		    
@@ -61,7 +60,7 @@ public class LJTranslator {
 			try {
 				client = getClient();
 			} catch (MalformedURLException e1) {
-				MessageLogger.Severe(this,e1.getMessage());
+				LogHandler.logSevere(this,e1.getMessage());
 				return Result.Failure("Malformed URL");
 			}
 		    
@@ -69,7 +68,7 @@ public class LJTranslator {
 			try {
 				postParams = getInitialisedCallParams(client,ljData.userName,ljData.password);
 			} catch (Exception e1) {
-				MessageLogger.Severe(this,e1.getMessage());
+				LogHandler.logSevere(this,e1.getMessage());
 				return Result.Failure("Error connecting to server.");
 			}
 		    
@@ -117,7 +116,7 @@ public class LJTranslator {
 		    	if (e.getMessage().equals("Invalid password")){
 		    		return Result.Failure("Invalid Password");
 		    	} else{
-					MessageLogger.Severe(this,e.getMessage());
+					LogHandler.logSevere(this,e.getMessage());
 		    		return Result.Failure("Error communicating with server: " + e.getMessage());
 		    	}
 		    }

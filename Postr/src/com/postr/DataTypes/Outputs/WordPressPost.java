@@ -2,7 +2,7 @@ package com.postr.DataTypes.Outputs;
 
 import com.googlecode.objectify.annotation.Subclass;
 import com.postr.DAO;
-import com.postr.MessageLogger;
+import com.postr.LogHandler;
 import com.postr.Result;
 import com.postr.Translators.WordPressTranslator;
 
@@ -19,7 +19,7 @@ public class WordPressPost extends BasePost {
 		try {
 			data = DAO.LoadThing(WordPressData.class, output, getParent());
 		} catch (Exception e) {
-			MessageLogger.Severe(this,e.getMessage());
+			LogHandler.logSevere(this,e.getMessage());
 			result = Result.Failure("Failed to load Output.");
 			return;
 		}

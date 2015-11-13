@@ -30,7 +30,7 @@ public class MakeSinglePostServlet extends HttpServlet {
 		try {
 			toPost.PostOrSave();
 		} catch (Exception e) {
-			LogHandler.logException(this.getClass(), e, "An error occurred.  Please let andrew@ducker.org.uk know");
+			LogHandler.logException(this, e, "An error occurred.  Please let andrew@ducker.org.uk know");
 			toPost.result = Result.Failure("An error occurred.  Please let andrew@ducker.org.uk know" + e.getMessage());
 			try {
 				DAO.SaveThing(toPost);

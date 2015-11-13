@@ -21,11 +21,11 @@ public class PostBacklogServlet extends HttpServlet {
 					List<Long> feeds = DAO.LoadPostsInQueue();
 					Queue queue = QueueFactory.getDefaultQueue();
 					for (Long feedKey : feeds) {
-						LogHandler.info("Queuing up - " + feedKey.toString());
+						LogHandler.logInfo(this,"Queuing up - " + feedKey.toString());
 						queue.add(withUrl("/ProcessSinglePostOrFeed").param("key", feedKey.toString()));			
 					}
 				} catch (Exception e) {
-					LogHandler.logException(this.getClass(), e, "Uncaught Exception:");
+					LogHandler.logException(this, e, "Uncaught Exception:");
 				}
 			}
 

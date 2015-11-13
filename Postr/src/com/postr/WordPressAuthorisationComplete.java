@@ -20,7 +20,7 @@ void handleRequest() throws Exception {
 	String error = req.getParameter("error");
 	String serverUrl = req.getScheme()+"://"+req.getServerName()+":" +req.getServerPort();
 	if(error != null && !error.isEmpty()){
-		LogHandler.logWarning(getClass(), "Failed to authorise to wordpress: " + error);
+		LogHandler.logWarning(this, "Failed to authorise to wordpress: " + error);
 	}
 	else if(code != null && !code.isEmpty())
 	{

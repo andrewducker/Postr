@@ -3,7 +3,7 @@ package com.postr.DataTypes.Outputs;
 import com.googlecode.objectify.annotation.Subclass;
 import com.postr.DAO;
 import com.postr.LivejournalVisibilityTypes;
-import com.postr.MessageLogger;
+import com.postr.LogHandler;
 import com.postr.Result;
 
 @SuppressWarnings("serial")
@@ -24,7 +24,7 @@ public class TestPost extends BasePost {
 		try {
 			ljData = DAO.LoadThing(TestData.class, output, getParent());
 		} catch (Exception e) {
-			MessageLogger.Severe(this,e.getMessage());
+			LogHandler.logSevere(this,e.getMessage());
 			result = Result.Failure("Failed to load Output.");
 			return;
 		}

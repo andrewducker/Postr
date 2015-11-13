@@ -23,33 +23,40 @@ public class LogHandler {
 		return currentIP;
 	}
 	
-	
-	public static void logException(String location, Exception e, String message)
+	public static void logException(Object caller, Exception e, String message)
 	{
-		Logger log = Logger.getLogger(location);
 		StringWriter sw = new StringWriter();
 		PrintWriter pw = new PrintWriter(sw);
-
 		e.printStackTrace(pw);
-		log.severe(message + " : " + sw.toString());
+		
+		getLogger(caller).severe(message + " : " + sw.toString());
 	}
 	
-	public static <T> void logException(Class<T> clazz, Exception e, String message)
-	{
-		logException(clazz.getName(), e, message);
+	public static <T> void logWarning(Object caller, String message){
+		 getLogger(caller).warning(message);
 	}
 	
-	public static <T> void logWarning(Class<T> clazz, String message){
-		Logger log = Logger.getLogger(clazz.getName());
-		log.warning(message);
+	@SuppressWarnings("rawtypes")
+	private static Logger getLogger(Object caller){
+		String className;
+		if(caller instanceof Class){
+			className = ((Class)caller).getName();
+		}else if (caller instanceof String){
+			className = (String) caller;
+		}else {
+			className = caller.getClass().getName();
+		}
+		return Logger.getLogger(className);
+		
 	}
 
-	
-	static Logger infoLogger = Logger.getLogger("info");
-	
-	public static void info(String message)
+	public static void logInfo(Object caller,String message)
 	{
-		infoLogger.info(message);
+		getLogger(caller).info(message);
+	}
+
+	public static void logSevere(Object caller, String message ){
+		getLogger(caller).severe(message);
 	}
 	
 }

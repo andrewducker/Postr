@@ -106,11 +106,11 @@ public class DAO {
 	}
 
 	static long GetUserID(String persona) throws Exception {
-		LogHandler.info("Fetching data for "+persona);
+		LogHandler.logInfo(DAO.class,"Fetching data for "+persona);
 		List<Key<UserEmail>> email = ofy().load().type(UserEmail.class).filter("email",persona).keys().list();
-		LogHandler.info("Found "+email.size() + " entries");
+		LogHandler.logInfo(DAO.class,"Found "+email.size() + " entries");
 		if (email.size() == 0) {
-			LogHandler.info("Creating entry");
+			LogHandler.logInfo(DAO.class,"Creating entry");
 			User user = new User();
 			long parent = ofy().save().entity(user).now().getId();
 			UserEmail emailToSave = new UserEmail();
@@ -120,7 +120,7 @@ public class DAO {
 			return parent;
 		}
 		if(email.size() == 1){
-			LogHandler.info("Retrieving entry for "+email.get(0).getId());
+			LogHandler.logInfo(DAO.class,"Retrieving entry for "+email.get(0).getId());
 			return ofy().load().key(email.get(0)).now().getParent();
 		}
 		throw new Exception("Multiple emails found with address: "+persona);
@@ -150,9 +150,9 @@ public class DAO {
 	
 	static User GetUser(String persona) throws Exception{
 		long userID = GetUserID(persona);
-		LogHandler.info("User ID located - " + userID);
+		LogHandler.logInfo(DAO.class,"User ID located - " + userID);
 		User user = LoadThing(User.class, userID, userID);
-		LogHandler.info("User loader - " + user.getId());
+		LogHandler.logInfo(DAO.class,"User loader - " + user.getId());
 		return user;
 	}
 	

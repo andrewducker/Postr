@@ -17,7 +17,7 @@ public class ProcessSinglePostOrFeedServlet extends HttpServlet {
 		try {
 			toPost = DAO.LoadThing(BasePost.class, key);
 		} catch (Exception e) {
-			LogHandler.logException(this.getClass(), e, "Uncaught Exception trying to load feed " + key);
+			LogHandler.logException(this, e, "Uncaught Exception trying to load feed " + key);
 			return;
 		}
 		try {

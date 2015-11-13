@@ -15,7 +15,7 @@ abstract class BaseJSONServlet extends BasePersonaSessionServlet {
 			sb.append(line);
 		}
 
-		LogHandler.info("Request - " + sb.toString());
+		LogHandler.logInfo(this,"Request - " + sb.toString());
 
 		Result result = ProcessRequest(new Json(sb.toString()));
 		

@@ -1,18 +1,5 @@
 package com.postr.Translators;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.HashMap;
-
-import org.apache.xmlrpc.XmlRpcException;
-import org.apache.xmlrpc.client.XmlRpcClient;
-import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
-import org.apache.xmlrpc.client.XmlRpcHttpTransportException;
-
-import com.postr.LogHandler;
-import com.postr.MessageLogger;
 import com.postr.Result;
 import com.postr.DataTypes.Outputs.WordPressData;
 

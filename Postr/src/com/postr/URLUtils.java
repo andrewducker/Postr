@@ -14,7 +14,7 @@ class URLUtils {
 			if (code == 200) {
 				return true;			
 			}
-			LogHandler.info("Failed to find URL - " + urlAddress + ". Code - " + code + "Current IP is - " + LogHandler.CurrentIP());
+			LogHandler.logInfo(URLUtils.class,"Failed to find URL - " + urlAddress + ". Code - " + code + "Current IP is - " + LogHandler.CurrentIP());
 		}
 		catch(Exception e){
 			LogHandler.logException(URLUtils.class, e, "Failed to find URL - " + urlAddress);

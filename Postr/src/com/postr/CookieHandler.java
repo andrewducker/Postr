@@ -42,7 +42,7 @@ public class CookieHandler {
 					+ cookieExpires.toString());
 			return null;
 		}
-		LogHandler.info("Retrieved email from cookie - " + email);
+		LogHandler.logInfo(CookieHandler.class,"Retrieved email from cookie - " + email);
 		return email;
 
 	}
