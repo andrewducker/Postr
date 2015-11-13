@@ -3,21 +3,17 @@
 		<h3>WordPress</h3>
 	</div>
 	<div>
-		<form class="form-horizontal" name="outputDetails">
+		<form name="outputDetails" class="form-horizontal">
 			<fieldset>
 				<legend>Details</legend>
-				<div class="control-group">
-					<div class="controls">
-						<Button ng-click="item.verifyWordPress()">Click here to verify</Button>
-					</div>
+				<div class="form-group col-sm-2">
+					<label>Site: {{item.userName}}</label>
 				</div>
 			</fieldset>
 		</form>
 	</div>
 	<div>
-		<button class="btn btn-primary" ng-click="Save()">OK</button>
 		<button class="btn btn-warning" ng-click="Cancel()">Cancel</button>
-		<button class="btn btn-danger" ng-show="action=='Update'"
-			ng-click="Delete()">Delete</button>
+		<button class="btn btn-danger" ng-show="action=='Update'" ng-click="Delete()">Delete</button>
 	</div>
 </div>

@@ -43,6 +43,7 @@ public class UserData {
 		
 		isAdmin = appData.Administrator.toLowerCase().equalsIgnoreCase(persona);
 		wordPressClientId = appData.wordPressClientId;
+		wordPressClientSecret = appData.wordPressClientSecret;
 		
 		possibleOutputs.add("Dreamwidth");
 		possibleOutputs.add("Livejournal");
@@ -64,6 +65,9 @@ public class UserData {
 	@SuppressWarnings("unused")
 	private String wordPressClientId;
 	
+	@SuppressWarnings("unused")
+	private String wordPressClientSecret;
+
 	@SuppressWarnings("unused")
 	private boolean isAdmin;
 

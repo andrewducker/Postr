@@ -33,6 +33,7 @@ public class AppDataServlet extends BaseJSONServlet {
 			return Result.Failure("Security error - only an administrator should do this.  This security violation has been logged.");
 		}
 		oldAppData.wordPressClientId = appData.wordPressClientId;
+		oldAppData.wordPressClientSecret = appData.wordPressClientSecret;
 		DAO.setAppData(oldAppData);
 		return Result.Success("Updated");
 	}

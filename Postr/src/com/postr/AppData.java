@@ -16,6 +16,7 @@ public class AppData extends BaseSaveable {
 	public String Administrator;
 	public int CookieTimeout;
 	public String wordPressClientId;
+	public String wordPressClientSecret;
 
 	static AppData CreateDefault() throws NoSuchAlgorithmException {
 		AppData siteData = new AppData();
@@ -24,6 +25,7 @@ public class AppData extends BaseSaveable {
 		siteData.Administrator = "Andrew@Ducker.org.uk";
 		siteData.CookieTimeout = 60 * 60 * 24 * 28; // 28 days
 		siteData.wordPressClientId = "";
+		siteData.wordPressClientSecret = "";
 		return siteData;
 	}
 
