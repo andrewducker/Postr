@@ -5,4 +5,10 @@
     <description>Feed any posts that are in the queue</description>
     <schedule>every 1 hours synchronized</schedule>
   </cron>
+  <cron>
+    <url>/DeleteOldPosts</url>
+    <description>Delete any posts older than 1 week</description>
+    <schedule>every day 09:00</schedule>
+  </cron>
+  
 </cronentries>

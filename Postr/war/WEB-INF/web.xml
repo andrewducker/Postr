@@ -64,6 +64,14 @@
 	<url-pattern>/PostBacklog</url-pattern>
 </servlet-mapping>
 <servlet>
+	<servlet-name>DeleteOldPosts</servlet-name>
+	<servlet-class>com.postr.DeleteOldPostsServlet</servlet-class>
+</servlet>
+<servlet-mapping>
+	<servlet-name>DeleteOldPosts</servlet-name>
+	<url-pattern>/DeleteOldPosts</url-pattern>
+</servlet-mapping>
+<servlet>
 	<servlet-name>TestOutput</servlet-name>
 	<servlet-class>com.postr.TestOutputServlet</servlet-class>
 </servlet>

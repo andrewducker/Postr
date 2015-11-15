@@ -175,6 +175,13 @@ public class DAO {
 		return appData;
 	}
 	
+	public static void DeleteOldPosts(){
+		QueryKeys<BasePost> query = ofy().load().type(BasePost.class)
+				.filter("postingTime <=", DateTime.now().minusWeeks(1))
+				.keys();
+		ofy().delete().keys(query).now();
+	}
+	
 	public static void setAppData(AppData appData) throws Exception{
 		ofy().save().entity(appData).now();
 	}
