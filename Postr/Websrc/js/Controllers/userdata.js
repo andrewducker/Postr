@@ -88,7 +88,7 @@ postrApp.factory('userData', function(persona, $http,orderByFilter, $filter, ale
 					feed.postingTime = new Date(feed.postingTime);
 				});
 				var redirect = $location.protocol()+"://"+$location.host();
-				if($location.port() != 80){
+				if($location.port() != 80 && $location.port() != 443){
 					redirect += ":"+$location.port();
 				}
 				redirect += "/WordPressAuthorisationComplete";

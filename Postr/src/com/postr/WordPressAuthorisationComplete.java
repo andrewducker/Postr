@@ -18,7 +18,10 @@ void handleRequest() throws Exception {
 	HttpServletRequest req = getRequest();
 	String code = req.getParameter("code");
 	String error = req.getParameter("error");
-	String serverUrl = req.getScheme()+"://"+req.getServerName()+":" +req.getServerPort();
+	String serverUrl = req.getScheme()+"://"+req.getServerName();
+	if(req.getServerPort() != 80 && req.getServerPort() != 443){
+		serverUrl += ":" +req.getServerPort();
+	}
 	if(error != null && !error.isEmpty()){
 		LogHandler.logWarning(this, "Failed to authorise to wordpress: " + error);
 	}
