@@ -83,14 +83,14 @@ public abstract class BaseFeed extends BasePost {
 
 	private List<String> getTags(LinkSet links) {
 		List<String> tagsForPosting;
+		if(defaultTags != null){
+			String[] extraTags = defaultTags.split(",");
+			for (int i = 0; i < extraTags.length; i++) {
+				tagsForPosting.add(extraTags[i]);
+			}
+		}
 		if (postWithTags) {
 			tagsForPosting = links.getTagNames();
-			if(defaultTags != null){
-				String[] extraTags = defaultTags.split(",");
-				for (int i = 0; i < extraTags.length; i++) {
-					tagsForPosting.add(extraTags[i]);
-				}
-			}
 		}
 		else{
 			tagsForPosting = new ArrayList<String>();

@@ -9,6 +9,6 @@ public class DeliciousFeedParser extends BaseFeedParser {
 
 	@Override
 	String GetURLForTag(String tag) {
-		return "http://delicious.com/"+userName+"/"+tag;
+		return "http://del.icio.us/"+userName+"/"+tag;
 	}
 }

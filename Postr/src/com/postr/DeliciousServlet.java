@@ -16,7 +16,7 @@ public class DeliciousServlet extends BaseInputServlet {
 	@Override
 	protected Result VerifyUserExists(Json parameters) throws Exception {
 		Input input = parameters.FromJson(Input.class);
-		if (URLUtils.DoesURLExist("http://feeds.delicious.com/v2/rss/"+input.userName)) {
+		if (URLUtils.DoesURLExist("http://feeds.del.icio.us/v2/rss/"+input.userName)) {
 			return Result.Success("User verified.");
 		}
 		return Result.Failure("Failed to find user.");
