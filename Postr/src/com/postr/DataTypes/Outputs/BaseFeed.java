@@ -83,6 +83,7 @@ public abstract class BaseFeed extends BasePost {
 
 	private List<String> getTags(LinkSet links) {
 		List<String> tagsForPosting;
+		tagsForPosting = new ArrayList<String>();
 		if(defaultTags != null){
 			String[] extraTags = defaultTags.split(",");
 			for (int i = 0; i < extraTags.length; i++) {
@@ -90,14 +91,9 @@ public abstract class BaseFeed extends BasePost {
 			}
 		}
 		if (postWithTags) {
-			tagsForPosting = links.getTagNames();
+			tagsForPosting.addAll(links.getTagNames());
 		}
-		else{
-			tagsForPosting = new ArrayList<String>();
-		}
-		
 		return tagsForPosting;
-		
 	}
 
 	private LinkSet getLinks() throws Exception {
