@@ -45,7 +45,9 @@ public abstract class BaseFeedParser implements Function<HTTPResponse, LinkSet> 
 		for(Iterator<Entry> entryIterator = feedData.entries();entryIterator.hasNext();)
 		{
 			Entry entry = entryIterator.next();
-
+			if(entry.getAuthor().getName().equalsIgnoreCase("delicious")){
+				continue;
+			}
 			LinkEntry linkEntry = new LinkEntry();
 			linkEntry.Title = entry.getTitle().getValue();
 			

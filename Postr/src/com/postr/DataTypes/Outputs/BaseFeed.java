@@ -66,6 +66,10 @@ public abstract class BaseFeed extends BasePost {
 		Collections.sort(links);
 		String postSubject = FormatTitle(postingTime, subject);
 		String postContents = Format(links, contents);
+		//Possible that there will be no content left once formatting has completed.
+		if (postContents.trim().length() == 0) {
+			return Result.Success("No entries found");
+		}
 		List<String> tags = getTags(links);
 		long postKey = WritePost(postSubject, postContents, tags);
 		return Result.Success("Post " + postKey +  " created at "+postingTime.toString());
