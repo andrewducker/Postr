@@ -5,7 +5,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.postr.DataTypes.Json;
 
 @SuppressWarnings("serial")
-abstract class BaseJSONServlet extends BasePersonaSessionServlet {
+abstract class BaseJSONServlet extends BaseUserSessionServlet {
 
 	@Override
 	protected void handleRequest() throws Exception {

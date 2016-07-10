@@ -37,9 +37,9 @@ public class UserDataServlet extends BaseJSONServlet {
 		if (LoggedIn()) {
 			log.info("Logged in");
 			Long userID = GetUserID();
-			String persona = GetPersona();
+			String email = getUserEmail();
 
-			com.postr.DataTypes.UserData userData = new com.postr.DataTypes.UserData(persona, userID);
+			com.postr.DataTypes.UserData userData = new com.postr.DataTypes.UserData(email, userID);
 			
 			return new Result("UserData available", userData);
 		}

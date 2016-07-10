@@ -105,25 +105,25 @@ public class DAO {
 		ofy().delete().type(BaseSaveable.class).id(id);
 	}
 
-	static long GetUserID(String persona) throws Exception {
-		LogHandler.logInfo(DAO.class,"Fetching data for "+persona);
-		List<Key<UserEmail>> email = ofy().load().type(UserEmail.class).filter("email",persona).keys().list();
-		LogHandler.logInfo(DAO.class,"Found "+email.size() + " entries");
-		if (email.size() == 0) {
+	static long GetUserID(String email) throws Exception {
+		LogHandler.logInfo(DAO.class,"Fetching data for "+email);
+		List<Key<UserEmail>> emailKey = ofy().load().type(UserEmail.class).filter("email",email).keys().list();
+		LogHandler.logInfo(DAO.class,"Found "+emailKey.size() + " entries");
+		if (emailKey.size() == 0) {
 			LogHandler.logInfo(DAO.class,"Creating entry");
 			User user = new User();
 			long parent = ofy().save().entity(user).now().getId();
 			UserEmail emailToSave = new UserEmail();
-			emailToSave.email = persona;
+			emailToSave.email = email;
 			emailToSave.setParent(parent);
 			ofy().save().entity(emailToSave).now();
 			return parent;
 		}
-		if(email.size() == 1){
-			LogHandler.logInfo(DAO.class,"Retrieving entry for "+email.get(0).getId());
-			return ofy().load().key(email.get(0)).now().getParent();
+		if(emailKey.size() == 1){
+			LogHandler.logInfo(DAO.class,"Retrieving entry for "+emailKey.get(0).getId());
+			return ofy().load().key(emailKey.get(0)).now().getParent();
 		}
-		throw new Exception("Multiple emails found with address: "+persona);
+		throw new Exception("Multiple emails found with address: "+email);
 	}
 	
 	public static List<Long> LoadPostsInQueue(){
@@ -148,8 +148,8 @@ public class DAO {
 		return outputList;
 	}
 	
-	static User GetUser(String persona) throws Exception{
-		long userID = GetUserID(persona);
+	static User GetUser(String email) throws Exception{
+		long userID = GetUserID(email);
 		LogHandler.logInfo(DAO.class,"User ID located - " + userID);
 		User user = LoadThing(User.class, userID, userID);
 		LogHandler.logInfo(DAO.class,"User loader - " + user.getId());

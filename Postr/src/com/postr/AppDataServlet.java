@@ -28,8 +28,8 @@ public class AppDataServlet extends BaseJSONServlet {
 		AppData appData = parameters.FromJson(AppData.class);
 		AppData oldAppData = DAO.getAppData();
 		
-		if (!oldAppData.Administrator.equalsIgnoreCase(GetPersona())) {
-			log.severe("User "+GetPersona() + " tried to update Site Data illegally.");
+		if (!oldAppData.Administrator.equalsIgnoreCase(getUserEmail())) {
+			log.severe("User "+getUserEmail() + " tried to update Site Data illegally.");
 			return Result.Failure("Security error - only an administrator should do this.  This security violation has been logged.");
 		}
 		oldAppData.wordPressClientId = appData.wordPressClientId;

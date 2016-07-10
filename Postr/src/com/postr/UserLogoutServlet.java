@@ -3,11 +3,11 @@ package com.postr;
 import com.postr.DataTypes.Json;
 
 @SuppressWarnings("serial")
-public class PersonaLogoutServlet extends BaseJSONServlet {
+public class UserLogoutServlet extends BaseJSONServlet {
 	
 	@Override
 	protected Result ProcessRequest(Json parameters) throws Exception {
-			SetPersona(null);
+			setUserEmail(null);
 			return Result.Success("Logged out");
 	}
 }

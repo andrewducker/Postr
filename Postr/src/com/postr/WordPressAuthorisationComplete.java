@@ -9,7 +9,7 @@ import com.postr.DataTypes.Outputs.WordPressData;
 
 
 @SuppressWarnings("serial")
-public class WordPressAuthorisationComplete extends BasePersonaSessionServlet {
+public class WordPressAuthorisationComplete extends BaseUserSessionServlet {
 
 @Override
 void handleRequest() throws Exception {

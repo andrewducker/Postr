@@ -13,8 +13,8 @@ import com.postr.DataTypes.Outputs.BasePost;
 
 public class UserData {
 
-	public UserData(String persona, Long userID) throws Exception{
-		this.persona = persona;
+	public UserData(String email, Long userID) throws Exception{
+		this.persona = email;
 		List<BaseSaveable> saveables = DAO.LoadThings(BaseSaveable.class, userID);
 		for (BaseSaveable baseSaveable : saveables) {
 			if (baseSaveable instanceof BaseFeed) {
@@ -41,7 +41,7 @@ public class UserData {
 		
 		AppData appData = DAO.getAppData();
 		
-		isAdmin = appData.Administrator.toLowerCase().equalsIgnoreCase(persona);
+		isAdmin = appData.Administrator.toLowerCase().equalsIgnoreCase(email);
 		wordPressClientId = appData.wordPressClientId;
 		wordPressClientSecret = appData.wordPressClientSecret;
 		
