@@ -1,6 +1,4 @@
-package com.postr;
-
-import javax.servlet.http.Cookie;
+	package com.postr;
 
 import com.postr.DataTypes.ThreadStorage;
 import com.postr.DataTypes.User;
@@ -44,13 +42,8 @@ abstract class BasePersonaSessionServlet extends BaseServlet {
 		getSession().setAttribute("Persona", persona);
 		if (persona == null) {
 			getSession().setAttribute("User", null);
-			Cookie removal = new Cookie("PostrID", "");
-			removal.setMaxAge(0);
-			AddCookie(removal);
 		} else {
 			User user = DAO.GetUser(persona);
-			Cookie idCookie = CookieHandler.GenerateCookie(persona);
-			AddCookie(idCookie);
 			ThreadStorage.setDateTimeZone(user.timeZone);
 			getSession().setAttribute("User", user);
 		}
@@ -61,24 +54,6 @@ abstract class BasePersonaSessionServlet extends BaseServlet {
 		// Are we logged in already?
 		if (LoggedIn()) {
 			ThreadStorage.setDateTimeZone(GetTimeZone());
-		} else {
-			// Is there an ID cookie set?
-			Cookie[] cookies = GetCookies();
-			Cookie idCookie = null;
-			if (cookies != null) {
-				for (Cookie cookie : cookies) {
-					if (cookie.getName().equals("PostrID")) {
-						idCookie = cookie;
-						break;
-					}
-				}
-			}
-			if (idCookie != null) {
-				String email = CookieHandler.ParseCookie(idCookie.getValue());
-				if (email != null) {
-					SetPersona(email);
-				}
-			}
-		}
+		} 
 	}
 }
