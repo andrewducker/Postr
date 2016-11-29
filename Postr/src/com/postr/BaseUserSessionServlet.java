@@ -2,7 +2,6 @@ package com.postr;
 
 import com.google.appengine.api.users.UserServiceFactory;
 import com.postr.DataTypes.ThreadStorage;
-import com.postr.DataTypes.User;
 
 @SuppressWarnings("serial")
 abstract class BaseUserSessionServlet extends BaseServlet {
