@@ -99,14 +99,12 @@ postrApp.factory('userData', function(persona, $http,orderByFilter, $filter, ale
 			},
 			loaded : loadedDeferral.promise
 	};
-	$http.post('userdata',{method:"GetData"}).success(function(result) {
-		if (result.data != null) {
+	$http.post('userdata',{method:"GetData", URL:$location.absUrl()}).success(function(result) {
+		if (result.data.userEmail != null) {
 			data.populate(result);
-			persona.initialise($http, result.data.persona);
 		} else {
-			persona.initialise($http, null, function(newData) {
-				data.populate(newData);
-			});
+			data.logoutURL = result.data.logoutURL
+			data.loginURL = result.data.loginURL
 			data.loggedOut = true;
 			data.loggedIn = false;
 		}

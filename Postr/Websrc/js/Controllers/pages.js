@@ -25,14 +25,10 @@ postrApp.controller('SummaryController',function summaryController($scope,userDa
 	};
 });
 
-postrApp.controller('UserDataCtrl', function postCtrl($scope, persona, userData) {
+postrApp.controller('UserDataCtrl', function postCtrl($scope, userData) {
 	$scope.data = userData;
 
-	$scope.login = function() {
-		persona.login();
-	};
-	$scope.logout = function() {
-		persona.logout();
-	};
+	$scope.loginUrl = userData.loginURL;
+	$scope.logoutURL = userData.logoutURL;
 });
 

@@ -55,7 +55,7 @@ abstract class BaseOutputServlet extends BaseJSONServlet {
 
 	protected abstract Result SaveData(Json parameters) throws Exception;
 
-	protected abstract BasePost CreatePost(Json parameters);
+	protected abstract BasePost CreatePost(Json parameters) throws Exception;
 
 	protected abstract Result SavePost(Json parameters) throws Exception;
 

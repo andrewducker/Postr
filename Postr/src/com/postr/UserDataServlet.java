@@ -4,6 +4,7 @@ import java.util.logging.Logger;
 
 import com.postr.DataTypes.Json;
 import com.postr.DataTypes.User;
+import com.postr.DataTypes.UserData;
 
 @SuppressWarnings("serial")
 public class UserDataServlet extends BaseJSONServlet {
@@ -13,36 +14,40 @@ public class UserDataServlet extends BaseJSONServlet {
 	@Override
 	protected Result ProcessRequest(Json parameters) throws Exception {
 		
-		String method = parameters.FromJson(Request.class).method;
+		RequestFromURL request = parameters.FromJson(RequestFromURL.class);
 
-		MethodTypes methodType = MethodTypes.valueOf(method);
+		MethodTypes methodType = MethodTypes.valueOf(request.method);
 		switch (methodType) {
 		case GetData:
-			return GetData(parameters);
+			return GetData(request.URL);
 		case UpdateData:
 			return UpdateData(parameters);
 		default:
-			throw new Exception("No such method found: "+method);
+			throw new Exception("No such method found: "+request.method);
 		}
 	}
 
-	private Result UpdateData(Json parameters) {
-		User user = parameters.FromJson(User.class);
-		SetTimeZone(user.timeZone);
-		SaveUserData();
+	private Result UpdateData(Json parameters) throws Exception {
+		User userWithTimezone = parameters.FromJson(User.class);
+		User user = DAO.GetUser(getUserEmail());
+		user.timeZone = userWithTimezone.timeZone;
+		DAO.SaveUser(user);
 		return Result.Success("Updated");
 	}
 
-	private Result GetData(Json parameters) throws Exception {
+	private Result GetData(String originURL) throws Exception {
+		com.postr.DataTypes.UserData userData;
 		if (LoggedIn()) {
 			log.info("Logged in");
 			Long userID = GetUserID();
 			String email = getUserEmail();
 
-			com.postr.DataTypes.UserData userData = new com.postr.DataTypes.UserData(email, userID);
+			 userData = new com.postr.DataTypes.UserData(email, userID);
 			
-			return new Result("UserData available", userData);
+		}else{
+			userData = new UserData();
 		}
-		return Result.Success("");
+		userData.SetURLs(originURL);
+		return new Result("Success",userData);
 	}
 }

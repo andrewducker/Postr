@@ -39,7 +39,7 @@ public class LivejournalServlet extends BaseOutputServlet {
 	}
 	
 	@Override
-	protected LJPost CreatePost(Json parameters) {
+	protected LJPost CreatePost(Json parameters) throws Exception {
 		LJPost post = parameters.FromJson(postClass);
 		post.timeZone = GetTimeZone();
 		return post;

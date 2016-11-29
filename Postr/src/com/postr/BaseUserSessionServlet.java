@@ -1,5 +1,6 @@
 package com.postr;
 
+import com.google.appengine.api.users.UserServiceFactory;
 import com.postr.DataTypes.ThreadStorage;
 import com.postr.DataTypes.User;
 
@@ -7,46 +8,19 @@ import com.postr.DataTypes.User;
 abstract class BaseUserSessionServlet extends BaseServlet {
 
 	protected String getUserEmail() {
-		return (String) getSession().getAttribute("Email");
+		return UserServiceFactory.getUserService().getCurrentUser().getEmail();
 	}
 
 	protected boolean LoggedIn() {
-		if (getSession().getAttribute("User") != null) {
-			return true;
-		}
-		return false;
+		return getRequest().getUserPrincipal() != null;
 	}
 
-	protected Long GetUserID() {
-		User user = (User) getSession().getAttribute("User");
-		return user.getId();
+	protected Long GetUserID() throws Exception {
+		return DAO.GetUser(getUserEmail()).getId();
 	}
 
-	protected String GetTimeZone() {
-		return ((User) getSession().getAttribute("User")).timeZone;
-	}
-
-	protected void SetTimeZone(String timeZone) {
-		((User) getSession().getAttribute("User")).timeZone = timeZone;
-	}
-
-	protected void SaveUserData() {
-		DAO.SaveUser(((User) getSession().getAttribute("User")));
-	}
-
-	protected void setUserEmail(String email) throws Exception {
-		String oldEmail = getUserEmail();
-		if (oldEmail != null && oldEmail.equals(email)) {
-			return;
-		}
-		getSession().setAttribute("Email", email);
-		if (email == null) {
-			getSession().setAttribute("User", null);
-		} else {
-			User user = DAO.GetUser(email);
-			ThreadStorage.setDateTimeZone(user.timeZone);
-			getSession().setAttribute("User", user);
-		}
+	protected String GetTimeZone() throws Exception {
+		return DAO.GetUser(getUserEmail()).timeZone;
 	}
 
 	@Override

@@ -35,8 +35,7 @@
 				Delicious, Pinboard, and Pinterest), collect the most recent links from them,
 				and then post the results to a variety of outputs (currently
 				Livejournal, Dreamwidth, and WordPress).</div>
-			<a class="persona-button orange" ng-click="login()"><span>Sign
-					in</span></a>
+			<a ng-href="{{data.loginURL}}" class="persona-button orange"><span>Sign in</span></a>
 		</div>
 		<div ng-show="data.loggedIn">
 			<div ng-view></div>

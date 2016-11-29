@@ -32,7 +32,7 @@ public class TestOutputServlet extends BaseOutputServlet {
 	}
 
 	@Override
-	protected TestPost CreatePost(Json parameters) {
+	protected TestPost CreatePost(Json parameters) throws Exception {
 		TestPost post = parameters.FromJson(TestPost.class);
 		post.timeZone = GetTimeZone();
 		return post;

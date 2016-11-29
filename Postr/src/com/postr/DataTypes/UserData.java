@@ -3,6 +3,8 @@ package com.postr.DataTypes;
 import java.util.List;
 import java.util.Vector;
 
+import com.google.appengine.api.users.UserService;
+import com.google.appengine.api.users.UserServiceFactory;
 import com.postr.AppData;
 import com.postr.DAO;
 import com.postr.DataTypes.Inputs.BaseInput;
@@ -13,8 +15,12 @@ import com.postr.DataTypes.Outputs.BasePost;
 
 public class UserData {
 
+	public UserData(){
+		
+	}
+	
 	public UserData(String email, Long userID) throws Exception{
-		this.persona = email;
+		this.userEmail = email;
 		List<BaseSaveable> saveables = DAO.LoadThings(BaseSaveable.class, userID);
 		for (BaseSaveable baseSaveable : saveables) {
 			if (baseSaveable instanceof BaseFeed) {
@@ -56,8 +62,14 @@ public class UserData {
 		possibleInputs.add("TestInput");
 	}
 	
+	public void SetURLs(String originURL){
+		UserService userService = UserServiceFactory.getUserService();
+		loginURL = userService.createLoginURL(originURL);
+		logoutURL = userService.createLogoutURL(originURL);
+	}
+	
 	@SuppressWarnings("unused")
-	private String persona; // NO_UCD (JSON)
+	private String userEmail; // NO_UCD (JSON)
 	
 	@SuppressWarnings("unused")
 	private String timeZone;
@@ -82,4 +94,9 @@ public class UserData {
 	private List<String> possibleOutputs = new Vector<String>();
 	
 	private List<String> possibleInputs = new Vector<String>();
+	
+	@SuppressWarnings("unused")
+	private String loginURL;
+	@SuppressWarnings("unused")
+	private String logoutURL;
 }

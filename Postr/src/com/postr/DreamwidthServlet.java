@@ -35,7 +35,7 @@ public class DreamwidthServlet extends BaseOutputServlet {
 	}
 	
 	@Override
-	protected DWPost CreatePost(Json parameters) {
+	protected DWPost CreatePost(Json parameters) throws Exception {
 		DWPost post = parameters.FromJson(DWPost.class);
 		post.timeZone = GetTimeZone();
 		return post;
